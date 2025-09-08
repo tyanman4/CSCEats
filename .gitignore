@@ -1,0 +1,20 @@
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Backend (Spring Boot / Maven)
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Frontend (React / Node.js)
+frontend/node_modules/
+frontend/build/
+
+# Logs and environment variables
+*.log
+.env
