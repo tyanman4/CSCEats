@@ -10,4 +10,9 @@ public class HelloController {
     public String getMessage() {
         return "Hello from Spring!";
     }
+
+    @GetMapping("/api/message2")
+    public String getMessage2() {
+        return "Hello from Summer!";
+    }
 }
