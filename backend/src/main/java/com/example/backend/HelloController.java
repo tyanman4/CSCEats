@@ -15,6 +15,6 @@ public class HelloController {
 
     @GetMapping("/api/message2")
     public String getMessage2() {
-        return "Hello from Summer!";
+        return "Hello from Summmmmmmmmmer!";
     }
 }

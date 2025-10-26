@@ -1,10 +1,14 @@
+//ReactがAppをHTMLに描画する起点
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+//./Appは./App/jsの略
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+//Appコンポーネントを画面に描写している。
 root.render(
   <React.StrictMode>
     <App />
