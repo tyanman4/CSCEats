@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000") // ReactサーバのURL
+@CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
 public class ShopController {
 
     @GetMapping("/api/restaurants")

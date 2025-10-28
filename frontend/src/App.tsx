@@ -1,25 +1,29 @@
-import { useEffect, useState } from "react";
-
+import { useState, useEffect } from "react";
 function App() {
-  const [restaurants, setRestaurants] = useState([]);
-
+  interface Restaurant {
+    id: number,
+    name: string,
+    genre: string
+  }
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   useEffect(() => {
     fetch("http://localhost:8080/api/restaurants")
       .then(res => res.json())
-      .then(data => setRestaurants(data))
+      .then(data => {
+        console.log(data);
+        setRestaurants(data)})
       .catch(err => console.error(err));
   }, []);
-
+  // console.log(restaurants);
   return (
-    <div>
+    <>
       <h1>CSCEats 店舗一覧</h1>
       <ul>
         {restaurants.map(shop => (
           <li key={shop.id}>{shop.name} ({shop.genre})</li>
         ))}
       </ul>
-    </div>
-  );
+    </>
+  )
 }
-
-export default App;
+export default App
