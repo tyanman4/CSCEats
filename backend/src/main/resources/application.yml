@@ -1,8 +1,13 @@
-spring.application.name=backend
+spring:
+  application:
+    name: backend
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/csceats_test
-spring.datasource.username=postgres
-spring.datasource.password=babanotakada
-spring.datasource.driver-class-name=org.postgresql.Driver
+  datasource:
+    url: jdbc:postgresql://localhost:5432/csceats_test
+    username: postgres
+    password: babanotakada
+    driver-class-name: org.postgresql.Driver
 
-spring.sql.init.mode=always
+  sql:
+    init:
+      mode: always
