@@ -13,6 +13,8 @@ export const RestaurantList: React.FC = () => {
     distance: number;
     averageBudget: string;
     description: string;
+    lat: number;
+    lng: number;
   }
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [searchWord, setSearchWord] = useState("");
@@ -58,7 +60,7 @@ export const RestaurantList: React.FC = () => {
       <Header />
       <div className={styles.container}>
         <div className={styles.map}>
-          <MapView />
+          <MapView restaurants={restaurants} />
         </div>
         <div className={styles.listArea}>
           <div className={styles.searchBar}>

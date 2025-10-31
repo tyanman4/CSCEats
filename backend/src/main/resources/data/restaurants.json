@@ -1,170 +1,22 @@
-[
-  {
+[ 
+ {
     "id": 1,
-    "name": "ラーメン花月",
-    "address": "東京都千代田区隼町4-1",
-    "distance": 2100,
-    "averageBudget": "0~1000",
-    "description": "味噌ラーメンがうまい老舗。"
+    "name": "高田馬場カフェ",
+    "address": "東京都新宿区高田馬場1-26-7",
+    "distance": 500,
+    "averageBudget": "1000~2000",
+    "description": "スパイスが効いた昔ながらのカレー。",
+    "lat": 35.7129,
+    "lng": 139.7034
   },
   {
     "id": 2,
-    "name": "カレー幸",
-    "address": "東京都新宿区西新宿2-8-1",
-    "distance": 500,
-    "averageBudget": "1000~2000",
-    "description": "スパイスが効いた昔ながらのカレー。"
-  },
-  {
-    "id": 3,
-    "name": "トラットリア・ミラノ",
-    "address": "東京都港区六本木6-10-1",
-    "distance": 3200,
-    "averageBudget": "2000~4000",
-    "description": "本格イタリアンレストラン。"
-  },
-  {
-    "id": 4,
-    "name": "焼肉 太郎",
-    "address": "東京都渋谷区宇田川町15-1",
-    "distance": 1800,
-    "averageBudget": "3000~5000",
-    "description": "国産和牛が人気の焼肉店。"
-  },
-  {
-    "id": 5,
-    "name": "寿司 はなれ",
-    "address": "東京都中央区銀座5-8-20",
-    "distance": 4500,
-    "averageBudget": "5000~10000",
-    "description": "カウンターで味わう江戸前寿司。"
-  },
-  {
-    "id": 6,
-    "name": "カフェ・ブリーズ",
-    "address": "東京都目黒区自由が丘2-11-3",
-    "distance": 1200,
-    "averageBudget": "1000~1500",
-    "description": "スイーツが人気の落ち着いたカフェ。"
-  },
-  {
-    "id": 7,
-    "name": "とんかつ まる八",
-    "address": "東京都文京区本郷3-22-1",
-    "distance": 1500,
-    "averageBudget": "1000~2000",
-    "description": "肉厚ロースが名物のとんかつ専門店。"
-  },
-  {
-    "id": 8,
-    "name": "うどん 一福",
-    "address": "東京都品川区上大崎2-15-4",
-    "distance": 900,
-    "averageBudget": "~1000",
-    "description": "讃岐うどんのコシが自慢。"
-  },
-  {
-    "id": 9,
-    "name": "ステーキHOUSE極",
-    "address": "東京都台東区上野6-12-10",
-    "distance": 2500,
-    "averageBudget": "4000~8000",
-    "description": "厚切りステーキが楽しめる洋食店。"
-  },
-  {
-    "id": 10,
-    "name": "天ぷら 松乃屋",
-    "address": "東京都新宿区歌舞伎町1-1-1",
-    "distance": 3000,
-    "averageBudget": "2000~4000",
-    "description": "サクサク衣の天ぷら専門店。"
-  },
-  {
-    "id": 11,
-    "name": "カフェ・ルミエール",
-    "address": "東京都世田谷区三軒茶屋2-5-3",
-    "distance": 1600,
-    "averageBudget": "800~1500",
-    "description": "アートギャラリー併設のカフェ。"
-  },
-  {
-    "id": 12,
-    "name": "蕎麦処 松風庵",
-    "address": "東京都中野区中野5-52-15",
-    "distance": 1100,
-    "averageBudget": "1000~2000",
-    "description": "手打ち蕎麦が香る老舗。"
-  },
-  {
-    "id": 13,
-    "name": "BAR 夜空",
-    "address": "東京都渋谷区代々木2-8-5",
-    "distance": 3800,
-    "averageBudget": "2000~4000",
-    "description": "夜景を眺めながらカクテルを楽しめるバー。"
-  },
-  {
-    "id": 14,
-    "name": "パン工房 こむぎ",
-    "address": "東京都豊島区池袋2-40-5",
-    "distance": 800,
-    "averageBudget": "~1000",
-    "description": "焼きたてのクロワッサンが人気のパン屋。"
-  },
-  {
-    "id": 15,
-    "name": "居酒屋 縁",
-    "address": "東京都杉並区高円寺南4-24-8",
-    "distance": 1300,
-    "averageBudget": "2000~4000",
-    "description": "家庭的な料理とお酒を楽しめる居酒屋。"
-  },
-  {
-    "id": 16,
-    "name": "ベーカリー サンライズ",
-    "address": "東京都足立区千住3-33-1",
-    "distance": 2300,
-    "averageBudget": "~1000",
-    "description": "朝7時から営業する人気ベーカリー。"
-  },
-  {
-    "id": 17,
-    "name": "焼き鳥 鳥政",
-    "address": "東京都大田区蒲田5-16-10",
-    "distance": 2700,
-    "averageBudget": "2000~3000",
-    "description": "炭火で焼く焼き鳥が絶品。"
-  },
-  {
-    "id": 18,
-    "name": "お好み焼 もみじ",
-    "address": "東京都板橋区常盤台2-13-2",
-    "distance": 1900,
-    "averageBudget": "1000~2000",
-    "description": "関西風お好み焼きが人気。"
-  },
-  {
-    "id": 19,
-    "name": "インド料理 タージ",
-    "address": "東京都江東区亀戸6-5-8",
-    "distance": 3100,
-    "averageBudget": "1500~3000",
-    "description": "スパイスの効いた本格インドカレー。"
-  },
-  {
-    "id": 20,
-    "name": "フレンチ ビストロ空",
-    "address": "東京都中央区日本橋2-3-10",
-    "distance": 3400,
-    "averageBudget": "3000~6000",
-    "description": "気軽に楽しめるフレンチビストロ。"
-  },
-  {
-    "id": 21,
-    "name": "和",
-    "address": "東京都中央区日本橋2-3-9",
-    "distance": 210,
-    "averageBudget": "3000~6000",
-    "description": "手軽に寿司がおいしい"
+    "name": "洋食レストラン シェ・タカダ",
+    "address": "東京都新宿区高田馬場2-14-9",
+     "distance": 2100,
+    "averageBudget": "0~1000",
+    "description": "味噌ラーメンがうまい老舗。",
+    "lat": 35.7134,
+    "lng": 139.7039
   }
 ]
