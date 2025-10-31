@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
+import { MapView } from "../../components/Map/MapView";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
 
@@ -57,7 +58,7 @@ export const RestaurantList: React.FC = () => {
       <Header />
       <div className={styles.container}>
         <div className={styles.map}>
-          <h3>[地図配置場所]</h3>
+          <MapView />
         </div>
         <div className={styles.listArea}>
           <div className={styles.searchBar}>
