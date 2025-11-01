@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
 import { MapView } from "../../components/Map/MapView";
+import { SearchBar } from "../../components/SearchBar/SearchBar";
+import { SortBar } from "../../components/ SortBar/SortBar";
+import { RestaurantCard } from "../../components/RestaurantCard/RestaurantCard";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
 
@@ -42,17 +45,18 @@ export const RestaurantList: React.FC = () => {
     fetchRestaurants();
   }, [searchWord, sortOption, page]);
 
-  const onClickSearch = () => {
+  const onClickSearch = (word: string) => {
     setPage(1);
-    setSearchWord((document.getElementById("searchInput") as HTMLInputElement).value);
+    setSearchWord(word);
+  };
+
+  const onChangeSort = (option: string) => {
+    setPage(1);
+    setSortOption(option);
   };
 
   const onClickToDetail = (id: number) => {
     navigate(`/restaurants/${id}`)
-  }
-
-  const onChangeSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOption(e.target.value);
   };
 
   return (
@@ -63,26 +67,10 @@ export const RestaurantList: React.FC = () => {
           <MapView restaurants={restaurants} />
         </div>
         <div className={styles.listArea}>
-          <div className={styles.searchBar}>
-            <input id="searchInput" type="text" placeholder="検索" className={styles.searchInput} />
-            <button onClick={onClickSearch} className={styles.searchButton}> 検索 </button>
-          </div>
-          <div className={styles.sortBar}>
-            <label>並び替え:</label>
-            <select value={sortOption} onChange={onChangeSort}>
-              <option>人気順</option>
-              <option>安い順</option>
-              <option>レビュー総数順</option>
-              <option>近い順</option>
-            </select>
-          </div>
-
+          <SearchBar onSearch={onClickSearch} />
+          <SortBar value={sortOption} onChange={onChangeSort} />
           {restaurants.map((shop) => (
-            <div key={shop.id} className={styles.restaurantCard} onClick={() => onClickToDetail(shop.id)}>
-              <h5>{shop.name}</h5>
-              <p>{shop.address}  {shop.distance}m</p>
-              <p>{shop.averageBudget}円  {shop.description}</p>
-            </div>
+            <RestaurantCard key={shop.id} restaurant={shop} onClick={() => onClickToDetail(shop.id)} />
           ))}
         </div>
       </div>
