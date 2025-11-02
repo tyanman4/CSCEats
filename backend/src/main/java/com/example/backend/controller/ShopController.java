@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.entity.User;
 import com.example.backend.service.CSCEatsService;
@@ -22,14 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-// TODO: サーバーが準備できたら変更
-@CrossOrigin(origins = "http://localhost:5173") 
+@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
 public class ShopController {
-     private final ObjectMapper objectMapper = new ObjectMapper();
-     // GETリクエストで"/api/restaurants"が呼ばれたら
+
+    private final CSCEatsService cscEatsService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @GetMapping("/api/restaurants")
-    public List<Map<String, Object>> getRestaurants(@RequestParam Map<String, String> params)
-    {
+    public List<Map<String, Object>> getRestaurants(@RequestParam Map<String, String> params) {
         try {
             // resources/data/restaurants.json を読み込み
             ClassPathResource resource = new ClassPathResource("data/restaurants.json");
@@ -37,26 +37,14 @@ public class ShopController {
             // JSON → List<Map<String, Object>> に変換
             List<Map<String, Object>> shops = objectMapper.readValue(
                     inputStream,
-                    new TypeReference<List<Map<String, Object>>>() {}
-            );
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
             System.out.println("受け取ったパラメータ: " + params);
             return shops;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("JSONファイルの読み込みに失敗しました");
         }
-@RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
-public class ShopController {
-
-    private final CSCEatsService cscEatsService;
-
-    @GetMapping("/api/restaurants")
-    public List<Map<String, Object>> getRestaurants() {
-        List<Map<String, Object>> shops = new ArrayList<>();
-        shops.add(Map.of("id", 1, "name", "ラーメン花月", "genre", "ラーメン"));
-        shops.add(Map.of("id", 2, "name", "カレー幸", "genre", "カレー"));
-        return shops;
     }
 
     @GetMapping("/api/user/{id}")
