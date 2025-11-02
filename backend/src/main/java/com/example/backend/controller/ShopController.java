@@ -36,4 +36,15 @@ public class ShopController {
         users.add(Map.of("id", user.getUser_id(), "name", user.getName(), "intro", user.getIntroduction()));
         return users;
     }
+
+    @GetMapping("/api/user/")
+    public List<Map<String, Object>> getAllUsers() {
+        List<User> allUser = cscEatsService.findAllUser();
+        List<Map<String, Object>> users = new ArrayList<>();
+
+        for (User user : allUser) {
+            users.add(Map.of("id", user.getUser_id(), "name", user.getName(), "intro", user.getIntroduction()));
+        }
+        return users;
+    }
 }
