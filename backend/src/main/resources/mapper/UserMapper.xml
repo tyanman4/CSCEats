@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.UserMapper">
+    <!-- 全件検索 -->
+    <select id="selectAll" resultType="com.example.backend.entity.User">
+        SELECT * FROM "user"
+    </select>
+    <!-- １件検索 -->
+    <select id="selectById" resultType="com.example.backend.entity.User">
+        SELECT * FROM "user" WHERE user_id = #{user_id}
+    </select>
+</mapper>
