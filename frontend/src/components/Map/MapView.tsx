@@ -20,21 +20,28 @@ const cscIcon = L.icon({
   shadowSize: [41, 41],
 });
 
-interface RestaurantReview {
-  id: number;
+interface Category {
+  categoryId: number;
+  name: string;
+}
+
+interface Restaurant {
+  restaurantId: number;
   name: string;
   address: string;
   distance: number;
   averageBudget: string;
   description: string;
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
+  averageRating?: number;
+  reviewCount?: number;
+  categories?: Category[];
 }
 
 interface MapViewProps {
-  restaurants: RestaurantReview[];
+  restaurants: Restaurant[];
 }
-
 
 export const MapView: React.FC<MapViewProps> = ({ restaurants }) => {
   const csc: [number, number] = [35.712117, 139.704741]; // 高田馬場駅中心 
@@ -57,7 +64,7 @@ export const MapView: React.FC<MapViewProps> = ({ restaurants }) => {
           </Popup>
       </Marker>
       {restaurants.map((r) => (
-        <Marker key={r.id} position={[r.lat, r.lng] as [number, number]}>
+        <Marker key={r.restaurantId} position={[r.latitude, r.longitude] as [number, number]}>
           
           <Popup>
             <strong>{r.name}</strong>
