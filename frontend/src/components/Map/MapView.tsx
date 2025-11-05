@@ -20,7 +20,7 @@ const cscIcon = L.icon({
   shadowSize: [41, 41],
 });
 
-interface Restaurant {
+interface RestaurantReview {
   id: number;
   name: string;
   address: string;
@@ -32,7 +32,7 @@ interface Restaurant {
 }
 
 interface MapViewProps {
-  restaurants: Restaurant[];
+  restaurants: RestaurantReview[];
 }
 
 

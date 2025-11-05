@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.entity.RestaurantReview;
 import com.example.backend.entity.User;
+import com.example.backend.mapper.RestaurantReviewMapper;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.service.CSCEatsService;
 
@@ -18,6 +20,7 @@ public class CSCEatsImpl implements CSCEatsService {
 
     /** DI */
     private final UserMapper userMapper;
+    private final RestaurantReviewMapper restaurantReviewMapper;
 
     @Override
     public List<User> findAllUser() {
@@ -27,5 +30,10 @@ public class CSCEatsImpl implements CSCEatsService {
     @Override
     public User findByIdUser(Integer id) {
         return userMapper.selectById(id);
+    }
+
+    @Override
+    public List<RestaurantReview> findRestaurantsWithReviewSummary(int offset) {
+        return restaurantReviewMapper.findRestaurantsWithReviewSummary(offset);
     }
 }

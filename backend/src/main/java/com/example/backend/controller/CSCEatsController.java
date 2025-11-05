@@ -11,40 +11,52 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.InputStream;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.backend.entity.RestaurantReview;
 import com.example.backend.entity.User;
 import com.example.backend.service.CSCEatsService;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
-public class ShopController {
+public class CSCEatsController {
 
     private final CSCEatsService cscEatsService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @GetMapping("/api/restaurants")
-    public List<Map<String, Object>> getRestaurants(@RequestParam Map<String, String> params) {
-        try {
-            // resources/data/restaurants.json を読み込み
-            ClassPathResource resource = new ClassPathResource("data/restaurants.json");
-            InputStream inputStream = resource.getInputStream();
-            // JSON → List<Map<String, Object>> に変換
-            List<Map<String, Object>> shops = objectMapper.readValue(
-                    inputStream,
-                    new TypeReference<List<Map<String, Object>>>() {
-                    });
-            System.out.println("受け取ったパラメータ: " + params);
-            return shops;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("JSONファイルの読み込みに失敗しました");
-        }
+    public List<Map<String, Object>> getRestaurants(
+        @RequestParam(defaultValue = "0") int offset
+    ) {
+       List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(offset);
+       List<Map<String, Object>> restaurants = new ArrayList<>();
+       for (RestaurantReview rt : listRestaurants) {
+            Map<String, Object> restaurant = new HashMap<>();
+            restaurant.put("id", rt.getRestaurantId());
+            restaurant.put("name", rt.getName());
+            restaurant.put("address", rt.getAddress());
+            restaurant.put("url", rt.getUrl());
+            restaurant.put("averageBudget", rt.getAverageBudget());
+            restaurant.put("description", rt.getDescription());
+            restaurant.put("imageUrl", rt.getImageUrl());
+            restaurant.put("createdAt", rt.getCreatedAt());
+            restaurant.put("updatedAt", rt.getUpdatedAt());
+            restaurant.put("latitude", rt.getLatitude());
+            restaurant.put("longitude", rt.getLongitude());
+            restaurant.put("averageRating", rt.getAverageRating()); 
+            restaurant.put("reviewCount", rt.getReviewCount());
+            restaurant.put("categories", rt.getCategories());
+
+            restaurants.add(restaurant);
+       };
+       return restaurants;
     }
 
     @GetMapping("/api/user/{id}")
