@@ -1,0 +1,2 @@
+ALTER TABLE restaurants
+ADD COLUMN visit_count INTEGER DEFAULT 0;

@@ -26,7 +26,7 @@ interface Category {
 }
 
 interface Restaurant {
-  restaurantId: number;
+  id: number;
   name: string;
   address: string;
   distance: number;
@@ -64,7 +64,7 @@ export const MapView: React.FC<MapViewProps> = ({ restaurants }) => {
           </Popup>
       </Marker>
       {restaurants.map((r) => (
-        <Marker key={r.restaurantId} position={[r.latitude, r.longitude] as [number, number]}>
+        <Marker key={r.id} position={[r.latitude, r.longitude] as [number, number]}>
           
           <Popup>
             <strong>{r.name}</strong>

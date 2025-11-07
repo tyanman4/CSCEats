@@ -15,7 +15,7 @@ export const RestaurantList: React.FC = () => {
   }
 
   interface RestaurantReview {
-    restaurantId: number;
+    id: number;
     name: string;
     address: string;
     distance: number;
@@ -45,11 +45,10 @@ export const RestaurantList: React.FC = () => {
           params: {
             search: searchWord,
             sort: sortOption,
-            page: page,
+            offset: page,
           },
         });
         setRestaurants(res.data);
-        console.log(restaurants);
       } catch (err) {
         console.error("Error fetching restaurants:", err);
       }
@@ -72,6 +71,14 @@ export const RestaurantList: React.FC = () => {
     navigate(`/restaurants/${id}`);
   };
 
+  const onClickNext = () => {
+    setPage(page + 1);
+  }
+
+  const onClickPrev = () => {
+    setPage(page - 1);
+  }
+
   return (
     <>
       <Header />
@@ -85,17 +92,27 @@ export const RestaurantList: React.FC = () => {
 
           {restaurants.map((shop) => (
             <RestaurantCard
-              key={shop.restaurantId}
+              key={shop.id}
               restaurant={shop}
-              onClick={() => onClickToDetail(shop.restaurantId)}
+              onClick={() => onClickToDetail(shop.id)}
             />
           ))}
-
-          <div className={styles.pagination}>
-            <button disabled={page === 1} onClick={() => setPage(page - 1)}>前へ</button>
-            <span>ページ {page}</span>
-            <button onClick={() => setPage(page + 1)}>次へ</button>
-          </div>
+        </div>
+        <div className={styles.paginationArea}>
+          <button
+            className={styles.paginationButton}
+            disabled={page === 1}
+            onClick={onClickPrev}
+          >
+            ← Prev
+          </button>
+          <p>{page}</p>
+          <button
+            className={styles.paginationButton}
+            onClick={onClickNext}
+          >
+            Next →
+          </button>
         </div>
       </div>
     </>

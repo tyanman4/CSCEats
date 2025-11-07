@@ -3,7 +3,7 @@ import styles from "../../pages/RestaurantList/RestaurantList.module.scss";
 
 interface RestaurantCardProps {
   restaurant: {
-    restaurantId: number;
+    id: number;
     name: string;
     address: string;
     distance: number;
