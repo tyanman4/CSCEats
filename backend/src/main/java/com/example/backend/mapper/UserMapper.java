@@ -1,6 +1,7 @@
 package com.example.backend.mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,4 +17,5 @@ public interface UserMapper {
 
     void insert(User user);
 
+    Optional<User> findByName(String name);
 }

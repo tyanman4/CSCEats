@@ -12,6 +12,6 @@ public interface CSCEatsService {
 
     void insertUser(User user);
 
-    boolean authenticate(String name, String password);
+    String login(String username, String password);
 
 }

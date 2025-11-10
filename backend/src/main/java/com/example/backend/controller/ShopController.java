@@ -82,15 +82,18 @@ public class ShopController {
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginForm form) {
 
-        boolean authenticated = cscEatsService.authenticate(form.getName(),
-                form.getPassword());
+        String token = cscEatsService.login(form.getName(), form.getPassword());
+        return ResponseEntity.ok(Map.of("token", token));
 
-        Map<String, String> response = new HashMap<>();
-        if (authenticated) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(401).body(response);
-        }
+        // boolean authenticated = cscEatsService.authenticate(form.getName(),
+        // form.getPassword());
+
+        // Map<String, String> response = new HashMap<>();
+        // if (authenticated) {
+        // return ResponseEntity.ok(response);
+        // } else {
+        // return ResponseEntity.status(401).body(response);
+        // }
     }
 
     @PostMapping("/api/save")

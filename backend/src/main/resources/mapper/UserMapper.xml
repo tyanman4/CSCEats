@@ -10,6 +10,10 @@
         SELECT * FROM "user" WHERE user_id = #{user_id}
     </select>
 
+    <select id="findByName" resultType="com.example.backend.entity.User">
+        SELECT * FROM "user" WHERE name = #{name}
+    </select>
+
     <insert id="insert">
         INSERT INTO "user" (name, password, introduction, created_at, updated_at)
         VALUES

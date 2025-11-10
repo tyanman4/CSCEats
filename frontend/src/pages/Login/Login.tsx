@@ -39,7 +39,7 @@ export const Login: React.FC = () => {
 
         try {
             // APIにPOST送信（appApiを使う場合）
-            const response = await appApi.post("http://localhost:8080/api/save", formData,
+            const response = await appApi.post("http://localhost:8080/api/login", formData,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -48,8 +48,9 @@ export const Login: React.FC = () => {
             );
 
             if (response.status === 200) {
-                setMessage(`ようこそ、${formData.name}さん！`);
-                //setMessage(response.data.redirect);
+                //setMessage(`ようこそ、${formData.name}さん！`);
+                localStorage.setItem("token", response.data.token)
+                setMessage(response.data.token);
                 navigate(response.data.redirect)
 
             } else {
