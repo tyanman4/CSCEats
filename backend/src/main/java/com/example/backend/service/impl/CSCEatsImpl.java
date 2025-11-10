@@ -33,12 +33,12 @@ public class CSCEatsImpl implements CSCEatsService {
     }
 
     @Override
-    public List<RestaurantReview> findRestaurantsWithReviewSummary(int limit, int offset) {
-        return restaurantReviewMapper.findRestaurantsWithReviewSummary(limit, offset);
+    public List<RestaurantReview> findRestaurantsWithReviewSummary(String search, List<String> sorts, int limit, int offset) {
+        return restaurantReviewMapper.findRestaurantsWithReviewSummary(search, sorts, limit, offset);
     }
 
     @Override
-    public int findTotalCountRestaurants() {
-        return restaurantReviewMapper.findTotalCountRestaurants();
+    public int findTotalCountRestaurants(String search) {
+        return restaurantReviewMapper.findTotalCountRestaurants(search);
     }
 }

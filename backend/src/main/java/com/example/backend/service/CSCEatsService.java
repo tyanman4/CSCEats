@@ -11,7 +11,7 @@ public interface CSCEatsService {
 
     User findByIdUser(Integer user_id);
 
-    List<RestaurantReview> findRestaurantsWithReviewSummary(int limit, int offset);
+    List<RestaurantReview> findRestaurantsWithReviewSummary(String search, List<String> sorts, int limit, int offset);
 
-    int findTotalCountRestaurants();
+    int findTotalCountRestaurants(String search);
 }

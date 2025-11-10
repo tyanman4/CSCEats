@@ -39,7 +39,7 @@ export const RestaurantList: React.FC = () => {
 
   const [restaurants, setRestaurants] = useState<RestaurantReview[]>([]);
   const [searchWord, setSearchWord] = useState("");
-  const [sortOption, setSortOption] = useState("人気順");
+  const [sortOptions, setSortOption] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const limit = 20;
@@ -51,7 +51,7 @@ export const RestaurantList: React.FC = () => {
         const res = await appApi.get<RestaurantResponse>("/restaurants", {
           params: {
             search: searchWord,
-            sort: sortOption,
+            sorts: sortOptions,
             page: page,
           },
         });
@@ -63,7 +63,7 @@ export const RestaurantList: React.FC = () => {
     };
 
     fetchRestaurants();
-  }, [searchWord, sortOption, page]);
+  }, [searchWord, sortOptions, page]);
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -72,9 +72,9 @@ export const RestaurantList: React.FC = () => {
     setSearchWord(word.trim());
   };
 
-  const onChangeSort = (option: string) => {
+  const onChangeSort = (options: string[]) => {
     setPage(1);
-    setSortOption(option);
+    setSortOption(options);
   };
 
   const onClickToDetail = (id: number) => {
@@ -98,15 +98,16 @@ export const RestaurantList: React.FC = () => {
         </div>
         <div className={styles.listArea}>
           <SearchBar onSearch={onClickSearch} />
-          <SortBar value={sortOption} onChange={onChangeSort} />
-
-          {restaurants.map((shop) => (
-            <RestaurantCard
-              key={shop.id}
-              restaurant={shop}
-              onClick={() => onClickToDetail(shop.id)}
-            />
-          ))}
+          <SortBar selectedOptions={sortOptions} onChange={onChangeSort} />
+          <div className={styles.scrollArea} >
+            {restaurants.map((shop) => (
+              <RestaurantCard
+                key={shop.id}
+                restaurant={shop}
+                onClick={() => onClickToDetail(shop.id)}
+              />
+            ))}
+          </div>
         </div>
         <div className={styles.paginationArea}>
           <button
@@ -116,7 +117,7 @@ export const RestaurantList: React.FC = () => {
           >
             ← Prev
           </button>
-          <p>{page}</p>
+          <p>{page} / {totalPages}</p>
           <button
             className={styles.paginationButton}
             disabled={page >= totalPages}

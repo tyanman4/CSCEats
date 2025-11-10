@@ -1,15 +1,18 @@
 .header {
   background-color: rgba(248, 249, 250, 1);
   z-index: 1020;
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   padding: 8px 0;
-  text-align: center; /* 必要に応じて中央寄せ */
   border-bottom: 1px solid #ddd;
+  height: 50px;
+ 
 }
 
 .title {
-  margin: 0;
   font-size: 1.5rem;
   font-weight: bold;
+  margin: 0;
+
 }

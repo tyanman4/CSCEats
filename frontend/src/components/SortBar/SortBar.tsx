@@ -2,24 +2,42 @@ import React from "react";
 import styles from "../../pages/RestaurantList/RestaurantList.module.scss";
 
 interface SortBarProps {
-  value: string;
-  onChange: (value: string) => void;
+  selectedOptions: string[]; // 複数選択
+  onChange: (values: string[]) => void;
 }
 
-export const SortBar: React.FC<SortBarProps> = ({ value, onChange }) => {
+const SORT_OPTIONS = ["人気順", "安い順", "レビュー総数順", "近い順"];
+
+export const SortBar: React.FC<SortBarProps> = ({ selectedOptions,onChange }) => {
+  const toggleOption = (option: string) => {
+    if (selectedOptions.includes(option)) {
+      onChange(selectedOptions.filter((v) => v !== option));
+    } else {
+      onChange([...selectedOptions, option]);
+    }
+  };
+
+  const displayOrder = [
+    ...selectedOptions,
+    ...SORT_OPTIONS.filter((o) => !selectedOptions.includes(o)),
+  ]
+
   return (
     <div className={styles.sortBar}>
-      <label className={styles.sortLabel}>並び替え:</label>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={styles.sortSelect}
-      >
-        <option>人気順</option>
-        <option>安い順</option>
-        <option>レビュー総数順</option>
-        <option>近い順</option>
-      </select>
+      <div className={styles.sortButtons}>
+        {displayOrder.map((option) => (
+          <button
+            key={option}
+            type="button"
+            className={`${styles.sortButton} ${
+              selectedOptions.includes(option) ? styles.active : ""
+            }`}
+            onClick={() => toggleOption(option)}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

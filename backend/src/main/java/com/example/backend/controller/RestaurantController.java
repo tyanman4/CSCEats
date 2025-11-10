@@ -33,12 +33,14 @@ public class RestaurantController {
 
     @GetMapping("/api/restaurants")
     public Map<String, Object> getRestaurants (
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) List<String> sorts,
         @RequestParam(defaultValue = "1") int page
     ) {
         int limit = 20;
         int offset = ( page - 1) * limit;
-       List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(limit, offset);
-       long totalCount =  cscEatsService.findTotalCountRestaurants();
+       List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(search, sorts, limit, offset);
+       long totalCount =  cscEatsService.findTotalCountRestaurants(search);
        List<Map<String, Object>> restaurants = new ArrayList<>();
        for (RestaurantReview rt : listRestaurants) {
             Map<String, Object> restaurant = new HashMap<>();
