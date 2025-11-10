@@ -2,23 +2,36 @@ package com.example.backend.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.validation.Valid;
+
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.backend.entity.User;
+import com.example.backend.form.LoginForm;
+import com.example.backend.form.UserForm;
+import com.example.backend.helper.UserHelper;
 import com.example.backend.service.CSCEatsService;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -65,4 +78,39 @@ public class ShopController {
         }
         return users;
     }
+
+    @PostMapping("/api/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginForm form) {
+
+        boolean authenticated = cscEatsService.authenticate(form.getName(),
+                form.getPassword());
+
+        Map<String, String> response = new HashMap<>();
+        if (authenticated) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(401).body(response);
+        }
+    }
+
+    @PostMapping("/api/save")
+    public ResponseEntity<?> create(@Valid @RequestBody UserForm form) {
+        User user = UserHelper.convertUser(form);
+        cscEatsService.insertUser(user);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("redirect", "/restaurants");
+        return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
+        String errorMsg = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(e -> e.getField() + ": " + e.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.badRequest().body(errorMsg);
+    }
+
 }

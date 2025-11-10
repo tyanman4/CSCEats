@@ -28,4 +28,14 @@ public class CSCEatsImpl implements CSCEatsService {
     public User findByIdUser(Integer id) {
         return userMapper.selectById(id);
     }
+
+    @Override
+    public void insertUser(User user) {
+        userMapper.insert(user);
+    }
+
+    @Override
+    public boolean authenticate(String name, String password) {
+        return true;
+    }
 }
