@@ -32,23 +32,31 @@ export const RestaurantList: React.FC = () => {
     categories: Category[];
   }
 
+  interface RestaurantResponse {
+    restaurants: RestaurantReview[];
+    totalCount: number;
+  }
+
   const [restaurants, setRestaurants] = useState<RestaurantReview[]>([]);
   const [searchWord, setSearchWord] = useState("");
   const [sortOption, setSortOption] = useState("人気順");
   const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const limit = 20;
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const res = await appApi.get<RestaurantReview[]>("/restaurants", {
+        const res = await appApi.get<RestaurantResponse>("/restaurants", {
           params: {
             search: searchWord,
             sort: sortOption,
-            offset: page,
+            page: page,
           },
         });
-        setRestaurants(res.data);
+        setRestaurants(res.data.restaurants);
+        setTotalCount(res.data.totalCount);
       } catch (err) {
         console.error("Error fetching restaurants:", err);
       }
@@ -56,6 +64,8 @@ export const RestaurantList: React.FC = () => {
 
     fetchRestaurants();
   }, [searchWord, sortOption, page]);
+
+  const totalPages = Math.ceil(totalCount / limit);
 
   const onClickSearch = (word: string) => {
     setPage(1);
@@ -109,6 +119,7 @@ export const RestaurantList: React.FC = () => {
           <p>{page}</p>
           <button
             className={styles.paginationButton}
+            disabled={page >= totalPages}
             onClick={onClickNext}
           >
             Next →

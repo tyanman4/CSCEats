@@ -45,12 +45,16 @@
       LEFT JOIN reviews rv ON r.restaurant_id = rv.restaurant_id
     GROUP BY r.restaurant_id
     ORDER BY r.restaurant_id
-    LIMIT 20 OFFSET #{offset}
+    LIMIT #{limit} OFFSET #{offset}
   </select>
   <select id="findCategoriesByRestaurantId" resultType="com.example.backend.entity.Category">
     SELECT c.category_id AS categoryId, c.name
     FROM restaurant_categories rc
     JOIN categories c ON rc.category_id = c.category_id
     WHERE rc.restaurant_id = #{restaurant_id}
+  </select>
+
+  <select id~"findTotalCountRestaurants" resultType="int">
+    SLECT COUNT (*) FROM restaurants
   </select>
 </mapper>

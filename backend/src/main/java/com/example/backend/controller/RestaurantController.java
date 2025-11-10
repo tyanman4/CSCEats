@@ -26,16 +26,19 @@ import java.util.HashMap;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
-public class CSCEatsController {
+public class RestaurantController {
 
     private final CSCEatsService cscEatsService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @GetMapping("/api/restaurants")
-    public List<Map<String, Object>> getRestaurants(
-        @RequestParam(defaultValue = "0") int offset
+    public Map<String, Object> getRestaurants (
+        @RequestParam(defaultValue = "1") int page
     ) {
-       List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(offset);
+        int limit = 20;
+        int offset = ( page - 1) * limit;
+       List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(limit, offset);
+       long totalCount =  cscEatsService.findTotalCountRestaurants();
        List<Map<String, Object>> restaurants = new ArrayList<>();
        for (RestaurantReview rt : listRestaurants) {
             Map<String, Object> restaurant = new HashMap<>();
@@ -55,26 +58,13 @@ public class CSCEatsController {
             restaurant.put("categories", rt.getCategories());
 
             restaurants.add(restaurant);
+
        };
-       return restaurants;
-    }
+       
+       Map<String, Object> response = new HashMap<>();
+       response.put("restaurants", restaurants);
+       response.put("totalCount", totalCount);
 
-    @GetMapping("/api/user/{id}")
-    public List<Map<String, Object>> getUser(@PathVariable Integer id) {
-        User user = cscEatsService.findByIdUser(id);
-        List<Map<String, Object>> users = new ArrayList<>();
-        users.add(Map.of("id", user.getUser_id(), "name", user.getName(), "intro", user.getIntroduction()));
-        return users;
-    }
-
-    @GetMapping("/api/user/")
-    public List<Map<String, Object>> getAllUsers() {
-        List<User> allUser = cscEatsService.findAllUser();
-        List<Map<String, Object>> users = new ArrayList<>();
-
-        for (User user : allUser) {
-            users.add(Map.of("id", user.getUser_id(), "name", user.getName(), "intro", user.getIntroduction()));
-        }
-        return users;
+       return response;
     }
 }

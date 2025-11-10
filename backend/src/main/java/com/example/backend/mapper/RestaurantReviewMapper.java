@@ -7,5 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface RestaurantReviewMapper {
-    List<RestaurantReview> findRestaurantsWithReviewSummary(int offset);
+    List<RestaurantReview> findRestaurantsWithReviewSummary(int limit, int offset);
+
+    int findTotalCountRestaurants();
 }
