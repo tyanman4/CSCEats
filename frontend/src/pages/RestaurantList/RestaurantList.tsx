@@ -7,6 +7,7 @@ import { SortBar } from "../../components/ SortBar/SortBar";
 import { RestaurantCard } from "../../components/RestaurantCard/RestaurantCard";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
+import { jwtDecode } from "jwt-decode";
 
 export const RestaurantList: React.FC = () => {
   interface Restaurant {
@@ -59,9 +60,30 @@ export const RestaurantList: React.FC = () => {
     navigate(`/restaurants/${id}`)
   };
 
+  interface UserInfo {
+    username: string;
+  }
+
+  const [user, setUser] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      //navigate("/login");
+      return;
+    }
+
+    const decoded = getDecodedToken();
+    if (decoded) {
+      setUser({ username: decoded.sub });
+    }
+
+  }, []);
+
   return (
     <>
       <Header />
+      <p>{user?.username || "ゲスト"}</p>
       <div className={styles.container}>
         <div className={styles.map}>
           <MapView restaurants={restaurants} />
@@ -77,3 +99,24 @@ export const RestaurantList: React.FC = () => {
     </>
   );
 };
+
+
+interface DecodedToken {
+  sub: string;      // ユーザー名など
+  exp: number;      // 有効期限（秒単位のUNIXタイム）
+  iat: number;      // 発行時刻
+  [key: string]: any; // その他のカスタムクレームにも対応
+}
+
+function getDecodedToken(): DecodedToken | null {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  try {
+    const decoded = jwtDecode<DecodedToken>(token);
+    return decoded;
+  } catch (err) {
+    console.error("トークンのデコードに失敗しました", err);
+    return null;
+  }
+}

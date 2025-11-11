@@ -50,8 +50,8 @@ export const Login: React.FC = () => {
             if (response.status === 200) {
                 //setMessage(`ようこそ、${formData.name}さん！`);
                 localStorage.setItem("token", response.data.token)
-                setMessage(response.data.token);
-                navigate(response.data.redirect)
+                setMessage(response.data.redirect);
+                navigate("/restaurants")
 
             } else {
                 setMessage("登録に失敗しました。");
