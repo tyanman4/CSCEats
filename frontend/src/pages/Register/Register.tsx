@@ -3,6 +3,8 @@ import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
 import styles from "./Register.module.scss";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+
 
 export const Register: React.FC = () => {
 
@@ -12,6 +14,7 @@ export const Register: React.FC = () => {
         password: "",
         introduction: ""
     });
+    const { login } = useAuth();
 
     const [message, setMessage] = useState("");
 
@@ -40,18 +43,10 @@ export const Register: React.FC = () => {
         }
 
         try {
-            // APIにPOST送信（appApiを使う場合）
-            const response = await appApi.post("http://localhost:8080/api/save", formData,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const response = await appApi.post("/save", formData);
 
             if (response.status === 200) {
-                setMessage(`ようこそ、${formData.name}さん！`);
-                //setMessage(response.data.redirect);
+                login(response.data.token);
                 navigate(response.data.redirect)
 
             } else {

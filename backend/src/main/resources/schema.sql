@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS public.request_restaurants ;
 DROP TABLE IF EXISTS public.restaurant_has_category ;
 DROP TABLE IF EXISTS public.review ;
 DROP TABLE IF EXISTS public.category ;
-DROP TABLE IF EXISTS public.user ;
+DROP TABLE IF EXISTS public."user" ;
 DROP TABLE IF EXISTS public.restaurant ;
 
 

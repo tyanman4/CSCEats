@@ -3,10 +3,12 @@ import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
 import styles from "./Login.module.scss";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Login: React.FC = () => {
 
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [formData, setFormData] = useState({
         name: "",
         password: "",
@@ -39,17 +41,14 @@ export const Login: React.FC = () => {
 
         try {
             // APIにPOST送信（appApiを使う場合）
-            const response = await appApi.post("http://localhost:8080/api/login", formData,
+            const response = await appApi.post("/login", formData,
                 {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
                 }
             );
 
             if (response.status === 200) {
                 //setMessage(`ようこそ、${formData.name}さん！`);
-                localStorage.setItem("token", response.data.token)
+                login(response.data.token);
                 setMessage(response.data.redirect);
                 navigate("/restaurants")
 

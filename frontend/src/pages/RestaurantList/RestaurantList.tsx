@@ -9,6 +9,7 @@ import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
 import { jwtDecode } from "jwt-decode";
 
+
 export const RestaurantList: React.FC = () => {
   interface Restaurant {
     id: number;
@@ -60,30 +61,10 @@ export const RestaurantList: React.FC = () => {
     navigate(`/restaurants/${id}`)
   };
 
-  interface UserInfo {
-    username: string;
-  }
-
-  const [user, setUser] = useState<UserInfo | null>(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      //navigate("/login");
-      return;
-    }
-
-    const decoded = getDecodedToken();
-    if (decoded) {
-      setUser({ username: decoded.sub });
-    }
-
-  }, []);
 
   return (
     <>
       <Header />
-      <p>{user?.username || "ゲスト"}</p>
       <div className={styles.container}>
         <div className={styles.map}>
           <MapView restaurants={restaurants} />

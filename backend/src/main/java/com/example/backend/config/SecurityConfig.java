@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.backend.security.CustomUserDetailsService;
+import com.example.backend.security.JwtAuthFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,16 +29,12 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     // private final CustomUserDetailsService userDetailsService;
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // 🔑 ここでBean化
     }
-
-    // @Bean
-    // public UserDetailsService userDetailsService() {
-    // return userDetailsService; // 既存の CustomUserDetailsService を返す
-    // }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -51,10 +48,10 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
-                        .anyRequest().authenticated());
-        // .authenticationProvider(authenticationProvider())
-        // .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers("/api/save").permitAll()
+                        .anyRequest().authenticated())
+                // .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
