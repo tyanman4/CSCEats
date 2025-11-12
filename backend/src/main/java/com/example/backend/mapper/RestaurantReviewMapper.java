@@ -4,10 +4,11 @@ import com.example.backend.entity.RestaurantReview;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RestaurantReviewMapper {
-    List<RestaurantReview> findRestaurantsWithReviewSummary(String search, List<String> sorts, int limit, int offset);
+    List<RestaurantReview> findRestaurantsWithReviewSummary(Map<String, Object> params);
 
-    int findTotalCountRestaurants(String search);
+    int findTotalCountRestaurants(Map<String, Object> params);
 }

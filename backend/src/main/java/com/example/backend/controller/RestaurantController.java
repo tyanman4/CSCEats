@@ -37,12 +37,10 @@ public class RestaurantController {
         @RequestParam(required = false) List<String> sorts,
         @RequestParam(defaultValue = "1") int page
     ) {
-        int limit = 20;
-        int offset = ( page - 1) * limit;
-       List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(search, sorts, limit, offset);
-       long totalCount =  cscEatsService.findTotalCountRestaurants(search);
-       List<Map<String, Object>> restaurants = new ArrayList<>();
-       for (RestaurantReview rt : listRestaurants) {
+        List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(search, sorts, page);
+        long totalCount =  cscEatsService.findTotalCountRestaurants(search);
+        List<Map<String, Object>> restaurants = new ArrayList<>();
+        for (RestaurantReview rt : listRestaurants) {
             Map<String, Object> restaurant = new HashMap<>();
             restaurant.put("id", rt.getRestaurantId());
             restaurant.put("name", rt.getName());
@@ -60,13 +58,12 @@ public class RestaurantController {
             restaurant.put("categories", rt.getCategories());
 
             restaurants.add(restaurant);
-
-       };
+        };
        
-       Map<String, Object> response = new HashMap<>();
-       response.put("restaurants", restaurants);
-       response.put("totalCount", totalCount);
+        Map<String, Object> response = new HashMap<>();
+        response.put("restaurants", restaurants);
+        response.put("totalCount", totalCount);
 
-       return response;
+        return response;
     }
 }

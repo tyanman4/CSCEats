@@ -109,22 +109,29 @@ export const RestaurantList: React.FC = () => {
             ))}
           </div>
         </div>
+
         <div className={styles.paginationArea}>
-          <button
-            className={styles.paginationButton}
-            disabled={page === 1}
-            onClick={onClickPrev}
-          >
-            ← Prev
-          </button>
-          <p>{page} / {totalPages}</p>
-          <button
-            className={styles.paginationButton}
-            disabled={page >= totalPages}
-            onClick={onClickNext}
-          >
-            Next →
-          </button>
+          { totalPages > 0 ? (
+            <>
+              <button
+                className={styles.paginationButton}
+                disabled={page === 1}
+                onClick={onClickPrev}
+              >
+                ← Prev
+              </button>
+              <p>{page} / {totalPages}</p>
+              <button
+                className={styles.paginationButton}
+                disabled={page >= totalPages}
+                onClick={onClickNext}
+              >
+                Next →
+              </button>
+            </>
+          ) : (
+            <p className={styles.noResult}>該当するレストランが見つかりませんでした。</p>
+          )}
         </div>
       </div>
     </>

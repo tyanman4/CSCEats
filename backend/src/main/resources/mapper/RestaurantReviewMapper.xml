@@ -24,6 +24,7 @@
     />
     
   </resultMap>
+  <!-- メイン検索 -->
   <select id="findRestaurantsWithReviewSummary"
           resultMap="RestaurantReviewMap">
     SELECT
@@ -43,6 +44,21 @@
       COUNT(rv.review_id) AS review_count
     FROM restaurants r
       LEFT JOIN reviews rv ON r.restaurant_id = rv.restaurant_id
+      LEFT JOIN restaurant_categories rc ON r.restaurant_id = rc.restaurant_id
+      LEFT JOIN categories c ON rc.category_id = c.category_id
+    <where>
+      <if test="categories != null and categories.size > 0">
+        <foreach collection="categories" item="cat" separator=" OR ">
+            c.name ILIKE CONCAT('%', #{cat}, '%')
+        </foreach>
+      </if>
+      <if test="keywords != null and keywords.size > 0">
+        <foreach collection="keywords" item="kw" separator=" AND ">
+          (r.name ILIKE CONCAT('%', #{kw}, '%')
+          OR r.description ILIKE CONCAT('%', #{kw}, '%'))
+        </foreach>
+      </if>
+    </where>
     GROUP BY r.restaurant_id
     <if test="sorts != null and sorts.size > 0">
       ORDER BY 
@@ -57,6 +73,8 @@
     </if>
     LIMIT #{limit} OFFSET #{offset}
   </select>
+
+  <!-- カテゴリー取得 -->
   <select id="findCategoriesByRestaurantId" resultType="com.example.backend.entity.Category">
     SELECT c.category_id AS categoryId, c.name
     FROM restaurant_categories rc
@@ -64,7 +82,27 @@
     WHERE rc.restaurant_id = #{restaurant_id}
   </select>
 
-  <select id="findTotalCountRestaurants" resultType="int">
-    SELECT COUNT (*) FROM restaurants
+  <!-- 総件数取得 -->
+  <select id="findTotalCountRestaurants" parameterType="map" resultType="int">
+    SELECT COUNT (*) FROM restaurants r
+    <where>
+      <if test="categories != null and categories.size > 0">
+        AND r.restaurant_id IN (
+          SELECT r.restaurant_id
+          FROM restaurant_categories rc
+          JOIN categories c ON rc.category_id = c.category_id
+          WHERE
+          <foreach collection="categories" item="cat" separator=" OR ">
+            c.name ILIKE CONCAT('%', #{cat}, '%')
+          </foreach>
+        )
+      </if>
+      <if test="keywords != null and keywords.size > 0">
+        <foreach collection="keywords" item="kw" separator=" AND ">
+          (r.name ILIKE CONCAT('%', #{kw}, '%')
+          OR r.description ILIKE CONCAT('%', #{kw}, '%'))
+        </foreach>
+      </if>
+    </where>
   </select>
 </mapper>
