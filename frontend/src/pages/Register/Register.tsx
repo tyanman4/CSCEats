@@ -66,7 +66,7 @@ export const Register: React.FC = () => {
                     setMessage("登録に失敗しました。")
                 }
             } else {
-                setMessage("サーバに接続できません");
+                setMessage("サーバに接続できません。");
             }
 
         }
@@ -111,7 +111,7 @@ export const Register: React.FC = () => {
                             value={formData.password_re}
                             onChange={handleChange}
                         />
-                        <>　(確認)</>
+                        <>　(確認用)</>
                     </div>
 
                     <div>
