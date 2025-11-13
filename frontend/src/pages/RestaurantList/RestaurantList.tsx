@@ -5,6 +5,7 @@ import { MapView } from "../../components/Map/MapView";
 import { SearchBar } from "../../components/SearchBar/SearchBar";
 import { SortBar } from "../../components/SortBar/SortBar";
 import { RestaurantCard } from "../../components/RestaurantCard/RestaurantCard";
+import { Pagination } from "../../components/Pagination/Pagination";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
 
@@ -111,27 +112,7 @@ export const RestaurantList: React.FC = () => {
         </div>
 
         <div className={styles.paginationArea}>
-          { totalPages > 0 ? (
-            <>
-              <button
-                className={styles.paginationButton}
-                disabled={page === 1}
-                onClick={onClickPrev}
-              >
-                ← Prev
-              </button>
-              <p>{page} / {totalPages}</p>
-              <button
-                className={styles.paginationButton}
-                disabled={page >= totalPages}
-                onClick={onClickNext}
-              >
-                Next →
-              </button>
-            </>
-          ) : (
-            <p className={styles.noResult}>該当するレストランが見つかりませんでした。</p>
-          )}
+          <Pagination page={page} totalPages={totalPages} onClickNext={onClickNext} onClickPrev={onClickPrev} />
         </div>
       </div>
     </>
