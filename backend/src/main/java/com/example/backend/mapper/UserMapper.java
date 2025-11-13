@@ -18,4 +18,6 @@ public interface UserMapper {
     void insert(User user);
 
     Optional<User> findByName(String name);
+
+    int countByName(String name);
 }

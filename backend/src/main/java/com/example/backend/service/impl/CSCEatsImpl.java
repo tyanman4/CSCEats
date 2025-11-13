@@ -35,6 +35,11 @@ public class CSCEatsImpl implements CSCEatsService {
     }
 
     @Override
+    public boolean checkExistsByName(String name) {
+        return userMapper.countByName(name) > 0;
+    }
+
+    @Override
     public void insertUser(User user) {
         userMapper.insert(user);
     }

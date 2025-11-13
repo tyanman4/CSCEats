@@ -14,6 +14,10 @@
         SELECT * FROM "user" WHERE name = #{name}
     </select>
 
+    <select id="countByName" resultType="int">
+        SELECT COUNT(*) FROM "user" WHERE name = #{name}
+    </select>
+
     <insert id="insert">
         INSERT INTO "user" (name, password, introduction, created_at, updated_at)
         VALUES

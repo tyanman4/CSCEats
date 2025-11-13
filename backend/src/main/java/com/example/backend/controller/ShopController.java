@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -84,13 +86,23 @@ public class ShopController {
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginForm form) {
 
-        String token = cscEatsService.login(form.getName(), form.getPassword());
-        return ResponseEntity.ok(Map.of("token", token));
+        try {
+            String token = cscEatsService.login(form.getName(), form.getPassword());
+            return ResponseEntity.ok(Map.of("token", token));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid username or password"));
+        }
 
     }
 
     @PostMapping("/api/save")
     public ResponseEntity<?> create(@Valid @RequestBody UserForm form) {
+
+        if (cscEatsService.checkExistsByName(form.getName())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Username already exists"));
+        }
         User user = UserHelper.convertUser(form);
         cscEatsService.insertUser(user);
         String token = cscEatsService.login(form.getName(), form.getPassword());

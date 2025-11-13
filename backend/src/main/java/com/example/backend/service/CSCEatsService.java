@@ -10,6 +10,8 @@ public interface CSCEatsService {
 
     User findByIdUser(Integer user_id);
 
+    boolean checkExistsByName(String name);
+
     void insertUser(User user);
 
     String login(String username, String password);

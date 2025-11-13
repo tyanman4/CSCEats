@@ -5,16 +5,23 @@ import styles from "./Login.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
+
 export const Login: React.FC = () => {
 
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, logout, isAuthenticated } = useAuth();
+
+    if (isAuthenticated) {
+        navigate("/restaurants")
+    }
+
     const [formData, setFormData] = useState({
         name: "",
         password: "",
     });
 
     const [message, setMessage] = useState("");
+
 
     // 入力が変更されたとき
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -30,34 +37,34 @@ export const Login: React.FC = () => {
         }
 
         if (formData.name.length < 2) {
-            setMessage("ユーザ名は2文字以上にしてください。");
+            setMessage("ユーザ名は2文字以上です。");
             return;
         }
 
         if (formData.password.length < 4) {
-            setMessage("パスワードは4文字以上にしてください。");
+            setMessage("パスワードは4文字以上です。");
             return;
         }
 
         try {
             // APIにPOST送信（appApiを使う場合）
-            const response = await appApi.post("/login", formData,
-                {
-                }
-            );
+            const response = await appApi.post("/login", formData);
 
             if (response.status === 200) {
-                //setMessage(`ようこそ、${formData.name}さん！`);
                 login(response.data.token);
                 setMessage(response.data.redirect);
                 navigate("/restaurants")
 
-            } else {
-                setMessage("登録に失敗しました。");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            setMessage("サーバーエラーが発生しました。");
+
+            if (error.response && error.response.status === 401) {
+                // Spring側で401を返した場合
+                setMessage("ログインに失敗しました。");
+            } else {
+                setMessage("サーバーエラーが発生しました。");
+            }
         }
     };
 
@@ -104,7 +111,10 @@ export const Login: React.FC = () => {
                 </form>
                 <div>
                     <div><a href="register">新規登録</a></div>
-                    <div><a href="restaurants">ゲストでログイン</a></div>
+                    <div><a
+                        href="restaurants"
+                        onClick={() => logout()}
+                    >ゲストのまま利用する</a></div>
                 </div>
             </div>
         </>

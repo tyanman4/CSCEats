@@ -12,6 +12,7 @@ export const Register: React.FC = () => {
     const [formData, setFormData] = useState({
         name: "",
         password: "",
+        password_re: "",
         introduction: ""
     });
     const { login } = useAuth();
@@ -42,6 +43,11 @@ export const Register: React.FC = () => {
             return;
         }
 
+        if (formData.password !== formData.password_re) {
+            setMessage("パスワードが確認用パスワードと異なります。");
+            return;
+        }
+
         try {
             const response = await appApi.post("/save", formData);
 
@@ -52,9 +58,17 @@ export const Register: React.FC = () => {
             } else {
                 setMessage("登録に失敗しました。");
             }
-        } catch (error) {
-            console.error(error);
-            setMessage("サーバーエラーが発生しました。");
+        } catch (error: any) {
+            if (error.response) {
+                if (error.response.status === 409) {
+                    setMessage("そのユーザ名は既に存在します。");
+                } else {
+                    setMessage("登録に失敗しました。")
+                }
+            } else {
+                setMessage("サーバに接続できません");
+            }
+
         }
     };
 
@@ -88,6 +102,16 @@ export const Register: React.FC = () => {
                             onChange={handleChange}
                         />
                         <>　(必須)4文字以上</>
+                    </div>
+                    <div>
+                        <label>パスワード</label>
+                        <input
+                            type="password"
+                            name="password_re"
+                            value={formData.password_re}
+                            onChange={handleChange}
+                        />
+                        <>　(確認)</>
                     </div>
 
                     <div>
