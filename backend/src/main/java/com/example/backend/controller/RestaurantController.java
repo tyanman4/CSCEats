@@ -44,6 +44,7 @@ public class RestaurantController {
             Map<String, Object> restaurant = new HashMap<>();
             restaurant.put("id", rt.getRestaurantId());
             restaurant.put("name", rt.getName());
+            restaurant.put("distance", rt.getDistance());
             restaurant.put("address", rt.getAddress());
             restaurant.put("url", rt.getUrl());
             restaurant.put("averageBudget", rt.getAverageBudget());
