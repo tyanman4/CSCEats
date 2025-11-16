@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import appApi from "../api/appApi";
 
+//ログアウト時→null
 type User = {
     name: string;
     introduction: string;
@@ -14,6 +15,7 @@ type AuthContextType = {
     isAuthenticated: boolean;
 };
 
+//コンテキスト作成
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -24,9 +26,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     //tokenが存在すればtrue
     const isAuthenticated = !!token;
 
+    //プロフィール取得関数
     const fetchProfile = async (jwt: string) => {
         try {
-            console.log(jwt)
+
             const res = await appApi.get("/users/me", {
                 headers: { Authorization: `Bearer ${jwt}` },
             });
@@ -60,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [token]);
 
     return (
+        //子孫要素はvalueを共有利用できる。
         <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>
             {children}
         </AuthContext.Provider>
@@ -68,6 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);
+    //Provider内で使わないとエラー
     if (!context) throw new Error("useAuth must be used within AuthProvider");
     return context;
 };

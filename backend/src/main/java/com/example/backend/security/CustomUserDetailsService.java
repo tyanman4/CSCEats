@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.backend.mapper.UserMapper;
 
+//UserDetailsServiceはユーザ名を受け取って、DB からユーザ情報を取り出し、Spring Security が扱える形（UserDetails）に変換して返す
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {

@@ -44,6 +44,7 @@ public class ShopController {
 
     private final CSCEatsService cscEatsService;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final UserHelper userHelper;
 
     @GetMapping("/api/restaurants")
     public List<Map<String, Object>> getRestaurants(@RequestParam Map<String, String> params) {
@@ -98,12 +99,13 @@ public class ShopController {
     @PostMapping("/api/save")
     public ResponseEntity<?> create(@Valid @RequestBody UserForm form) {
 
+        // 既に存在するユーザ名かチェック
         if (cscEatsService.checkExistsByName(form.getName())) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "Username already exists"));
         }
-        User user = UserHelper.convertUser(form);
+        User user = userHelper.convertUser(form);
         cscEatsService.insertUser(user);
         String token = cscEatsService.login(form.getName(), form.getPassword());
 
@@ -115,7 +117,7 @@ public class ShopController {
 
     @GetMapping("/api/users/me")
     public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        // AuthenticationPrincipal で現在ログイン中のユーザ情報を取得
+        // @AuthenticationPrincipal で現在ログイン中のユーザ情報を取得
         return ResponseEntity
                 .ok(Map.of("name", userDetails.getUsername(), "introduction", userDetails.getIntroduction()));
     }

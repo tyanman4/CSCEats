@@ -17,6 +17,7 @@ public interface UserMapper {
 
     void insert(User user);
 
+    // 複数件ヒットしても最初の一件だけ返す。見つからなかったらOptional.empty()が返る。
     Optional<User> findByName(String name);
 
     int countByName(String name);

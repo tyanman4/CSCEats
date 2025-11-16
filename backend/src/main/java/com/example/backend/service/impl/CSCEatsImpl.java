@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +48,9 @@ public class CSCEatsImpl implements CSCEatsService {
 
     @Override
     public String login(String username, String password) {
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        return jwtUtil.generateToken(new org.springframework.security.core.userdetails.User(username, password,
-                java.util.Collections.emptyList()));
+        Authentication authentication = authManager
+                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        return jwtUtil.generateToken(user);
     }
 }

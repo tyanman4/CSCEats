@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // 32文字以上の安全なランダム文字列を使用（本番環境では文字列を 環境変数やプロパティファイル に置き、コードにハードコーディングしない）
+    // 32文字以上の安全なランダム文字列を使用（本番環境では文字列を環境変数やプロパティファイルに置き、コードにハードコーディングしない）
     private static final String SECRET_KEY = "myVerySecureRandomSecretKey1234567890!";
 
     // JWTからユーザー名を取得
@@ -62,7 +62,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date(System.currentTimeMillis())) // トークン発行時刻
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1時間有効
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();

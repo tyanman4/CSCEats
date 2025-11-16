@@ -11,10 +11,6 @@ export const Login: React.FC = () => {
     const navigate = useNavigate();
     const { login, logout, isAuthenticated } = useAuth();
 
-    if (isAuthenticated) {
-        navigate("/restaurants")
-    }
-
     const [formData, setFormData] = useState({
         name: "",
         password: "",
