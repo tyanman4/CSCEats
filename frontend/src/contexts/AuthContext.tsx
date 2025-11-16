@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import appApi from "../api/appApi";
 
-//ログアウト時→null
+
 type User = {
     name: string;
     introduction: string;
-} | null;
+    //roles: string[];
+} | null; //ログアウト時はnull
 
 type AuthContextType = {
     user: User;
@@ -36,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const userData: User = {
                 name: res.data.name,
                 introduction: res.data.introduction,
+                //roles: res.data.roles
             };
             setUser(userData);
         } catch (err) {

@@ -43,12 +43,11 @@ export const Login: React.FC = () => {
         }
 
         try {
-            // APIにPOST送信（appApiを使う場合）
-            const response = await appApi.post("/login", formData);
+            const res = await appApi.post("/login", formData);
 
-            if (response.status === 200) {
-                login(response.data.token);
-                setMessage(response.data.redirect);
+            if (res.status === 200) {
+                login(res.data.token);
+                setMessage(res.data.redirect);
                 navigate("/restaurants")
 
             }
@@ -56,7 +55,6 @@ export const Login: React.FC = () => {
             console.error(error);
 
             if (error.response && error.response.status === 401) {
-                // Spring側で401を返した場合
                 setMessage("ログインに失敗しました。");
             } else {
                 setMessage("サーバーエラーが発生しました。");

@@ -118,6 +118,7 @@ public class ShopController {
     @GetMapping("/api/users/me")
     public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
         // @AuthenticationPrincipal で現在ログイン中のユーザ情報を取得
+        // rolesもあとで加える。
         return ResponseEntity
                 .ok(Map.of("name", userDetails.getUsername(), "introduction", userDetails.getIntroduction()));
     }

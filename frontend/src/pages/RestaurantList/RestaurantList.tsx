@@ -80,24 +80,3 @@ export const RestaurantList: React.FC = () => {
     </>
   );
 };
-
-
-interface DecodedToken {
-  sub: string;      // ユーザー名など
-  exp: number;      // 有効期限（秒単位のUNIXタイム）
-  iat: number;      // 発行時刻
-  [key: string]: any; // その他のカスタムクレームにも対応
-}
-
-function getDecodedToken(): DecodedToken | null {
-  const token = localStorage.getItem("token");
-  if (!token) return null;
-
-  try {
-    const decoded = jwtDecode<DecodedToken>(token);
-    return decoded;
-  } catch (err) {
-    console.error("トークンのデコードに失敗しました", err);
-    return null;
-  }
-}
