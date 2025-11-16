@@ -69,4 +69,9 @@ public class CSCEatsImpl implements CSCEatsService {
         Map<String, Object> params = new HashMap<>(parsed);
         return restaurantReviewMapper.findTotalCountRestaurants(params);
     }
+
+    @Override
+    public List<Map<String, Object>> findCategoriesByUsage() {
+        return restaurantReviewMapper.findCategoriesByUsage();
+    }
 }

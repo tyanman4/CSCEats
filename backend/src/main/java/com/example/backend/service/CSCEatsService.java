@@ -11,4 +11,6 @@ public interface CSCEatsService {
     List<RestaurantReview> findRestaurantsWithReviewSummary(String search, List<String> sorts, int page);
 
     int findTotalCountRestaurants(String search);
+
+    List<Map<String, Object>> findCategoriesByUsage();
 }

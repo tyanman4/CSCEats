@@ -82,6 +82,20 @@
     WHERE rc.restaurant_id = #{restaurant_id}
   </select>
 
+  <!-- カテゴリーの使われてる順を取得 -->
+  <select id="findCategoriesByUsage" resultType="map">
+    SELECT
+      c.category_id AS categoryId,
+      c.name,
+      COUNT(rc.restaurant_id) AS usageCount
+    FROM categories c
+    LEFT JOIN restaurant_categories rc
+      ON c.category_id = rc.category_id
+    GROUP BY c.category_id, c.name
+    ORDER BY usageCount DESC
+  </select>
+
+
   <!-- 総件数取得 -->
   <select id="findTotalCountRestaurants" parameterType="map" resultType="int">
     SELECT COUNT (*) FROM restaurants r

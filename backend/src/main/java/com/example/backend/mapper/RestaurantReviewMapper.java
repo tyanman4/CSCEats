@@ -11,4 +11,6 @@ public interface RestaurantReviewMapper {
     List<RestaurantReview> findRestaurantsWithReviewSummary(Map<String, Object> params);
 
     int findTotalCountRestaurants(Map<String, Object> params);
+
+    List<Map<String, Object>> findCategoriesByUsage();
 }
