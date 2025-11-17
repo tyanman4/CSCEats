@@ -13,6 +13,7 @@ export const RestaurantList: React.FC = () => {
   interface Category {
     categoryId: number;
     name: string;
+    usageCount?: number;
   }
 
   interface RestaurantReview {
@@ -39,6 +40,7 @@ export const RestaurantList: React.FC = () => {
   }
 
   const [restaurants, setRestaurants] = useState<RestaurantReview[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [searchWord, setSearchWord] = useState("");
   const [sortOptions, setSortOption] = useState<string[]>([]);
   const [page, setPage] = useState(1);
@@ -65,6 +67,19 @@ export const RestaurantList: React.FC = () => {
 
     fetchRestaurants();
   }, [searchWord, sortOptions, page]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await appApi.get<Category[]>("/categories");
+        setCategories(res.data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -98,7 +113,7 @@ export const RestaurantList: React.FC = () => {
           <MapView restaurants={restaurants} />
         </div>
         <div className={styles.listArea}>
-          <SearchBar onSearch={onClickSearch} />
+          <SearchBar onSearch={onClickSearch} categories={categories} />
           <SortBar selectedOptions={sortOptions} onChange={onChangeSort} />
           <div className={styles.scrollArea} >
             {restaurants.map((shop) => (

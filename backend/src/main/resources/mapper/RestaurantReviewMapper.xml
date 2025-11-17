@@ -98,23 +98,30 @@
 
   <!-- 総件数取得 -->
   <select id="findTotalCountRestaurants" parameterType="map" resultType="int">
-    SELECT COUNT (*) FROM restaurants r
+    SELECT COUNT(*)
+    FROM restaurants r
     <where>
+
+      <!-- カテゴリーの絞り込み -->
       <if test="categories != null and categories.size > 0">
-        AND r.restaurant_id IN (
-          SELECT r.restaurant_id
+        r.restaurant_id IN (
+          SELECT rc.restaurant_id
           FROM restaurant_categories rc
           JOIN categories c ON rc.category_id = c.category_id
-          WHERE
-          <foreach collection="categories" item="cat" separator=" OR ">
-            c.name ILIKE CONCAT('%', #{cat}, '%')
-          </foreach>
+          <where>
+            <foreach collection="categories" item="cat" separator=" OR ">
+              c.name ILIKE CONCAT('%', #{cat}, '%')
+            </foreach>
+          </where>
         )
       </if>
+
+      <!-- キーワード検索 -->
       <if test="keywords != null and keywords.size > 0">
         <foreach collection="keywords" item="kw" separator=" AND ">
-          (r.name ILIKE CONCAT('%', #{kw}, '%')
-          OR r.description ILIKE CONCAT('%', #{kw}, '%'))
+          ( r.name ILIKE CONCAT('%', #{kw}, '%')
+            OR r.description ILIKE CONCAT('%', #{kw}, '%')
+          )
         </foreach>
       </if>
     </where>

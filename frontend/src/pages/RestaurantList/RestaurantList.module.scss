@@ -19,7 +19,7 @@
     position: relative;
     margin-left: 40%;
     width: 60%;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
     padding: 0 20px;
@@ -35,29 +35,73 @@
     padding: 10px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
-    input {
-      flex: 1;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      border-radius: 0.375rem;
-      margin-right: 8px;
-      width: calc(100% - 120px);
+    .inputArea {
+      display: flex;
+      width: 95%;
+      gap: 8px;
+      input {
+        flex: 1;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        border-radius: 0.375rem;
+      }
+  
+      button {
+        cursor: pointer;
+        color: #0d6efd;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #0d6efd;
+        border-radius: 0.375rem;
+        background-color: transparent;
+      }
     }
+  }
 
-    button {
-      cursor: pointer;
-      color: #0d6efd;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      border: 1px solid #0d6efd;
-      border-radius: 0.375rem;
-      background-color: transparent;
+  .categoryScroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-top: 10px;
+
+    border-bottom: 2px solid gray;
+
+    /* スクロールバー非表示 */
+    -ms-overflow-style: none; /* IE */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none; /* Chrome */
     }
+  }
+
+  .categoryButton {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 9999px; // pill style
+    background: #f1f3f5;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.9rem;
+
+    &:hover {
+      background: #e2e6ea;
+    }
+  }
+
+  .selected {
+    background-color: #0d6dfddd;
+    color: white;
+    border-color: #0d6dfd;
+   &:hover {
+    background-color: #0d6dfd;
+   }
   }
 
   .sortBar {
     position: fixed;
-    top: 110px;
+    top: 167px;
     left: 40%;
     width: 60%;
     background: #fff;
@@ -98,7 +142,7 @@
   .scrollArea {
     flex: 1;
     overflow-y: auto;
-    padding-top: 140px;
+    padding-top: 220px;
 
     .restaurantCard {
       background: #fff;
