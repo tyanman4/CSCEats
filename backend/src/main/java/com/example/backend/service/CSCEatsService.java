@@ -12,5 +12,13 @@ public interface CSCEatsService {
 
     int findTotalCountRestaurants(String search);
 
+    User findByIdUser(Integer user_id);
+
+    boolean checkExistsByName(String name);
+
+    void insertUser(User user);
+
+    String login(String username, String password);
+
     List<Map<String, Object>> findCategoriesByUsage();
 }

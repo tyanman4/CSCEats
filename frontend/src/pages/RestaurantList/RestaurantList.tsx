@@ -8,6 +8,8 @@ import { RestaurantCard } from "../../components/RestaurantCard/RestaurantCard";
 import { Pagination } from "../../components/Pagination/Pagination";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
+import { jwtDecode } from "jwt-decode";
+
 
 export const RestaurantList: React.FC = () => {
   interface Category {

@@ -9,4 +9,19 @@
     <select id="selectById" resultType="com.example.backend.entity.User">
         SELECT * FROM "user" WHERE user_id = #{user_id}
     </select>
+
+    <select id="findByName" resultType="com.example.backend.entity.User">
+        SELECT * FROM "user" WHERE name = #{name}
+    </select>
+
+    <select id="countByName" resultType="int">
+        SELECT COUNT(*) FROM "user" WHERE name = #{name}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO "user" (name, password, introduction, created_at, updated_at)
+        VALUES
+        (#{name}, #{password}, #{introduction}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
 </mapper>
