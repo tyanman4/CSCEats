@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/save").permitAll()
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/api/restaurants").permitAll()
+                        .requestMatchers("/api/categories").permitAll()
                         .anyRequest().authenticated())
                 // UsernamePasswordAuthenticationFilter より前にjwtAuthFilterでフィルターする。
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
