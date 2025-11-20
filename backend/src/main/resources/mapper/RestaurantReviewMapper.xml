@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.RestaurantReviewMapper">
+  <resultMap id="RestaurantReviewMap" type="com.example.backend.entity.RestaurantReview">
+    <id property="restaurantId" column="restaurant_id"/>
+    <result property="name" column="name"/>
+    <result property="address" column="address"/>
+    <result property="distance" column="distance"/>
+    <result property="url" column="url"/>
+    <result property="averageBudget" column="average_budget"/>
+    <result property="description" column="description"/>
+    <result property="imageUrl" column="image_url"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+    <result property="latitude" column="latitude"/>
+    <result property="longitude" column="longitude"/>
+    <result property="averageRating" column="average_rating"/>
+    <result property="reviewCount" column="review_count"/>
+
+    <!-- Category情報をネスト -->
+    <collection property="categories" ofType="com.example.backend.entity.Category"    
+      column="restaurant_id"
+      select="findCategoriesByRestaurantId"
+    />
+    
+  </resultMap>
+  <!-- メイン検索 -->
+  <select id="findRestaurantsWithReviewSummary"
+          resultMap="RestaurantReviewMap">
+    SELECT
+      r.restaurant_id AS restaurant_id,
+      r.name,
+      r.address,
+      r.distance,
+      r.url,
+      r.average_budget,
+      r.description,
+      r.image_url,
+      r.created_at,
+      r.updated_at,
+      r.latitude,
+      r.longitude,
+      COALESCE(ROUND(AVG(rv.rating)::numeric, 1), 0) AS average_rating,
+      COUNT(rv.review_id) AS review_count
+    FROM restaurants r
+      LEFT JOIN reviews rv ON r.restaurant_id = rv.restaurant_id
+      LEFT JOIN restaurant_categories rc ON r.restaurant_id = rc.restaurant_id
+      LEFT JOIN categories c ON rc.category_id = c.category_id
+    <where>
+      <if test="categories != null and categories.size > 0">
+        <foreach collection="categories" item="cat" separator=" OR ">
+            c.name ILIKE CONCAT('%', #{cat}, '%')
+        </foreach>
+      </if>
+      <if test="keywords != null and keywords.size > 0">
+        <foreach collection="keywords" item="kw" separator=" AND ">
+          (r.name ILIKE CONCAT('%', #{kw}, '%')
+          OR r.description ILIKE CONCAT('%', #{kw}, '%'))
+        </foreach>
+      </if>
+    </where>
+    GROUP BY r.restaurant_id
+    <if test="sorts != null and sorts.size > 0">
+      ORDER BY 
+      <foreach collection="sorts" item="s" separator=",">
+        <choose>
+          <when test="s == '人気順'">average_rating DESC</when>
+          <when test="s == '安い順'">average_budget ASC</when>
+          <when test="s == 'レビュー総数順'">review_count DESC</when>
+          <when test="s == '近い順'">distance ASC</when>
+        </choose>
+      </foreach>
+    </if>
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <!-- カテゴリー取得 -->
+  <select id="findCategoriesByRestaurantId" resultType="com.example.backend.entity.Category">
+    SELECT c.category_id AS categoryId, c.name
+    FROM restaurant_categories rc
+    JOIN categories c ON rc.category_id = c.category_id
+    WHERE rc.restaurant_id = #{restaurant_id}
+  </select>
+
+  <!-- カテゴリーの使われてる順を取得 -->
+  <select id="findCategoriesByUsage" resultType="map">
+    SELECT
+      c.category_id AS categoryId,
+      c.name,
+      COUNT(rc.restaurant_id) AS usageCount
+    FROM categories c
+    LEFT JOIN restaurant_categories rc
+      ON c.category_id = rc.category_id
+    GROUP BY c.category_id, c.name
+    ORDER BY usageCount DESC
+  </select>
+
+
+  <!-- 総件数取得 -->
+  <select id="findTotalCountRestaurants" parameterType="map" resultType="int">
+    SELECT COUNT(*)
+    FROM restaurants r
+    <where>
+
+      <!-- カテゴリーの絞り込み -->
+      <if test="categories != null and categories.size > 0">
+        r.restaurant_id IN (
+          SELECT rc.restaurant_id
+          FROM restaurant_categories rc
+          JOIN categories c ON rc.category_id = c.category_id
+          <where>
+            <foreach collection="categories" item="cat" separator=" OR ">
+              c.name ILIKE CONCAT('%', #{cat}, '%')
+            </foreach>
+          </where>
+        )
+      </if>
+
+      <!-- キーワード検索 -->
+      <if test="keywords != null and keywords.size > 0">
+        <foreach collection="keywords" item="kw" separator=" AND ">
+          ( r.name ILIKE CONCAT('%', #{kw}, '%')
+            OR r.description ILIKE CONCAT('%', #{kw}, '%')
+          )
+        </foreach>
+      </if>
+    </where>
+  </select>
+</mapper>
