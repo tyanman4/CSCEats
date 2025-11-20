@@ -18,10 +18,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   categories
  }) => {
   const [input, setInput] = useState("");
-  const newWords: string[] = [];
 
   const selectedCategories = input.split(/\s+/).filter((word) => word.startsWith("#")).map((word) => word.substring(1));
-
 
   const handleClick = () => {
     onSearch(input);
