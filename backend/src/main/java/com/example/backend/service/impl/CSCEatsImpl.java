@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.entity.RestaurantReview;
 import com.example.backend.entity.User;
+import com.example.backend.entity.RequestRestaurant;
 import com.example.backend.mapper.RestaurantReviewMapper;
 import com.example.backend.mapper.UserMapper;
+import com.example.backend.mapper.RequestRestaurantMapper;
 import com.example.backend.security.JwtUtil;
 import com.example.backend.service.CSCEatsService;
 
@@ -31,6 +33,7 @@ public class CSCEatsImpl implements CSCEatsService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authManager;
     private final RestaurantReviewMapper restaurantReviewMapper;
+    private final RequestRestaurantMapper requestRestaurantMapper;
 
     private Map<String, List<String>> parseSearchKeywords(String search) {
         List<String> categoryKeywords = new ArrayList<>();
@@ -103,5 +106,31 @@ public class CSCEatsImpl implements CSCEatsService {
                 .authenticate(new UsernamePasswordAuthenticationToken(username, password));
         UserDetails user = (UserDetails) authentication.getPrincipal();
         return jwtUtil.generateToken(user);
+    }
+
+    // RequestRestaurant関連のメソッド
+    @Override
+    public List<RequestRestaurant> findAllForAdmin() {
+        return requestRestaurantMapper.findAllForAdmin();
+    }
+
+    @Override
+    public List<RequestRestaurant> findAllForUser(Long userId) {
+        return requestRestaurantMapper.findAllForUser(userId);  
+    }
+
+    @Override
+    public void insert(RequestRestaurant requestRestaurant) {
+        requestRestaurantMapper.insert(requestRestaurant);
+    }
+
+    @Override
+    public void approve(Long id) {
+        requestRestaurantMapper.approve(id);
+    }
+
+    @Override
+    public void reject(Long id, String rejectReason) {
+        requestRestaurantMapper.reject(id, rejectReason);
     }
 }

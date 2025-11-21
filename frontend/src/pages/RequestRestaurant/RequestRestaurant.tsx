@@ -4,8 +4,8 @@ import appApi from "../../api/appApi";
 
 export const RequestRestaurant: React.FC = () => {
   const [formData, setFormData] = useState({
-    restaurantName: "",
-    restaurantAddress: "",
+    name: "",
+    address: "",
     description: ""
   });
 
@@ -20,20 +20,20 @@ export const RequestRestaurant: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.restaurantName || !formData.restaurantAddress) {
+    if (!formData.name || !formData.address) {
       setMessage("レストラン名と住所を入力してください。");
       return;
     }
 
     try {
       setIsSending(true);
-      const response = await appApi.post("/restaurants/request", formData);
+      const response = await appApi.post("/request-restaurants", formData);
 
       if (response.status === 200) {
         setMessage("リクエストが送信されました。");
         setFormData({
-          restaurantName: "",
-          restaurantAddress: "",
+          name: "",
+          address: "",
           description: ""
         });
       } else {
@@ -60,23 +60,23 @@ export const RequestRestaurant: React.FC = () => {
 
         <form onSubmit={handleSubmit} style={{ marginTop: "20px" }}>
           <div>
-            <label htmlFor="restaurantName">レストラン名：</label>
+            <label htmlFor="name">レストラン名：</label>
             <input
               type="text"
-              id="restaurantName"
-              name="restaurantName"
-              value={formData.restaurantName}
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
             />
           </div>
 
           <div>
-            <label htmlFor="restaurantAddress">住所：</label>
+            <label htmlFor="address">住所：</label>
             <input
               type="text"
-              id="restaurantAddress"
-              name="restaurantAddress"
-              value={formData.restaurantAddress}
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
             />
           </div>

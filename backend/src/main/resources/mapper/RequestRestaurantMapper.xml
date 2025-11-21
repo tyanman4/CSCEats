@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.RequestRestaurantMapper">
+    <!-- admin用の全権取得 -->
+    <select id="findAllForAdmin" resultType="com.example.backend.entity.RequestRestaurant">
+        SELECT *
+        FROM request_restaurants
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- userが自分が依頼したものの確認用 -->
+    <select id="findAllForUser" resultType="com.example.backend.entity.RequestRestaurant">
+        SELECT *
+        FROM request_restaurants
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <insert id="insert" parameterType="com.example.backend.entity.RequestRestaurant">
+        INSERT INTO request_restaurants(user_id ,name, address, reason, status, created_at, updated_at)
+        VALUES(#{userId}, #{name}, #{address}, #{description},#{status}, NOW(), NOW())
+    </insert>
+
+    <!-- 依頼を許可するとき -->
+    <update id="approve">
+        UPDATE request_restaurants
+        SET status = 'approved'
+        WHERE id = #{id}
+    </update>
+
+    <!-- 依頼を拒否するとき -->    
+    <update id="reject">
+        UPDATE request_restaurants
+        SET status = 'rejected',
+            reject_reason = #{rejectReason}
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -63,13 +63,5 @@ public class RestaurantController {
         response.put("totalCount", totalCount);
 
         return response;
-    }
-
-    @PostMapping("/api/restsurants/request")
-    public ResponseEntity<?> postMethodName(@RequestBody String entity) {
-        //TODO: process POST request
-        
-        return ResponseEntity.ok().build();
-    }
-    
+    }   
 }
