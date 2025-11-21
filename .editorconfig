@@ -1,0 +1,29 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+root = true
+
+# Java（Spring Boot）
+[*.java]
+indent_style = space
+indent_size = 4
+
+# JavaScript / TypeScript / React
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 2
+
+# JSON, YAML
+[*.{json,yaml,yml}]
+indent_style = space
+indent_size = 2
+
+# Markdown
+[*.md]
+indent_style = space
+indent_size = 2
+
+# 末尾の改行
+insert_final_newline = true
+
+# UTF-8 固定
+charset = utf-8
