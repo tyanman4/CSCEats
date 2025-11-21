@@ -3,23 +3,23 @@
 <mapper namespace="com.example.backend.mapper.UserMapper">
     <!-- 全件検索 -->
     <select id="selectAll" resultType="com.example.backend.entity.User">
-        SELECT * FROM "user"
+        SELECT * FROM "users"
     </select>
     <!-- １件検索 -->
     <select id="selectById" resultType="com.example.backend.entity.User">
-        SELECT * FROM "user" WHERE user_id = #{user_id}
+        SELECT * FROM "users" WHERE user_id = #{user_id}
     </select>
 
     <select id="findByName" resultType="com.example.backend.entity.User">
-        SELECT * FROM "user" WHERE name = #{name}
+        SELECT * FROM "users" WHERE name = #{name}
     </select>
 
     <select id="countByName" resultType="int">
-        SELECT COUNT(*) FROM "user" WHERE name = #{name}
+        SELECT COUNT(*) FROM "users" WHERE name = #{name}
     </select>
 
     <insert id="insert">
-        INSERT INTO "user" (name, password, introduction, created_at, updated_at)
+        INSERT INTO "users" (name, password, introduction, created_at, updated_at)
         VALUES
         (#{name}, #{password}, #{introduction}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
