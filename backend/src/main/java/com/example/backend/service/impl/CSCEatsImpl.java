@@ -3,6 +3,7 @@ package com.example.backend.service.impl;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.HashMap;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,7 +38,7 @@ public class CSCEatsImpl implements CSCEatsService {
         List<String> keywords = new ArrayList<>();
 
         if (search != null && !search.trim().isEmpty()) {
-            String[] parts = search.trim().split("\\s+"); // 空白で分割（AND条件）
+            String[] parts = search.trim().split("\s+"); // 空白で分割（AND条件）
             for (String word : parts) {
                 if (word.startsWith("#")) {
                     categoryKeywords.add(word.substring(1)); // #を外してカテゴリ名
@@ -83,6 +84,11 @@ public class CSCEatsImpl implements CSCEatsService {
     }
 
     @Override
+    public Optional<User> findByName(String name) {
+        return userMapper.findByName(name);
+    }
+
+    @Override
     public List<Map<String, Object>> findCategoriesByUsage() {
         return restaurantReviewMapper.findCategoriesByUsage();
     }
@@ -98,9 +104,20 @@ public class CSCEatsImpl implements CSCEatsService {
     }
 
     @Override
+    public void updateName(String newName, String name) {
+        userMapper.updateName(newName, name);
+
+    }
+
+    @Override
     public void updateIntroduction(String name, String introduction) {
         userMapper.updateIntroduction(name, introduction);
     }
+
+    @Override
+    public void updatePassword(String name, String password) {
+        userMapper.updatePassword(name, password);
+    };
 
     @Override
     public String login(String username, String password) {

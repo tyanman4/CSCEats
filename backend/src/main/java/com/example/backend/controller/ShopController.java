@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.backend.entity.User;
 import com.example.backend.form.LoginForm;
+import com.example.backend.form.PasswordForm;
 import com.example.backend.form.UserForm;
 import com.example.backend.helper.UserHelper;
 import com.example.backend.security.CustomUserDetails;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -92,8 +94,32 @@ public class ShopController {
         return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
     }
 
+    @PostMapping("/api/update/password")
+    public ResponseEntity<?> passwordUpdate(@Valid @RequestBody PasswordForm form,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String encodedPass = userHelper.encode(form.getPassword());
+        cscEatsService.updatePassword(userDetails.getUsername(), encodedPass);
+        return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
+    }
+
+    @PostMapping("/api/update/name")
+    public ResponseEntity<?> nameUpdate(@Valid @RequestBody LoginForm form,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // 既に存在するユーザ名かチェック
+        if (cscEatsService.checkExistsByName(form.getName())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Username already exists"));
+        }
+        cscEatsService.updateName(form.getName(), userDetails.getUsername());
+        String token = cscEatsService.login(form.getName(), form.getPassword());
+        return ResponseEntity.ok(Map.of("token", token, "msg", "introduction has changed"));
+
+    }
+
     @GetMapping("/api/users/me")
-    public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> getMyProfile(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         // @AuthenticationPrincipal で現在ログイン中のユーザ情報を取得
         // rolesもあとで加える。
         return ResponseEntity
