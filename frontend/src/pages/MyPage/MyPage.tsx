@@ -45,7 +45,7 @@ export const MyPage: React.FC = () => {
         }
 
         try {
-            const response = await appApi.post("/save/introduction", { introduction: formData.introduction });
+            const response = await appApi.post("/update/introduction", { introduction: formData.introduction });
 
             if (response.status === 200) {
 
@@ -89,8 +89,7 @@ export const MyPage: React.FC = () => {
                         >
                             <p>自己紹介</p>
                             <div>
-                                <input
-                                    type="text"
+                                <textarea
                                     name="introduction"
                                     value={formData.introduction}
                                     onChange={handleChange}

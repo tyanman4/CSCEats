@@ -85,7 +85,7 @@ public class ShopController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/api/save/introduction")
+    @PostMapping("/api/update/introduction")
     public ResponseEntity<?> introductionUpdate(@RequestBody Map<String, String> body,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         cscEatsService.updateIntroduction(userDetails.getUsername(), body.get("introduction"));
