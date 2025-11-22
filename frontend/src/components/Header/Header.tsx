@@ -14,7 +14,8 @@ export const Header: React.FC = () => {
       <h3 className={styles.title}>CSCEats</h3>
       {isAuthenticated && <button onClick={logout}>ログアウト</button>}
       {isAuthenticated ? <p>ようこそ、{user?.name}さん</p> : <p>ゲストとして利用中</p>}
-      {location.pathname === "/login" || <button onClick={() => navigate("/login")}>ログインページへ</button>}
+      {location.pathname !== "/login" && <button onClick={() => navigate("/login")}>ログインページへ</button>}
+      {location.pathname !== "/mypage" && isAuthenticated && <button onClick={() => navigate("/mypage")}>マイページへ</button>}
     </div>
   );
 };

@@ -65,7 +65,7 @@ export const Login: React.FC = () => {
     return (
         <>
             <Header />
-            <div>
+            <div className={styles.container}>
                 <h1>CSCEats</h1>
                 <p>レストランを探してレビューを投稿しよう！</p>
                 <form
@@ -108,7 +108,7 @@ export const Login: React.FC = () => {
                     <div><a
                         href="restaurants"
                         onClick={() => logout()}
-                    >ゲストのまま利用する</a></div>
+                    >ゲストとして利用する</a></div>
                 </div>
             </div>
         </>

@@ -75,7 +75,7 @@ export const Register: React.FC = () => {
     return (
         <>
             <Header />
-            <div>
+            <div className={styles.container}>
                 <form
                     onSubmit={handleSubmit}
                 >
