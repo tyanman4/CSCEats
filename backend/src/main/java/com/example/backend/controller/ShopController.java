@@ -50,7 +50,7 @@ public class ShopController {
     public List<Map<String, Object>> getUser(@PathVariable Integer id) {
         User user = cscEatsService.findByIdUser(id);
         List<Map<String, Object>> users = new ArrayList<>();
-        users.add(Map.of("id", user.getUser_id(), "name", user.getName(), "intro", user.getIntroduction()));
+        users.add(Map.of("id", user.getUser_Id(), "name", user.getName(), "intro", user.getIntroduction()));
         return users;
     }
 

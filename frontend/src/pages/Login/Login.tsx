@@ -7,15 +7,14 @@ import { useAuth } from "../../contexts/AuthContext";
 
 
 export const Login: React.FC = () => {
-
-  const navigate = useNavigate();
-  const { login, logout, isAuthenticated } = useAuth();
-
   const [formData, setFormData] = useState({
     name: "",
     password: "",
   });
 
+  const navigate = useNavigate();
+  const { login, logout, isAuthenticated } = useAuth();
+  const [isSending, setIsSending] = useState(false);
   const [message, setMessage] = useState("");
 
 
@@ -43,6 +42,7 @@ export const Login: React.FC = () => {
     }
 
     try {
+      setIsSending(true);
       const res = await appApi.post("/login", formData);
 
       if (res.status === 200) {
@@ -96,7 +96,9 @@ export const Login: React.FC = () => {
             />
           </div>
 
-          <button type="submit">ログイン</button>
+          <button type="submit" disabled={isSending} className="form-button">
+            {isSending ? "送信中...": "ログイン"}
+          </button>
         </form>
         <div className="auth-links">
           <div><a href="register">新規登録</a></div>

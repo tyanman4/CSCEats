@@ -3,6 +3,7 @@ package com.example.backend.service.impl;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.HashMap;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,7 +41,7 @@ public class CSCEatsImpl implements CSCEatsService {
         List<String> keywords = new ArrayList<>();
 
         if (search != null && !search.trim().isEmpty()) {
-            String[] parts = search.trim().split("\\s+"); // 空白で分割（AND条件）
+            String[] parts = search.trim().split("\s+"); // 空白で分割（AND条件）
             for (String word : parts) {
                 if (word.startsWith("#")) {
                     categoryKeywords.add(word.substring(1)); // #を外してカテゴリ名
@@ -104,7 +105,12 @@ public class CSCEatsImpl implements CSCEatsService {
     public String login(String username, String password) {
         Authentication authentication = authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        UserDetails user = (UserDetails) authentication.getPrincipal();
+       
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        // ← ここで User エンティティを取得
+        User user = userMapper.findByName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+
         return jwtUtil.generateToken(user);
     }
 

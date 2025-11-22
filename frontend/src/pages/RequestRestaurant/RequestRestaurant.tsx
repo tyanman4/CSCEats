@@ -8,7 +8,7 @@ export const RequestRestaurant: React.FC = () => {
     name: "",
     address: "",
     description: "",
-    image: null as File | null
+    images: [] as File[]
   });
 
   const [message, setMessage] = useState("");
@@ -20,9 +20,31 @@ export const RequestRestaurant: React.FC = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
+    const files = e.target.files;
+    if (!files) return;
+    const fileArray = Array.from(files);
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    // 全ファイルをチェック
+    for (const file of fileArray) {
+      // サイズチェック
+      if (file.size > 5 * 1024 * 1024) {
+        setMessage("ファイルサイズは5MB以下にしてください");
+        e.target.value = "";
+        return;
+      }
+      // 拡張子/タイプチェック
+      if (!allowedTypes.includes(file.type)) {
+        setMessage("対応している画像形式は jpg, jpeg, png, webp のみです");
+        e.target.value = "";
+        return;
+      }
     }
+
+    // チェックを通過した場合のみセット
+    setFormData((prev) => ({ 
+      ...prev, 
+      images: fileArray // ← File[] で保持
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,9 +61,9 @@ export const RequestRestaurant: React.FC = () => {
       formPayload.append("name", formData.name);
       formPayload.append("address", formData.address);
       formPayload.append("description", formData.description);
-      if (formData.image) {
-        formPayload.append("image", formData.image);
-      }
+      formData.images.forEach((file) =>  {
+        formPayload.append("images", file);
+      });
 
       const response = await appApi.post("/request-restaurants", formPayload, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -49,7 +71,7 @@ export const RequestRestaurant: React.FC = () => {
 
       if (response.status === 200) {
         setMessage("リクエストが送信されました。");
-        setFormData({ name: "", address: "", description: "", image: null });
+        setFormData({ name: "", address: "", description: "", images: [] });
       } else {
         setMessage("リクエストの送信に失敗しました。");
       }
@@ -65,7 +87,7 @@ export const RequestRestaurant: React.FC = () => {
     <>
       <Header />
       <div className="form-page-container">
-        <h2 className="form-title">レストランリクエストページ</h2>
+        <h2 className="form-title">レストランリクエスト</h2>
         <p className="form-description">おすすめのお店、教えてください！</p>
 
         {message && (
@@ -114,6 +136,7 @@ export const RequestRestaurant: React.FC = () => {
               id="image"
               name="image"
               accept="image/*"
+              multiple
               onChange={handleFileChange}
             />
           </div>

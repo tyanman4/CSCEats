@@ -54,6 +54,7 @@ public class RestaurantController {
             restaurant.put("averageRating", rt.getAverageRating()); 
             restaurant.put("reviewCount", rt.getReviewCount());
             restaurant.put("categories", rt.getCategories());
+ 
 
             restaurants.add(restaurant);
         };

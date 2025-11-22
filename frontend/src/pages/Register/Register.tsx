@@ -7,16 +7,17 @@ import { useAuth } from "../../contexts/AuthContext";
 
 
 export const Register: React.FC = () => {
-
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     password: "",
     password_re: "",
     introduction: ""
   });
+
+  const navigate = useNavigate();
   const { login, logout } = useAuth();
   const [message, setMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   // 入力が変更されたとき
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -48,6 +49,7 @@ export const Register: React.FC = () => {
     }
 
     try {
+      setIsSending(true);
       const response = await appApi.post("/save", formData);
       if (response.status === 200) {
         login(response.data.token);
@@ -130,7 +132,9 @@ export const Register: React.FC = () => {
             />
           </div>
 
-          <button type="submit">新規登録</button>
+          <button type="submit" disabled={isSending} className="form-button">
+            {isSending ? "送信中...": "新規登録"}
+          </button>
         </form>
         <div className="auth-links">
           <div><a href="/login">ログイン</a></div>
