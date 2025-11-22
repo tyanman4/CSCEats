@@ -21,4 +21,6 @@ public interface UserMapper {
     Optional<User> findByName(String name);
 
     int countByName(String name);
+
+    void updateIntroduction(String name, String introduction);
 }

@@ -85,6 +85,13 @@ public class ShopController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/api/save/introduction")
+    public ResponseEntity<?> introductionUpdate(@RequestBody Map<String, String> body,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        cscEatsService.updateIntroduction(userDetails.getUsername(), body.get("introduction"));
+        return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
+    }
+
     @GetMapping("/api/users/me")
     public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
         // @AuthenticationPrincipal で現在ログイン中のユーザ情報を取得

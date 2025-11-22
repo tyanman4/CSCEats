@@ -18,6 +18,8 @@ public interface CSCEatsService {
 
     void insertUser(User user);
 
+    void updateIntroduction(String name, String introduction);
+
     String login(String username, String password);
 
     List<Map<String, Object>> findCategoriesByUsage();

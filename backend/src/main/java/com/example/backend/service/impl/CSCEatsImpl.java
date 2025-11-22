@@ -56,7 +56,7 @@ public class CSCEatsImpl implements CSCEatsService {
     @Override
     public List<RestaurantReview> findRestaurantsWithReviewSummary(String search, List<String> sorts, int page) {
         int limit = 20;
-        int offset = ( page - 1) * limit;
+        int offset = (page - 1) * limit;
 
         Map<String, List<String>> parsed = parseSearchKeywords(search);
 
@@ -95,6 +95,11 @@ public class CSCEatsImpl implements CSCEatsService {
     @Override
     public void insertUser(User user) {
         userMapper.insert(user);
+    }
+
+    @Override
+    public void updateIntroduction(String name, String introduction) {
+        userMapper.updateIntroduction(name, introduction);
     }
 
     @Override

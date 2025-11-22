@@ -9,7 +9,7 @@ import { useAuth } from "../../contexts/AuthContext";
 export const MyPage: React.FC = () => {
 
     const navigate = useNavigate();
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated, login } = useAuth();
 
     const [message, setMessage] = useState("");
 
@@ -36,45 +36,28 @@ export const MyPage: React.FC = () => {
 
     // フォーム送信時
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        setIntroductionChanging(false)
+
         e.preventDefault();
-        // if (!formData.name || !formData.password) {
-        //     setMessage("ユーザ名とパスワードを入力してください。");
-        //     return;
-        // }
 
-        // if (formData.name.length < 2) {
-        //     setMessage("ユーザ名は2文字以上にしてください。");
-        //     return;
-        // }
-
-        // if (formData.password.length < 4) {
-        //     setMessage("パスワードは4文字以上にしてください。");
-        //     return;
-        // }
-
-        // if (formData.password !== formData.password_re) {
-        //     setMessage("パスワードが確認用パスワードと異なります。");
-        //     return;
-        // }
+        if (formData.introduction.length > 1024) {
+            setMessage("自己紹介が長すぎます。");
+            return;
+        }
 
         try {
-            const response = await appApi.post("/save", formData);
+            const response = await appApi.post("/save/introduction", { introduction: formData.introduction });
 
             if (response.status === 200) {
-                //login(response.data.token);
-                //navigate(response.data.redirect)
+
+                login(localStorage.token)
+                setIntroductionChanging(false)
 
             } else {
                 setMessage("登録に失敗しました。");
             }
         } catch (error: any) {
             if (error.response) {
-                if (error.response.status === 409) {
-                    setMessage("そのユーザ名は既に存在します。");
-                } else {
-                    setMessage("登録に失敗しました。")
-                }
+                setMessage("登録に失敗しました。")
             } else {
                 setMessage("サーバに接続できません。");
             }
@@ -114,6 +97,7 @@ export const MyPage: React.FC = () => {
                                 />
                             </div>
                             <button type="submit" >確定</button>
+                            {message}
                         </form>
 
                         :

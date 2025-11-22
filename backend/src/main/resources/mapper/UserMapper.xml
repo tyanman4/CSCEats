@@ -24,4 +24,11 @@
         (#{name}, #{password}, #{introduction}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
 
+    <update id="updateIntroduction">
+        UPDATE "users"
+        SET introduction = #{introduction},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE name = #{name}
+    </update>
+
 </mapper>
