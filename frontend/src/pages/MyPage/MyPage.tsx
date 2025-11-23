@@ -174,7 +174,7 @@ export const MyPage: React.FC = () => {
             <Header />
             {isAuthenticated &&
                 <div className={styles.container}>
-
+                    {user?.role === "admin" && <p>あなたは管理者です</p>}
                     {nameChanging ?
                         <form onSubmit={handleSubmitName}>
                             <p>ユーザ名</p>
