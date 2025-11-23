@@ -254,8 +254,10 @@ export const MyPage: React.FC = () => {
                                     onChange={handleChange}
                                 />
                             </div>
-                            <button type="submit" >確定</button>
                             {messageIntro}
+                            <button type="submit" >確定</button>
+                            <button type="button" onClick={() => setIntroductionChanging(false)}>戻る</button>
+
                         </form>
                         :
                         <div>
