@@ -12,10 +12,13 @@ export const Header: React.FC = () => {
   return (
     <div className={styles.header}>
       <h3 className={styles.title}>CSCEats</h3>
-      {isAuthenticated && <button onClick={logout}>ログアウト</button>}
-      {isAuthenticated ? <p>ようこそ、{user?.name}さん</p> : <p>ゲストとして利用中</p>}
-      {location.pathname !== "/login" && <button onClick={() => navigate("/login")}>ログインページへ</button>}
-      {location.pathname !== "/mypage" && isAuthenticated && <button onClick={() => navigate("/mypage")}>マイページへ</button>}
+      <div className={styles.right}>
+
+        {isAuthenticated ? <p>ようこそ、{user?.name}さん</p> : <p>ゲストとして利用中</p>}
+        {!isAuthenticated && location.pathname !== "/login" && <button onClick={() => navigate("/login")}>ログインページへ</button>}
+        {location.pathname !== "/mypage" && isAuthenticated && <button onClick={() => navigate("/mypage")}>マイページ</button>}
+        {isAuthenticated && <button onClick={logout}>ログアウト</button>}
+      </div>
     </div>
   );
 };

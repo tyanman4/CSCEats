@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.backend.entity.User;
+import com.example.backend.form.IntroductionForm;
 import com.example.backend.form.LoginForm;
 import com.example.backend.form.PasswordForm;
 import com.example.backend.form.UserForm;
@@ -88,9 +89,9 @@ public class ShopController {
     }
 
     @PostMapping("/api/update/introduction")
-    public ResponseEntity<?> introductionUpdate(@RequestBody Map<String, String> body,
+    public ResponseEntity<?> introductionUpdate(@Valid @RequestBody IntroductionForm form,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        cscEatsService.updateIntroduction(userDetails.getUsername(), body.get("introduction"));
+        cscEatsService.updateIntroduction(userDetails.getUsername(), form.getIntroduction());
         return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
     }
 

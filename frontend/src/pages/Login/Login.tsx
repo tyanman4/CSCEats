@@ -18,6 +18,12 @@ export const Login: React.FC = () => {
 
     const [message, setMessage] = useState("");
 
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/restaurants")
+        }
+    }, [isAuthenticated]);
+
 
     // 入力が変更されたとき
     const handleChange = (e: { target: { name: any; value: any; }; }) => {

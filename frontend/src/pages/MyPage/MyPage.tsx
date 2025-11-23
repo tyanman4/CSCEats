@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
 import styles from "./MyPage.module.scss";
-//import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 
 export const MyPage: React.FC = () => {
 
     const { user, isAuthenticated, login } = useAuth()
+    const navigate = useNavigate();
 
     const [messageIntro, setMessageIntro] = useState("")
     const [messagePassword, setMessagePassword] = useState("")
@@ -254,7 +256,7 @@ export const MyPage: React.FC = () => {
                                     onChange={handleChange}
                                 />
                             </div>
-                            {messageIntro}
+                            <p>{messageIntro}</p>
                             <button type="submit" >確定</button>
                             <button type="button" onClick={() => setIntroductionChanging(false)}>戻る</button>
 
@@ -266,8 +268,11 @@ export const MyPage: React.FC = () => {
 
                         </div>
                     }
+                    <button onClick={() => navigate(-1)}>戻る</button>
                 </div>
+
             }
+
         </>
     );
 };
