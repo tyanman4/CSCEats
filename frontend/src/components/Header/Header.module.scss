@@ -29,3 +29,16 @@
   align-items: center;
   gap: 8px;
 }
+
+.button {
+  border: none;
+  background-color: #006400;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
