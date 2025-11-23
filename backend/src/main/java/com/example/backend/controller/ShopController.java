@@ -122,9 +122,10 @@ public class ShopController {
     public ResponseEntity<?> getMyProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         // @AuthenticationPrincipal で現在ログイン中のユーザ情報を取得
-        // rolesもあとで加える。
         return ResponseEntity
-                .ok(Map.of("name", userDetails.getUsername(), "introduction", userDetails.getIntroduction()));
+                .ok(Map.of("name", userDetails.getUsername(),
+                        "introduction", userDetails.getIntroduction(),
+                        "role", userDetails.getRole()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
