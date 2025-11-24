@@ -6,8 +6,10 @@ import { useAuth } from "../../contexts/AuthContext";
 export const Header: React.FC = () => {
 
   const { logout, user, isAuthenticated } = useAuth();
+  const isAdmin = user?.role === "admin";
   const navigate = useNavigate();
   const location = useLocation();
+
 
   return (
     <div className={styles.header}>
@@ -15,6 +17,7 @@ export const Header: React.FC = () => {
       <div className={styles.right}>
 
         {isAuthenticated ? <p>ようこそ、{user?.name}さん</p> : <p>ゲストとして利用中</p>}
+        {isAdmin && <button className={styles.button} onClick={() => navigate("/request-approve")}>リクエスト承認ページ</button>}
         {!isAuthenticated && location.pathname !== "/login" && <button className={styles.button} onClick={() => navigate("/login")}>ログイン</button>}
         {location.pathname !== "/mypage" && isAuthenticated && <button className={styles.button} onClick={() => navigate("/mypage")}>マイページ</button>}
         {isAuthenticated && <button onClick={logout} className={styles.button}>ログアウト</button>}
