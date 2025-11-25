@@ -48,6 +48,12 @@ body {
     text-align: center;
   }
 
+  .form-message.success {
+    background: #e6ffed;
+    border: 1px solid #b3ffcc;
+    color: #267d24;
+  }
+
   .form-group {
   margin-bottom: 18px;
 

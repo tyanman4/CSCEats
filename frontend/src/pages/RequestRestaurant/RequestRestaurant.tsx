@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
 import '../../styles/_form.scss';
@@ -7,12 +7,14 @@ export const RequestRestaurant: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
     address: "",
-    description: "",
+    url: "",
     images: [] as File[]
   });
 
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [messageType, setMessageType] = useState<"success" | "error" | "">("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -60,7 +62,7 @@ export const RequestRestaurant: React.FC = () => {
       const formPayload = new FormData();
       formPayload.append("name", formData.name);
       formPayload.append("address", formData.address);
-      formPayload.append("description", formData.description);
+      formPayload.append("url", formData.url);
       formData.images.forEach((file) =>  {
         formPayload.append("images", file);
       });
@@ -71,12 +73,14 @@ export const RequestRestaurant: React.FC = () => {
 
       if (response.status === 200) {
         setMessage("リクエストが送信されました。");
-        setFormData({ name: "", address: "", description: "", images: [] });
+        setMessageType("success");
+        setFormData({ name: "", address: "", url: "", images: [] });
       } else {
+        setMessageType("error");
         setMessage("リクエストの送信に失敗しました。");
       }
     } catch (error) {
-      console.error(error);
+      setMessageType("error");
       setMessage("サーバーエラーが発生しました。");
     } finally {
       setIsSending(false);
@@ -91,7 +95,7 @@ export const RequestRestaurant: React.FC = () => {
         <p className="form-description">おすすめのお店、教えてください！</p>
 
         {message && (
-          <p className="form-message">{message}</p>
+          <p className={`form-message ${messageType === "success" ? "success" : "" }`}>{message}</p>
         )}
 
         <form className="request-form" onSubmit={handleSubmit}>
@@ -120,11 +124,12 @@ export const RequestRestaurant: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="description">説明：</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
+            <label htmlFor="url">URL:</label>
+            <input
+              type="text"
+              id="url"
+              name="url"
+              value={formData.url}
               onChange={handleChange}
             />
           </div>
@@ -138,6 +143,7 @@ export const RequestRestaurant: React.FC = () => {
               accept="image/*"
               multiple
               onChange={handleFileChange}
+              ref={fileInputRef}
             />
           </div>
 

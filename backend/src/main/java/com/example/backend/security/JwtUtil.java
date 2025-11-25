@@ -31,8 +31,8 @@ public class JwtUtil {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
-    public Integer extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("user_id", Integer.class));
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("user_id", Long.class));
     }
 
     // JWTの有効期限を取得

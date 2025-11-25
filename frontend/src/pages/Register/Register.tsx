@@ -67,6 +67,8 @@ export const Register: React.FC = () => {
       } else {
         setMessage("サーバに接続できません。");
       }
+    } finally {
+      setIsSending(false);
     }
   };
 

@@ -12,11 +12,15 @@ import com.example.backend.entity.RequestRestaurant;
 import com.example.backend.service.CSCEatsService;
 import com.example.backend.form.RequestRestaurantForm;
 import com.example.backend.helper.RequestRestaurantHelper;
+import com.example.backend.security.JwtUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.MediaType;
 
 
 @RestController
@@ -26,18 +30,33 @@ public class RequestRestaurantController {
 
     private final CSCEatsService cscEatsService;
     private final RequestRestaurantHelper requestRestaurantHelper;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/api/request-restaurants")
     public String getRequestRestaurantForUser(@RequestParam(required = false) String param) {
         return new String();
     }
     
-    @PostMapping("/api/request-restaurants")
-    public ResponseEntity<?> postRequestRestaurant(@Valid @RequestBody RequestRestaurantForm form) {
-        RequestRestaurant requestRestaurant = requestRestaurantHelper.convertRequestRestaurant(form);
-        cscEatsService.insert(requestRestaurant);
-        return ResponseEntity.ok().build();
+    @PostMapping(value = "/api/request-restaurants", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> requestRestaurant(
+        @ModelAttribute RequestRestaurantForm form,
+        HttpServletRequest request
+    ) {
+        // JWT から user_id 抽出
+        String token = request.getHeader("Authorization").substring(7);
+        Long userId = jwtUtil.extractUserId(token);
+
+        // Service 呼び出し
+        cscEatsService.insert(
+            form.getName(),
+            form.getAddress(),
+            form.getUrl(),
+            userId
+        );
+
+        return ResponseEntity.ok("OK");
     }
+
     
     @GetMapping("/api/admin/request-restaurants")
     public String getRequestRestaurantForAdmin(@RequestParam(required = false) String param) {

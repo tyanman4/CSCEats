@@ -17,8 +17,8 @@
     </select>
 
     <insert id="insert" parameterType="com.example.backend.entity.RequestRestaurant">
-        INSERT INTO request_restaurants(user_id ,name, address, reason, status, created_at, updated_at)
-        VALUES(#{userId}, #{name}, #{address}, #{description},#{status}, NOW(), NOW())
+        INSERT INTO request_restaurants(user_id ,name, address, url, status, created_at, updated_at)
+        VALUES(#{userId}, #{name}, #{address}, #{url}, #{status}, NOW(), NOW())
     </insert>
 
     <!-- 依頼を許可するとき -->

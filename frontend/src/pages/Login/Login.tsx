@@ -58,6 +58,8 @@ export const Login: React.FC = () => {
       } else {
         setMessage("サーバーエラーが発生しました。");
       }
+    } finally {
+      setIsSending(false);
     }
   };
 

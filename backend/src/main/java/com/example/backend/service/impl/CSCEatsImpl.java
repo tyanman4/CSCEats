@@ -126,7 +126,14 @@ public class CSCEatsImpl implements CSCEatsService {
     }
 
     @Override
-    public void insert(RequestRestaurant requestRestaurant) {
+    public void insert(String name, String address, String url, Long userId) {
+        RequestRestaurant requestRestaurant = new RequestRestaurant();
+        requestRestaurant.setName(name);
+        requestRestaurant.setAddress(address);
+        requestRestaurant.setUrl(url);
+        requestRestaurant.setUserId(userId);
+        requestRestaurant.setStatus("pending");
+
         requestRestaurantMapper.insert(requestRestaurant);
     }
 
