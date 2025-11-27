@@ -23,5 +23,5 @@ public class RequestRestaurantForm {
 
     private String url;
 
-    private List<MultipartFile> images;
+    private List<MultipartFile> photos;
 }

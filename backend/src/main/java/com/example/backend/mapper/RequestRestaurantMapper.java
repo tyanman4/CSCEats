@@ -11,7 +11,7 @@ import com.example.backend.entity.RequestRestaurant;
 public interface RequestRestaurantMapper {
     List<RequestRestaurant> findAllForAdmin();
     List<RequestRestaurant> findAllForUser(@Param("userId") Long userId);
-    void insert(RequestRestaurant requestRestaurant);
+    Long insert(RequestRestaurant requestRestaurant);
     void approve(@Param("id") Long id);
     void reject(@Param("id") Long id, @Param("rejectReason") String rejectReason);
 }

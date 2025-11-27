@@ -1,6 +1,10 @@
 spring:
   application:
     name: backend
+  servlet: 
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 25MB
   datasource:
     url: jdbc:postgresql://localhost:5432/csceats_test
     username: postgres

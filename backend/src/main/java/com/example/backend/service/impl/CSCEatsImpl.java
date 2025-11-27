@@ -126,7 +126,7 @@ public class CSCEatsImpl implements CSCEatsService {
     }
 
     @Override
-    public void insert(String name, String address, String url, Long userId) {
+    public Long insert(String name, String address, String url, Long userId) {
         RequestRestaurant requestRestaurant = new RequestRestaurant();
         requestRestaurant.setName(name);
         requestRestaurant.setAddress(address);
@@ -134,7 +134,7 @@ public class CSCEatsImpl implements CSCEatsService {
         requestRestaurant.setUserId(userId);
         requestRestaurant.setStatus("pending");
 
-        requestRestaurantMapper.insert(requestRestaurant);
+        return requestRestaurantMapper.insert(requestRestaurant);
     }
 
     @Override

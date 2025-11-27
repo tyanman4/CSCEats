@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.backend.entity.Photo;
 import com.example.backend.entity.RequestRestaurant;
 import com.example.backend.service.CSCEatsService;
+import com.example.backend.service.FileStorageService;
+import com.example.backend.service.PhotoService;
 import com.example.backend.form.RequestRestaurantForm;
 import com.example.backend.helper.RequestRestaurantHelper;
 import com.example.backend.security.JwtUtil;
@@ -29,6 +33,8 @@ import org.springframework.http.MediaType;
 public class RequestRestaurantController {
 
     private final CSCEatsService cscEatsService;
+    private final PhotoService photoService;
+    private final FileStorageService fileStorageService;
     private final RequestRestaurantHelper requestRestaurantHelper;
     private final JwtUtil jwtUtil;
 
@@ -47,12 +53,27 @@ public class RequestRestaurantController {
         Long userId = jwtUtil.extractUserId(token);
 
         // Service 呼び出し
-        cscEatsService.insert(
+        Long requestRestaurantId = cscEatsService.insert(
             form.getName(),
             form.getAddress(),
             form.getUrl(),
             userId
         );
+
+        if (form.getPhotos() != null && !form.getPhotos().isEmpty()) {
+            for (MultipartFile file: form.getPhotos()) {
+                String filePath = fileStorageService.store(file);
+
+                Photo photo = new Photo();
+                photo.setRestaurantId(null);
+                photo.setRestaurantId(requestRestaurantId);
+                photo.setUserId(userId);
+                photo.setUrl(filePath);
+                photo.setStatus("pending");
+                
+                photoService.insert(photo);
+            }
+        }
 
         return ResponseEntity.ok("OK");
     }

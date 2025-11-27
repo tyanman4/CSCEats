@@ -8,7 +8,7 @@ export const RequestRestaurant: React.FC = () => {
     name: "",
     address: "",
     url: "",
-    images: [] as File[]
+    photos: [] as File[]
   });
 
   const [message, setMessage] = useState("");
@@ -24,17 +24,26 @@ export const RequestRestaurant: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
+
     const fileArray = Array.from(files);
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    // 全ファイルをチェック
+
+    // 合計サイズ（25MB）
+    const totalSize = fileArray.reduce((acc, f) => acc + f.size, 0);
+    if (totalSize > 25 * 1024 * 1024) {
+      setMessage("画像の合計サイズは25MB以下にしてください");
+      e.target.value = "";
+      return;
+    }
+
     for (const file of fileArray) {
-      // サイズチェック
+      // ファイルごとの 5MB
       if (file.size > 5 * 1024 * 1024) {
-        setMessage("ファイルサイズは5MB以下にしてください");
+        setMessage("ファイルサイズは1つにつき5MB以下にしてください");
         e.target.value = "";
         return;
       }
-      // 拡張子/タイプチェック
+      // 形式チェック
       if (!allowedTypes.includes(file.type)) {
         setMessage("対応している画像形式は jpg, jpeg, png, webp のみです");
         e.target.value = "";
@@ -42,10 +51,10 @@ export const RequestRestaurant: React.FC = () => {
       }
     }
 
-    // チェックを通過した場合のみセット
-    setFormData((prev) => ({ 
-      ...prev, 
-      images: fileArray // ← File[] で保持
+    // 問題なければ保存
+    setFormData((prev) => ({
+      ...prev,
+      photos: fileArray,
     }));
   };
 
@@ -63,8 +72,8 @@ export const RequestRestaurant: React.FC = () => {
       formPayload.append("name", formData.name);
       formPayload.append("address", formData.address);
       formPayload.append("url", formData.url);
-      formData.images.forEach((file) =>  {
-        formPayload.append("images", file);
+      formData.photos.forEach((file) =>  {
+        formPayload.append("photos", file);
       });
 
       const response = await appApi.post("/request-restaurants", formPayload, {
@@ -74,7 +83,7 @@ export const RequestRestaurant: React.FC = () => {
       if (response.status === 200) {
         setMessage("リクエストが送信されました。");
         setMessageType("success");
-        setFormData({ name: "", address: "", url: "", images: [] });
+        setFormData({ name: "", address: "", url: "", photos: [] });
       } else {
         setMessageType("error");
         setMessage("リクエストの送信に失敗しました。");

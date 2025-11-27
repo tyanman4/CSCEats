@@ -28,7 +28,7 @@ public interface CSCEatsService {
     // RecuestRestaurant関連のメソッド
     List<RequestRestaurant> findAllForAdmin();
     List<RequestRestaurant> findAllForUser(@Param("userId") Long userId);
-    void insert(String name, String address, String url, Long userId);
+    Long insert(String name, String address, String url, Long userId);
     void approve(@Param("id") Long id);
     void reject(@Param("id") Long id, @Param("rejectReason") String rejectReason);
 }

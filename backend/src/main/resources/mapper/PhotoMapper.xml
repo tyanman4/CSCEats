@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.PhotoMapper">
+
+    <!-- ① 写真追加 -->
+    <insert id="insert" parameterType="Photo">
+        INSERT INTO photos
+        (restaurant_id, request_restaurant_id, user_id, url, status, created_at, updated_at)
+        VALUES
+        (#{restaurantId}, #{requestRestaurantId}, #{userId}, #{url}, #{status}, NOW(), NOW())
+    </insert>
+
+    <!-- ② 承認 -->
+    <update id="approvePhoto">
+        UPDATE photos
+        SET status = 'APPROVED',
+            reject_reason = NULL,
+            updated_at = NOW()
+        WHERE photo_id = #{photoId}
+    </update>
+
+    <!-- ③ 却下 -->
+    <update id="rejectPhoto">
+        UPDATE photos
+        SET status = 'REJECTED',
+            reject_reason = #{reason},
+            updated_at = NOW()
+        WHERE photo_id = #{photoId}
+    </update>
+
+    <!-- ④ レストラン別写真一覧 -->
+    <select id="findByRestaurantId" resultType="Photo">
+        SELECT *
+        FROM photos
+        WHERE restaurant_id = #{restaurantId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- ⑤ ユーザー別写真一覧 -->
+    <select id="findByUserId" resultType="Photo">
+        SELECT *
+        FROM photos
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- ⑥ ステータス別写真一覧 -->
+    <select id="findByStatus" resultType="Photo">
+        SLECT *
+        FROM photos
+        WHERE status = #{status}
+        ORDER BY created_at DESC
+    </select>
+</mapper>
