@@ -29,4 +29,7 @@ public interface PhotoMapper {
 
     // ステータス別一覧（Admin）
     List<Photo> findByStatus(@Param("status") String status);
+
+    // レストラン別承認写真一覧
+    List<Photo> findApprovedByRestaurantId(@Param("restaurantId") Long restaurandtId);
 }

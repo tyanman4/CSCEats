@@ -16,7 +16,7 @@
     <!-- ② 承認 -->
     <update id="approvePhoto">
         UPDATE photos
-        SET status = 'APPROVED',
+        SET status = 'approved',
             reject_reason = NULL,
             updated_at = NOW()
         WHERE photo_id = #{photoId}
@@ -25,7 +25,7 @@
     <!-- ③ 却下 -->
     <update id="rejectPhoto">
         UPDATE photos
-        SET status = 'REJECTED',
+        SET status = 'rejected',
             reject_reason = #{reason},
             updated_at = NOW()
         WHERE photo_id = #{photoId}
@@ -52,6 +52,14 @@
         SLECT *
         FROM photos
         WHERE status = #{status}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findApprovedByRestaurantId" resultType="Photo">
+        SELECT *
+        FROM photos
+        WHERE restaurant_id = #{restaurantId}
+          AND status = 'approved'
         ORDER BY created_at DESC
     </select>
 </mapper>

@@ -1,12 +1,15 @@
 package com.example.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.RestaurantDetailDto;
 import com.example.backend.entity.RestaurantReview;
 import com.example.backend.service.CSCEatsService;
 
@@ -16,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.example.backend.service.RestaurantDetailService;
+import com.example.backend.security.JwtUtil;
 
 
 @RestController
@@ -26,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class RestaurantController {
 
     private final CSCEatsService cscEatsService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestaurantDetailService restaurantDetailService;
+    private final JwtUtil jwtUtil;
+
 
     @GetMapping("/api/restaurants")
     public Map<String, Object> getRestaurants (
@@ -65,4 +70,24 @@ public class RestaurantController {
 
         return response;
     }   
+
+    @GetMapping("/api/restaurants/{id}")
+    public ResponseEntity<?> getDetail(
+        @PathVariable("id") Long restaurantId,
+        HttpServletRequest request
+    ) {
+        // --- JWT から userId 抽出 ---
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        Long userId = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            userId = jwtUtil.extractUserId(token);
+        } 
+        // --- Service 呼び出し ---
+        RestaurantDetailDto dto =
+                restaurantDetailService.getRestaurantDetail(restaurantId, userId);
+
+        return ResponseEntity.ok(dto);
+    }
 }
