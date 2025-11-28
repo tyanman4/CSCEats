@@ -4,7 +4,7 @@ import { Login } from "../pages/Login/Login";
 import { Register } from "../pages/Register/Register";
 import { AuthProvider } from "../contexts/AuthContext";
 import { MyPage } from "../pages/MyPage/MyPage";
-import { RequestApprove } from "../pages/RequestApprove/RequestApprove";
+import { RequestRestaurants } from "../pages/RequestRestaurants/RequestRestaurants";
 
 export const AppRoutes = () => {
   return (
@@ -15,7 +15,7 @@ export const AppRoutes = () => {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/restaurants" element={<RestaurantList />} />
-          <Route path="/request-approve" element={<RequestApprove />} />
+          <Route path="/request-restaurants" element={<RequestRestaurants />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

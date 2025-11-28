@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.RequestRestaurantsMapper">
+    <resultMap id="RequestRestaurantsResultMap" type="RequestRestaurants">
+        <id property="requestRestaurantId" column="request_restaurant_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="name" column="name"/>
+        <result property="url" column="url"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="address" column="address"/>
+        <result property="status" column="status"/>
+        <result property="approvedRestaurantId" column="approved_restaurant_id"/>
+        <result property="adminUserId" column="admin_user_id"/>
+        <result property="rejectReason" column="reject_reason"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="selectPendingRequestRestaurants" resultMap="RequestRestaurantsResultMap">
+        SELECT
+            rr.request_restaurant_id,
+            rr.user_id,
+            u.name AS user_name,
+            rr.name,
+            rr.url,
+            rr.created_at,
+            rr.address,
+            rr.status,
+            rr.approved_restaurant_id,
+            rr.admin_user_id,
+            rr.reject_reason,
+            rr.updated_at
+        FROM request_restaurants rr JOIN users u ON rr.user_id = u.user_id
+        WHERE rr.status = 'pending'
+    </select>
+
+    <update id="approveRequestRestaurant">
+        UPDATE "request_restaurants"
+        SET status = 'approved',
+        updated_at = CURRENT_TIMESTAMP
+        WHERE request_restaurant_id = #{id}
+    </update>
+
+
+</mapper>

@@ -13,10 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.entity.RestaurantReview;
 import com.example.backend.entity.User;
 import com.example.backend.mapper.RestaurantReviewMapper;
 import com.example.backend.mapper.UserMapper;
+import com.example.backend.mapper.RequestRestaurantsMapper;
 import com.example.backend.security.JwtUtil;
 import com.example.backend.service.CSCEatsService;
 
@@ -32,6 +34,7 @@ public class CSCEatsImpl implements CSCEatsService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authManager;
     private final RestaurantReviewMapper restaurantReviewMapper;
+    private final RequestRestaurantsMapper requestRestaurantsMapper;
 
     private Map<String, List<String>> parseSearchKeywords(String search) {
         List<String> categoryKeywords = new ArrayList<>();
@@ -125,5 +128,15 @@ public class CSCEatsImpl implements CSCEatsService {
                 .authenticate(new UsernamePasswordAuthenticationToken(username, password));
         UserDetails user = (UserDetails) authentication.getPrincipal();
         return jwtUtil.generateToken(user);
+    }
+
+    @Override
+    public List<RequestRestaurants> findPendingRequestRestaurants() {
+        return requestRestaurantsMapper.selectPendingRequestRestaurants();
+    }
+
+    @Override
+    public void approveRequestRestaurant(Integer id) {
+        requestRestaurantsMapper.approveRequestRestaurant(id);
     }
 }
