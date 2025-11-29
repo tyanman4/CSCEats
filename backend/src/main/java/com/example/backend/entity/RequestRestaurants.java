@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestRestaurants {
-    private int requestRestaurantId;
-    private int userId;
-    private String userName; //UsersテーブルをJOINしている。
+    private Integer requestRestaurantId;
+    private Integer userId;
+    private String userName; // UsersテーブルをJOINしている。
     private String name;
     private String url;
     private String createdAt;
     private String address;
     private String status;
-    private int approvedRestaurantId;
-    private int adminUserId;
+    private Integer approvedRestaurantId;
+    private Integer adminUserId;
     private String rejectReason;
     private String updatedAt;
 }

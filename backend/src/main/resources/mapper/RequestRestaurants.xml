@@ -37,9 +37,18 @@
     <update id="approveRequestRestaurant">
         UPDATE "request_restaurants"
         SET status = 'approved',
+        admin_user_id = #{adminId},
         updated_at = CURRENT_TIMESTAMP
-        WHERE request_restaurant_id = #{id}
+        WHERE request_restaurant_id = #{requestId}
     </update>
-
+    
+    <update id="rejectRequestRestaurant">
+        UPDATE "request_restaurants"
+        SET status = 'reject',
+        admin_user_id = #{adminId},
+        reject_reason = #{reason},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE request_restaurant_id = #{requestId}
+    </update>
 
 </mapper>

@@ -13,7 +13,7 @@ public interface UserMapper {
 
     List<User> selectAll();
 
-    User selectById(@Param("user_id") Integer user_id);
+    User selectById(Integer userId);
 
     void insert(User user);
 

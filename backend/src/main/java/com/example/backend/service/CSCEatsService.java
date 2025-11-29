@@ -34,6 +34,8 @@ public interface CSCEatsService {
 
     List<RequestRestaurants> findPendingRequestRestaurants();
 
-    void approveRequestRestaurant(Integer id);
+    void approveRequestRestaurant(Integer requestId, Integer adminId);
+
+    void rejectRequestRestaurant(Integer id, Integer userId, String reason);
 
 }

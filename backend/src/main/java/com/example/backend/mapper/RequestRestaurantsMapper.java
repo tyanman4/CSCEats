@@ -9,5 +9,7 @@ public interface RequestRestaurantsMapper {
 
     List<RequestRestaurants> selectPendingRequestRestaurants();
 
-    void approveRequestRestaurant(Integer id);
+    void approveRequestRestaurant(Integer requestId, Integer adminId);
+
+    void rejectRequestRestaurant(Integer requestId, Integer adminId, String reason);
 }

@@ -174,103 +174,114 @@ export const MyPage: React.FC = () => {
             <Header />
             {isAuthenticated &&
                 <div className={styles.container}>
-                    {user?.role === "admin" && <p>あなたは管理者です</p>}
-                    {nameChanging ?
-                        <form onSubmit={handleSubmitName}>
-                            <p>ユーザ名</p>
+                    <div className={styles.main_container}>
+                        {user?.role === "admin" && <p>あなたは管理者です</p>}
+                        {nameChanging ?
+                            <form onSubmit={handleSubmitName}>
+                                <label className={styles.label}>ユーザ名</label>
+                                <div>
+                                    <label className={styles.label} htmlFor="new_username">新しいユーザ名</label>
+                                    <input className={styles.input}
+                                        id="new_username"
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className={styles.label} htmlFor="password_with_new_user">パスワード</label>
+                                    <input className={styles.input}
+                                        id="password_with_new_user"
+                                        type="password"
+                                        name="passwordForName"
+                                        value={formData.passwordForName}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className={styles.button_container}>
+                                    <button type="submit" className={styles.button}>確定</button>
+                                    <button type="button" onClick={() => setNameChanging(false)} className={styles.button}>戻る</button>
+                                </div>
+                                <p>{messageName}</p>
+                            </form>
+                            :
                             <div>
-                                <label>新しいユーザ名</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                />
+                                <label className={styles.label}>ユーザ名</label>{changing || <button onClick={() => setNameChanging(true)} className={styles.button}>変更する</button>}
+                                <p>{user?.name}</p>
                             </div>
+                        }
 
+
+                        {passwordChanging ?
+                            <form onSubmit={handleSubmitPassword}>
+                                <label className={styles.label}>パスワード</label>
+                                <div>
+                                    <label className={styles.label} htmlFor="password_with_new_password">新しいパスワード</label>
+                                    <input className={styles.input}
+                                        id="password_with_new_password"
+                                        type="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                    />
+                                    <p>　(必須)4文字以上</p>
+                                </div>
+                                <div>
+                                    <label className={styles.label} htmlFor="password_with_new_password_re">新しいパスワード</label>
+                                    <input className={styles.input}
+                                        id="password_with_new_password_re"
+                                        type="password"
+                                        name="passwordRe"
+                                        value={formData.passwordRe}
+                                        onChange={handleChange}
+                                    />
+                                    <p>　(確認用)</p>
+                                </div>
+                                <div className={styles.button_container}>
+                                    <button type="submit" className={styles.button}>確定</button>
+                                    <button type="button" onClick={() => setPasswordChanging(false)} className={styles.button}>戻る</button>
+                                </div>
+                                <p>{messagePassword}</p>
+                            </form>
+                            :
                             <div>
-                                <label>パスワード</label>
-                                <input
-                                    type="password"
-                                    name="passwordForName"
-                                    value={formData.passwordForName}
-                                    onChange={handleChange}
-                                />
+                                <label className={styles.label}>パスワード</label>{changing || <button onClick={() => setPasswordChanging(true)} className={styles.button}>変更する</button>}
+                                <p>********</p>
                             </div>
-                            <button type="submit" >確定</button>
-                            <button type="button" onClick={() => setNameChanging(false)}>戻る</button>
-                            <p>{messageName}</p>
-                        </form>
-                        :
-                        <div>
-                            <p>ユーザ名&nbsp;{changing || <button onClick={() => setNameChanging(true)}>変更する</button>}</p>
-                            <p>{user?.name}</p>
-                        </div>
-                    }
+                        }
 
-
-                    {passwordChanging ?
-                        <form onSubmit={handleSubmitPassword}>
-                            <p>パスワード</p>
+                        {introductionChanging ?
+                            <form
+                                onSubmit={handleSubmit}
+                            >
+                                <label className={styles.label}>自己紹介</label>
+                                <div>
+                                    <textarea
+                                        className={styles.textarea}
+                                        name="introduction"
+                                        value={formData.introduction}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <p>{messageIntro}</p>
+                                <div className={styles.button_container}>
+                                    <button type="submit" className={styles.button}>確定</button>
+                                    <button type="button" onClick={() => setIntroductionChanging(false)} className={styles.button}>戻る</button>
+                                </div>
+                            </form>
+                            :
                             <div>
-                                <label>新しいパスワード</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
-                                <>　(必須)4文字以上</>
+                                <label className={styles.label}>自己紹介</label>{changing || <button onClick={() => setIntroductionChanging(true)} className={styles.button}>変更する</button>}
+                                <p>{user?.introduction}</p>
+
                             </div>
-                            <div>
-                                <label>新しいパスワード</label>
-                                <input
-                                    type="password"
-                                    name="passwordRe"
-                                    value={formData.passwordRe}
-                                    onChange={handleChange}
-                                />
-                                <>　(確認用)</>
-                            </div>
+                        }
+                        <button onClick={() => navigate(-1)} className={styles.button + " " + styles.center + " " + styles.back_btn}>戻る</button>
 
-                            <button type="submit" >確定</button>
-                            <button type="button" onClick={() => setPasswordChanging(false)}>戻る</button>
-                            <p>{messagePassword}</p>
-                        </form>
-                        :
-                        <div>
-                            <p>パスワード&nbsp;{changing || <button onClick={() => setPasswordChanging(true)}>変更する</button>}</p>
-                            <p>********</p>
-                        </div>
-                    }
-
-                    {introductionChanging ?
-                        <form
-                            onSubmit={handleSubmit}
-                        >
-                            <p>自己紹介</p>
-                            <div>
-                                <textarea
-                                    name="introduction"
-                                    value={formData.introduction}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <p>{messageIntro}</p>
-                            <button type="submit" >確定</button>
-                            <button type="button" onClick={() => setIntroductionChanging(false)}>戻る</button>
-
-                        </form>
-                        :
-                        <div>
-                            <p>自己紹介&nbsp;{changing || <button onClick={() => setIntroductionChanging(true)} >変更する</button>}</p>
-                            <p>{user?.introduction}</p>
-
-                        </div>
-                    }
-                    <button onClick={() => navigate(-1)}>戻る</button>
+                    </div >
                 </div>
-
             }
 
         </>
