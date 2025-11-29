@@ -138,6 +138,7 @@ public class CSCEatsImpl implements CSCEatsService {
     @Override
     public void approveRequestRestaurant(Integer requestId, Integer adminId) {
         requestRestaurantsMapper.approveRequestRestaurant(requestId, adminId);
+
     }
 
     @Override

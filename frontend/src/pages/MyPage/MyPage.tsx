@@ -226,10 +226,9 @@ export const MyPage: React.FC = () => {
                                         value={formData.password}
                                         onChange={handleChange}
                                     />
-                                    <p>　(必須)4文字以上</p>
                                 </div>
                                 <div>
-                                    <label className={styles.label} htmlFor="password_with_new_password_re">新しいパスワード</label>
+                                    <label className={styles.label} htmlFor="password_with_new_password_re">新しいパスワード(確認用)</label>
                                     <input className={styles.input}
                                         id="password_with_new_password_re"
                                         type="password"
@@ -237,7 +236,6 @@ export const MyPage: React.FC = () => {
                                         value={formData.passwordRe}
                                         onChange={handleChange}
                                     />
-                                    <p>　(確認用)</p>
                                 </div>
                                 <div className={styles.button_container}>
                                     <button type="submit" className={styles.button}>確定</button>
