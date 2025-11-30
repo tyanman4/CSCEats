@@ -1,21 +1,13 @@
 package com.example.backend.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.InputStream;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.example.backend.entity.RestaurantReview;
-import com.example.backend.entity.User;
 import com.example.backend.service.CSCEatsService;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;

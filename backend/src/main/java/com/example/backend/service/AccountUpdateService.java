@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.mapper.UserMapper;
 
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountUpdateService {
 
     private final UserMapper userMapper;

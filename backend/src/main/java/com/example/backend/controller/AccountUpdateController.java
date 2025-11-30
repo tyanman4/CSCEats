@@ -19,7 +19,7 @@ import com.example.backend.form.PasswordForm;
 import com.example.backend.helper.UserHelper;
 import com.example.backend.security.CustomUserDetails;
 import com.example.backend.service.AccountUpdateService;
-import com.example.backend.service.CSCEatsService;
+import com.example.backend.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "http://localhost:5173")
 public class AccountUpdateController {
 
-    private final CSCEatsService cscEatsService;
+    private final UserService userService;
     private final UserHelper userHelper;
     private final AccountUpdateService accountUpdateService;
 
@@ -52,13 +52,13 @@ public class AccountUpdateController {
     public ResponseEntity<?> nameUpdate(@Valid @RequestBody LoginForm form,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         // 既に存在するユーザ名かチェック
-        if (cscEatsService.checkExistsByName(form.getName())) {
+        if (userService.checkExistsByName(form.getName())) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "Username already exists"));
         }
         accountUpdateService.updateName(form.getName(), userDetails.getUsername());
-        String token = cscEatsService.login(form.getName(), form.getPassword());
+        String token = userService.login(form.getName(), form.getPassword());
         return ResponseEntity.ok(Map.of("token", token, "msg", "introduction has changed"));
 
     }
