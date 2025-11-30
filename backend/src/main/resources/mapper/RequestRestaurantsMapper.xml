@@ -16,6 +16,10 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
+    <select id="selectRequestRestaurantsById" resultMap="RequestRestaurantsResultMap">
+        SELECT * FROM request_restaurants WHERE request_restaurant_id =#{requestId}
+    </select>   
+
     <select id="selectPendingRequestRestaurants" resultMap="RequestRestaurantsResultMap">
         SELECT
             rr.request_restaurant_id,

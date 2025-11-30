@@ -7,6 +7,8 @@ import java.util.List;
 @Mapper
 public interface RequestRestaurantsMapper {
 
+    RequestRestaurants selectRequestRestaurantsById(Integer requestId);
+
     List<RequestRestaurants> selectPendingRequestRestaurants();
 
     void approveRequestRestaurant(Integer requestId, Integer adminId);

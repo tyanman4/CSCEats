@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.HashMap;
 
+import org.springframework.data.geo.GeoResult;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,11 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.entity.RestaurantReview;
 import com.example.backend.entity.User;
+import com.example.backend.helper.GeoUtils;
 import com.example.backend.mapper.RestaurantReviewMapper;
+import com.example.backend.mapper.RestaurantsMapper;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.mapper.RequestRestaurantsMapper;
 import com.example.backend.security.JwtUtil;
 import com.example.backend.service.CSCEatsService;
+import com.example.backend.service.GeocodingService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +39,9 @@ public class CSCEatsImpl implements CSCEatsService {
     private final AuthenticationManager authManager;
     private final RestaurantReviewMapper restaurantReviewMapper;
     private final RequestRestaurantsMapper requestRestaurantsMapper;
+    private final GeocodingService geocodingService;
+    private final GeoUtils geoUtils;
+    private final RestaurantsMapper restaurantsMapper;
 
     private Map<String, List<String>> parseSearchKeywords(String search) {
         List<String> categoryKeywords = new ArrayList<>();
@@ -137,8 +144,20 @@ public class CSCEatsImpl implements CSCEatsService {
 
     @Override
     public void approveRequestRestaurant(Integer requestId, Integer adminId) {
-        requestRestaurantsMapper.approveRequestRestaurant(requestId, adminId);
 
+        final double CSC_OFFICE_LAT = 35.712117;
+        final double CSC_OFFICE_LON = 139.704741;
+
+        requestRestaurantsMapper.approveRequestRestaurant(requestId, adminId);
+        RequestRestaurants requestRestaurants = requestRestaurantsMapper.selectRequestRestaurantsById(requestId);
+        String restaurantName = requestRestaurants.getName();
+        String address = requestRestaurants.getAddress();
+        String url = requestRestaurants.getUrl();
+        double[] latlon = geocodingService.getLatLon(address);
+        Double lattitude = (latlon == null) ? CSC_OFFICE_LAT : latlon[0];
+        Double longitude = (latlon == null) ? CSC_OFFICE_LON : latlon[1];
+        Integer distance = (int) geoUtils.distance(lattitude, longitude, CSC_OFFICE_LAT, CSC_OFFICE_LON);
+        restaurantsMapper.insertApprovedRestaurant(restaurantName, address, distance, url, lattitude, longitude);
     }
 
     @Override
