@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
-public class ShopController {
+public class UserController {
 
     private final CSCEatsService cscEatsService;
     private final UserHelper userHelper;

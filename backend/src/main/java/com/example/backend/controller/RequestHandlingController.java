@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/admin")
-public class ForAdminController {
+public class RequestHandlingController {
     private final CSCEatsService cscEatsService;
 
     @PostMapping("pending-list")
