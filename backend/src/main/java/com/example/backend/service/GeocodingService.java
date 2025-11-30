@@ -21,6 +21,7 @@ public class GeocodingService {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/search")
+                        .queryParam("q", address)
                         .queryParam("format", "json")
                         .queryParam("limit", "1")
                         .queryParam("accept-language", "ja")
