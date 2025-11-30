@@ -13,10 +13,10 @@ interface SearchBarProps {
 }
 
 
-export const SearchBar: React.FC<SearchBarProps> = ({ 
+export const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   categories
- }) => {
+}) => {
   const [input, setInput] = useState("");
 
   const selectedCategories = input.split(/\s+/).filter((word) => word.startsWith("#")).map((word) => word.substring(1));
@@ -65,13 +65,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       <div className={styles.categoryScroll}>
         {categories.map((cat) => {
           const isSelected = selectedCategories.includes(cat.name);
-          
+
           return (
             <button
               key={cat.categoryId}
               className={
                 isSelected
-                  ?`${styles.categoryButton} ${styles.selected}`
+                  ? `${styles.categoryButton} ${styles.selected}`
                   : styles.categoryButton
               }
               onClick={() => handleCategoryClick(cat.name)}
@@ -79,8 +79,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               {cat.name}
             </button>
           )
-          
-        })};
+
+        })}
       </div>
     </div>
   );

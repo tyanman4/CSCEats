@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class FileStorageServiceImpl implements FileStorageService {
+public class FileStorageImpl implements FileStorageService {
 
     // application.yml / properties に設定してもいいし、デフォルト値 "uploads" でもOK
     @Value("${app.upload-dir:uploads}")

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RestaurantDetailServiceImpl implements RestaurantDetailService {
+public class RestaurantDetailImpl implements RestaurantDetailService {
 
     private final RestaurantMapper restaurantMapper;
     private final PhotoMapper photoMapper;
@@ -25,7 +25,7 @@ public class RestaurantDetailServiceImpl implements RestaurantDetailService {
     private final CategoryMapper categoryMapper;
     private final RestaurantsLikesMapper favoriteMapper;
 
-    public RestaurantDetailServiceImpl(
+    public RestaurantDetailImpl(
             RestaurantMapper restaurantMapper,
             PhotoMapper photoMapper,
             ReviewMapper reviewMapper,

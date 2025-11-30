@@ -14,10 +14,19 @@
 
     <!-- ② レストラン別レビュー一覧 -->
     <select id="findByRestaurantId" resultType="Review">
-        SELECT *
-        FROM reviews
+        SELECT 
+            r.review_id,
+            r.restaurant_id,
+            r.user_id,
+            u.name AS user_name,
+            r.rating,
+            r.comment,
+            r.created_at,
+            r.updated_at
+        FROM reviews r
+        JOIN users u ON r.user_id = u.user_id
         WHERE restaurant_id = #{restaurantId}
-        ORDER BY created_at DESC
+        ORDER BY r.review_id DESC
     </select>
 
     <!-- ③ ユーザー別レビュー一覧 -->

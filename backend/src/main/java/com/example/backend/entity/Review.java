@@ -7,8 +7,11 @@ public class Review {
     private Long reviewId;
     private Long restaurantId;
     private Long userId;
-    private String content;
     private Integer rating;
+    private String comment;
     private String createdAt;
     private String updatedAt;
+
+    // 追加: ユーザー名フィールド
+    private String userName;
 }

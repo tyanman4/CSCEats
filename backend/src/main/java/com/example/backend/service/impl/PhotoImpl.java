@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PhotoServiceImpl implements PhotoService {
+public class PhotoImpl implements PhotoService {
 
     private final PhotoMapper photoMapper;
 
