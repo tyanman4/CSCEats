@@ -18,6 +18,7 @@ import com.example.backend.form.LoginForm;
 import com.example.backend.form.PasswordForm;
 import com.example.backend.helper.UserHelper;
 import com.example.backend.security.CustomUserDetails;
+import com.example.backend.service.AccountUpdateService;
 import com.example.backend.service.CSCEatsService;
 
 import jakarta.validation.Valid;
@@ -30,11 +31,12 @@ public class AccountUpdateController {
 
     private final CSCEatsService cscEatsService;
     private final UserHelper userHelper;
+    private final AccountUpdateService accountUpdateService;
 
     @PostMapping("/api/update/introduction")
     public ResponseEntity<?> introductionUpdate(@Valid @RequestBody IntroductionForm form,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        cscEatsService.updateIntroduction(userDetails.getUsername(), form.getIntroduction());
+        accountUpdateService.updateIntroduction(userDetails.getUsername(), form.getIntroduction());
         return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
     }
 
@@ -42,7 +44,7 @@ public class AccountUpdateController {
     public ResponseEntity<?> passwordUpdate(@Valid @RequestBody PasswordForm form,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         String encodedPass = userHelper.encode(form.getPassword());
-        cscEatsService.updatePassword(userDetails.getUsername(), encodedPass);
+        accountUpdateService.updatePassword(userDetails.getUsername(), encodedPass);
         return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
     }
 
@@ -55,7 +57,7 @@ public class AccountUpdateController {
                     .status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "Username already exists"));
         }
-        cscEatsService.updateName(form.getName(), userDetails.getUsername());
+        accountUpdateService.updateName(form.getName(), userDetails.getUsername());
         String token = cscEatsService.login(form.getName(), form.getPassword());
         return ResponseEntity.ok(Map.of("token", token, "msg", "introduction has changed"));
 

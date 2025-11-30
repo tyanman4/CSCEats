@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.security.CustomUserDetails;
-import com.example.backend.service.CSCEatsService;
+import com.example.backend.service.RequestHandlingService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,18 +23,19 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/admin")
 public class RequestHandlingController {
-    private final CSCEatsService cscEatsService;
+
+    private final RequestHandlingService requestHandlingService;
 
     @PostMapping("pending-list")
     public List<RequestRestaurants> getRequests() {
-        List<RequestRestaurants> requestRestaurantsList = cscEatsService.findPendingRequestRestaurants();
+        List<RequestRestaurants> requestRestaurantsList = requestHandlingService.findPendingRequestRestaurants();
         return requestRestaurantsList;
     }
 
     @PostMapping("approve/{id}")
     public ResponseEntity<String> approve(@PathVariable Integer id,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        cscEatsService.approveRequestRestaurant(id, userDetails.getUserId());
+        requestHandlingService.approveRequestRestaurant(id, userDetails.getUserId());
         return ResponseEntity.ok("approved");
     }
 
@@ -44,7 +45,7 @@ public class RequestHandlingController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         String reason = body.get("reason");
-        cscEatsService.rejectRequestRestaurant(id, userDetails.getUserId(), reason);
+        requestHandlingService.rejectRequestRestaurant(id, userDetails.getUserId(), reason);
         return ResponseEntity.ok("rejected");
     }
 

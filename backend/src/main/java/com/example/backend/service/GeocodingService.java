@@ -17,9 +17,6 @@ public class GeocodingService {
                 .build();
     }
 
-    /**
-     * 日本語住所の検索精度を上げるための Nominatim 呼び出し
-     */
     public Mono<NominatimResponse> getCoordinates(String address) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder

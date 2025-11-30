@@ -39,8 +39,6 @@ public class CSCEatsImpl implements CSCEatsService {
     private final AuthenticationManager authManager;
     private final RestaurantReviewMapper restaurantReviewMapper;
     private final RequestRestaurantsMapper requestRestaurantsMapper;
-    private final GeocodingService geocodingService;
-    private final GeoUtils geoUtils;
     private final RestaurantsMapper restaurantsMapper;
 
     private Map<String, List<String>> parseSearchKeywords(String search) {
@@ -114,55 +112,10 @@ public class CSCEatsImpl implements CSCEatsService {
     }
 
     @Override
-    public void updateName(String newName, String name) {
-        userMapper.updateName(newName, name);
-
-    }
-
-    @Override
-    public void updateIntroduction(String name, String introduction) {
-        userMapper.updateIntroduction(name, introduction);
-    }
-
-    @Override
-    public void updatePassword(String name, String password) {
-        userMapper.updatePassword(name, password);
-    };
-
-    @Override
     public String login(String username, String password) {
         Authentication authentication = authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(username, password));
         UserDetails user = (UserDetails) authentication.getPrincipal();
         return jwtUtil.generateToken(user);
-    }
-
-    @Override
-    public List<RequestRestaurants> findPendingRequestRestaurants() {
-        return requestRestaurantsMapper.selectPendingRequestRestaurants();
-    }
-
-    @Override
-    public void approveRequestRestaurant(Integer requestId, Integer adminId) {
-
-        final double CSC_OFFICE_LAT = 35.712117;
-        final double CSC_OFFICE_LON = 139.704741;
-
-        requestRestaurantsMapper.approveRequestRestaurant(requestId, adminId);
-        RequestRestaurants requestRestaurants = requestRestaurantsMapper.selectRequestRestaurantsById(requestId);
-        String restaurantName = requestRestaurants.getName();
-        String address = requestRestaurants.getAddress();
-        String url = requestRestaurants.getUrl();
-        double[] latlon = geocodingService.getLatLon(address);
-        Double lattitude = (latlon == null) ? CSC_OFFICE_LAT : latlon[0];
-        Double longitude = (latlon == null) ? CSC_OFFICE_LON : latlon[1];
-        Integer distance = (int) geoUtils.distance(lattitude, longitude, CSC_OFFICE_LAT, CSC_OFFICE_LON);
-        restaurantsMapper.insertApprovedRestaurant(restaurantName, address, distance, url, lattitude, longitude);
-    }
-
-    @Override
-    public void rejectRequestRestaurant(Integer requestId, Integer adminId, String reason) {
-
-        requestRestaurantsMapper.rejectRequestRestaurant(requestId, adminId, reason);
     }
 }

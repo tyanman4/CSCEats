@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.entity.RestaurantReview;
 import com.example.backend.entity.User;
 
@@ -22,20 +21,7 @@ public interface CSCEatsService {
 
     void insertUser(User user);
 
-    void updateName(String newName, String name);
-
-    void updateIntroduction(String name, String introduction);
-
-    void updatePassword(String name, String password);
-
     String login(String username, String password);
 
     List<Map<String, Object>> findCategoriesByUsage();
-
-    List<RequestRestaurants> findPendingRequestRestaurants();
-
-    void approveRequestRestaurant(Integer requestId, Integer adminId);
-
-    void rejectRequestRestaurant(Integer id, Integer userId, String reason);
-
 }
