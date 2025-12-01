@@ -7,7 +7,7 @@
     </select>
     <!-- １件検索 -->
     <select id="selectById" resultType="com.example.backend.entity.User">
-        SELECT * FROM "users" WHERE user_id = #{user_id}
+        SELECT * FROM "users" WHERE user_id = #{userId}
     </select>
 
     <select id="findByName" resultType="com.example.backend.entity.User">

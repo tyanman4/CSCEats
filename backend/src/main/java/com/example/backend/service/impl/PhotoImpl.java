@@ -3,8 +3,11 @@ package com.example.backend.service.impl;
 import com.example.backend.entity.Photo;
 import com.example.backend.mapper.PhotoMapper;
 import com.example.backend.service.PhotoService;
+import com.example.backend.service.FileStorageService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,10 +16,26 @@ import java.util.List;
 public class PhotoImpl implements PhotoService {
 
     private final PhotoMapper photoMapper;
+    private final FileStorageService fileStorageService;
 
     @Override
-    public void insert(Photo photo) {
+    public void savePhoto(Long restaurantId, Long userId, MultipartFile file) {
+        String fileUrl = fileStorageService.store(file);
+        
+        Photo photo = new Photo();
+        photo.setRestaurantId(restaurantId);
+        photo.setUserId(userId);
+        photo.setUrl(fileUrl);
+        photo.setStatus("pending");
+
         photoMapper.insert(photo);
+    }
+
+    @Override
+    public void savePhotos(Long restaurantId, Long userId, List<MultipartFile> file) {
+        for (MultipartFile f : file) {
+            savePhoto(restaurantId, userId, f);
+        }
     }
 
     @Override

@@ -15,7 +15,7 @@ public interface CSCEatsService {
 
     int findTotalCountRestaurants(String search);
 
-    User findByIdUser(Integer user_id);
+    User findByIdUser(Integer userId);
 
     boolean checkExistsByName(String name);
 

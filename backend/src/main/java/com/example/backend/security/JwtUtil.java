@@ -32,7 +32,7 @@ public class JwtUtil {
     }
 
     public Long extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("user_id", Long.class));
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
 
     // JWTの有効期限を取得
@@ -71,7 +71,7 @@ public class JwtUtil {
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("user_id", user.getUser_Id());
+        claims.put("userId", user.getUserId());
         claims.put("role", user.getRole()); // 例：admin / user / viewer 等
         return Jwts.builder()
             .setClaims(claims)

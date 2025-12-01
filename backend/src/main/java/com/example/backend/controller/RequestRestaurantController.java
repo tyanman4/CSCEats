@@ -48,6 +48,8 @@ public class RequestRestaurantController {
         @ModelAttribute RequestRestaurantForm form,
         HttpServletRequest request
     ) {
+        String bearer = request.getHeader("Authorization");
+        System.out.println("AUTH HEADER = " + bearer);
         // JWT から user_id 抽出
         String token = request.getHeader("Authorization").substring(7);
         Long userId = jwtUtil.extractUserId(token);
@@ -61,18 +63,7 @@ public class RequestRestaurantController {
         );
 
         if (form.getPhotos() != null && !form.getPhotos().isEmpty()) {
-            for (MultipartFile file: form.getPhotos()) {
-                String filePath = fileStorageService.store(file);
-
-                Photo photo = new Photo();
-                photo.setRestaurantId(null);
-                photo.setRestaurantId(requestRestaurantId);
-                photo.setUserId(userId);
-                photo.setUrl(filePath);
-                photo.setStatus("pending");
-                
-                photoService.insert(photo);
-            }
+            photoService.savePhotos(requestRestaurantId, userId, form.getPhotos());
         }
 
         return ResponseEntity.ok("OK");
