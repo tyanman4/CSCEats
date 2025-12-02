@@ -1,27 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.example.backend.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.example.backend.entity.User">
+        <id property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="introduction" column="introduction"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="role" column="role"/>
+    </resultMap>
+
     <!-- 全件検索 -->
-    <select id="selectAll" resultType="com.example.backend.entity.User">
-        SELECT * FROM "users"
+    <select id="selectAll" resultMap="UserResultMap">
+        SELECT * FROM users
     </select>
     <!-- １件検索 -->
-    <select id="selectById" resultType="com.example.backend.entity.User">
-        SELECT * FROM "users" WHERE user_id = #{userId}
+    <select id="selectById" resultMap="UserResultMap">
+        SELECT * FROM users WHERE user_id = #{userId}
     </select>
 
-    <select id="findByName" resultType="com.example.backend.entity.User">
-        SELECT * FROM "users" WHERE name = #{name}
+    <select id="findByName" resultMap="UserResultMap">
+        SELECT * FROM users WHERE name = #{name}
     </select>
 
     <select id="countByName" resultType="int">
-        SELECT COUNT(*) FROM "users" WHERE name = #{name}
+        SELECT COUNT(*) FROM users WHERE name = #{name}
     </select>
 
     <insert id="insert">
-        INSERT INTO "users" (name, password, introduction, created_at, updated_at)
+        INSERT INTO users (name, password, introduction, created_at, updated_at)
         VALUES
         (#{name}, #{password}, #{introduction}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
+
+    <update id="updateIntroduction">
+        UPDATE users
+        SET introduction = #{introduction},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE name = #{name}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE users
+        SET password = #{password},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE name = #{name}
+    </update>
+
+    <update id="updateName">
+        UPDATE users
+        SET name = #{newName},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE name = #{name}
+    </update>
 
 </mapper>

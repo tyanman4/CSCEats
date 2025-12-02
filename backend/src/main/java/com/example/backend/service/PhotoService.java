@@ -1,54 +1,57 @@
-package com.example.backend.service.impl;
+package com.example.backend.service;
 
 import com.example.backend.entity.Photo;
 import com.example.backend.mapper.PhotoMapper;
-import com.example.backend.service.PhotoService;
-import com.example.backend.service.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;      // ← import が漏れていた
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public interface PhotoService {
+public class PhotoService {
 
-    void savePhotos(Long restaurantId, Long userID, List<MultipartFile> file) {
-        for (MultipartFile f : file) {
-            savePhoto(restaurantId, userID, f);
+    private final PhotoMapper photoMapper;
+    private final FileStorageService fileStorageService; // 同じ package なので import 不要
+
+    public void savePhotos(Long restaurantId, Long requestRestaurantId,Long userID, List<MultipartFile> files) {
+        for (MultipartFile f : files) {
+            savePhoto(restaurantId, requestRestaurantId,userID, f);
         }
-    };
+    }
 
-    void savePhoto(Long restaurantId, Long userId, MultipartFile file) {
+    public void savePhoto(Long restaurantId, Long requestRestaurantId, Long userId, MultipartFile file) {
         String fileUrl = fileStorageService.store(file);
-        
+
         Photo photo = new Photo();
         photo.setRestaurantId(restaurantId);
+        photo.setRequestRestaurantId(requestRestaurantId);
         photo.setUserId(userId);
         photo.setUrl(fileUrl);
         photo.setStatus("pending");
 
         photoMapper.insert(photo);
-    };
+    }
 
-    void approvePhoto(Long photoId) {
+    public void approvePhoto(Long photoId) {
         photoMapper.approvePhoto(photoId);
-    };
+    }
 
-    void rejectPhoto(Long photoId, String reason) {
+    public void rejectPhoto(Long photoId, String reason) {
         photoMapper.rejectPhoto(photoId, reason);
-    };
+    }
 
-    List<Photo> getPhotosByRestaurant(Long restaurantId) {
+    public List<Photo> getPhotosByRestaurant(Long restaurantId) {
         return photoMapper.findByRestaurantId(restaurantId);
-    };
+    }
 
-    List<Photo> getPhotosByUser(Long userId) {
+    public List<Photo> getPhotosByUser(Long userId) {
         return photoMapper.findByUserId(userId);
-    };
+    }
 
-    List<Photo> getPhotosByStatus(String status) {
+    public List<Photo> getPhotosByStatus(String status) {
         return photoMapper.findByStatus(status);
-    };
+    }
 }

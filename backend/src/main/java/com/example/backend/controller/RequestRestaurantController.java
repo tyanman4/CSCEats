@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.entity.Photo;
-import com.example.backend.entity.RequestRestaurant;
-import com.example.backend.service.CSCEatsService;
+import com.example.backend.entity.RequestRestaurants;
+import com.example.backend.service.RequestRestaurantService;
 import com.example.backend.service.FileStorageService;
 import com.example.backend.service.PhotoService;
 import com.example.backend.form.RequestRestaurantForm;
@@ -32,17 +32,12 @@ import org.springframework.http.MediaType;
 @CrossOrigin(origins = "http://localhost:5173")
 public class RequestRestaurantController {
 
-    private final CSCEatsService cscEatsService;
+    private final RequestRestaurantService requestRestaurantService;
     private final PhotoService photoService;
     private final FileStorageService fileStorageService;
     private final RequestRestaurantHelper requestRestaurantHelper;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/api/request-restaurants")
-    public String getRequestRestaurantForUser(@RequestParam(required = false) String param) {
-        return new String();
-    }
-    
     @PostMapping(value = "/api/request-restaurants", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> requestRestaurant(
         @ModelAttribute RequestRestaurantForm form,
@@ -55,7 +50,7 @@ public class RequestRestaurantController {
         Long userId = jwtUtil.extractUserId(token);
 
         // Service 呼び出し
-        Long requestRestaurantId = cscEatsService.insert(
+        Long requestRestaurantId = requestRestaurantService.insert(
             form.getName(),
             form.getAddress(),
             form.getUrl(),
@@ -63,25 +58,10 @@ public class RequestRestaurantController {
         );
 
         if (form.getPhotos() != null && !form.getPhotos().isEmpty()) {
-            photoService.savePhotos(requestRestaurantId, userId, form.getPhotos());
+            photoService.savePhotos(null ,requestRestaurantId, userId, form.getPhotos());
         }
 
         return ResponseEntity.ok("OK");
     }
 
-    
-    @GetMapping("/api/admin/request-restaurants")
-    public String getRequestRestaurantForAdmin(@RequestParam(required = false) String param) {
-        return new String();
-    }
-
-    @PatchMapping("/api/admin/request-restaurants/{id}/reject")
-    public ResponseEntity<?> patchRejectRequestRestaurant(@PathVariable Long id) {
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/api/admin/request-restaurants/{id}/approve")
-    public ResponseEntity<?> patchApproveRequestRestaurant(@PathVariable Long id) {
-        return ResponseEntity.ok().build();
-    }
 }

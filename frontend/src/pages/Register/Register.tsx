@@ -45,7 +45,7 @@ export const Register: React.FC = () => {
 
     if (formData.password !== formData.password_re) {
       setMessage("パスワードが確認用パスワードと異なります。");
-      return; 
+      return;
     }
 
     try {
@@ -135,13 +135,13 @@ export const Register: React.FC = () => {
           </div>
 
           <button type="submit" disabled={isSending} className="form-button">
-            {isSending ? "送信中...": "新規登録"}
+            {isSending ? "送信中..." : "新規登録"}
           </button>
         </form>
         <div className="auth-links">
           <div><a href="/login">ログイン</a></div>
-          <div><a 
-            href ="restaurants"
+          <div><a
+            href="restaurants"
             onClick={() => logout()}
           >
             ゲストのまま利用する

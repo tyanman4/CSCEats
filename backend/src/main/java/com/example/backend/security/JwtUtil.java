@@ -64,14 +64,12 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    // JWT生成
-    // public String generateToken(UserDetails userDetails) {
-    //     return generateToken(new HashMap<>(), userDetails);
-    // }
-
-    public String generateToken(User user) {
+    public String generateToken(UserDetails userDetails) {
+        CustomUserDetails customUser = (CustomUserDetails) userDetails;
+        User user = customUser.getUser();
+        
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", user.getUserId());
+        claims.put("user_id", user.getUserId());
         claims.put("role", user.getRole()); // 例：admin / user / viewer 等
         return Jwts.builder()
             .setClaims(claims)

@@ -17,11 +17,17 @@ export const Login: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/restaurants")
+    }
+  }, [isAuthenticated]);
+
 
   // 入力が変更されたとき
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,7 +75,7 @@ export const Login: React.FC = () => {
       <div className="form-page-container">
         <h2 className="form-title">ログイン</h2>
         <p className="form-description">CSCEatsへお帰りなさい！</p>
-        
+
         {message && (
           <p className="form-message">{message}</p>
         )}
@@ -99,16 +105,16 @@ export const Login: React.FC = () => {
           </div>
 
           <button type="submit" disabled={isSending} className="form-button">
-            {isSending ? "送信中...": "ログイン"}
+            {isSending ? "送信中..." : "ログイン"}
           </button>
         </form>
         <div className="auth-links">
           <div><a href="register">新規登録</a></div>
           <div>
-            <a 
-              href="restaurants" 
+            <a
+              href="restaurants"
               onClick={() => logout()}>
-                ゲストのまま利用する
+              ゲストのまま利用する
             </a>
           </div>
         </div>

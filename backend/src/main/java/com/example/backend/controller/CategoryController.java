@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.service.CSCEatsService;
+import com.example.backend.service.RestaurantListService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
 public class CategoryController {
   
-  private final CSCEatsService cscEatsService;
+  private final RestaurantListService restaurantListService;
 
     @GetMapping("/api/categories")
     public List<Map<String, Object>> getCategoriesByUsage() {
-        return cscEatsService.findCategoriesByUsage();
+        return restaurantListService.findCategoriesByUsage();
     }
 }

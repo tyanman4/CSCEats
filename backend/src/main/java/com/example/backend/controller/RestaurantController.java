@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.RestaurantDetailDto;
 import com.example.backend.entity.RestaurantReview;
-import com.example.backend.service.CSCEatsService;
+import com.example.backend.service.RestaurantListService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,19 +28,18 @@ import com.example.backend.security.JwtUtil;
 @CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
 public class RestaurantController {
 
-    private final CSCEatsService cscEatsService;
+    private final RestaurantListService restaurantListService;
     private final RestaurantDetailService restaurantDetailService;
     private final JwtUtil jwtUtil;
 
 
     @GetMapping("/api/restaurants")
-    public Map<String, Object> getRestaurants (
-        @RequestParam(required = false) String search,
-        @RequestParam(required = false) List<String> sorts,
-        @RequestParam(defaultValue = "1") int page
-    ) {
-        List<RestaurantReview> listRestaurants = cscEatsService.findRestaurantsWithReviewSummary(search, sorts, page);
-        long totalCount =  cscEatsService.findTotalCountRestaurants(search);
+    public Map<String, Object> getRestaurants(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) List<String> sorts,
+            @RequestParam(defaultValue = "1") int page) {
+        List<RestaurantReview> listRestaurants = restaurantListService.findRestaurantsWithReviewSummary(search, sorts, page);
+        long totalCount = restaurantListService.findTotalCountRestaurants(search);
         List<Map<String, Object>> restaurants = new ArrayList<>();
         for (RestaurantReview rt : listRestaurants) {
             Map<String, Object> restaurant = new HashMap<>();
@@ -56,14 +55,15 @@ public class RestaurantController {
             restaurant.put("updatedAt", rt.getUpdatedAt());
             restaurant.put("latitude", rt.getLatitude());
             restaurant.put("longitude", rt.getLongitude());
-            restaurant.put("averageRating", rt.getAverageRating()); 
+            restaurant.put("averageRating", rt.getAverageRating());
             restaurant.put("reviewCount", rt.getReviewCount());
             restaurant.put("categories", rt.getCategories());
  
 
             restaurants.add(restaurant);
-        };
-       
+        }
+        ;
+
         Map<String, Object> response = new HashMap<>();
         response.put("restaurants", restaurants);
         response.put("totalCount", totalCount);

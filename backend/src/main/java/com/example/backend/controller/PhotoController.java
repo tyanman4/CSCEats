@@ -33,7 +33,7 @@ public class PhotoController {
         String token = request.getHeader("Authorization").substring(7);
         Long userId = jwtUtil.extractUserId(token);
 
-        photoService.savePhoto(restaurantId, userId, file);
+        photoService.savePhoto(restaurantId, null,userId, file);
 
         return ResponseEntity.ok("写真をアップロードしました");
     }
