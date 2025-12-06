@@ -7,9 +7,9 @@
     <!-- ① レストランいいね追加 -->
     <insert id="insert" parameterType="RestaurantsLikes">
         INSERT INTO restaurants_likes
-        (restaurant_id, user_id, created_at, updated_at)
+        (restaurant_id, user_id)
         VALUES
-        (#{restaurantId}, #{userId}, NOW(), NOW())
+        (#{restaurantId}, #{userId})
     </insert>
 
     <!-- ② レストランいいね削除 -->
@@ -26,16 +26,8 @@
         WHERE restaurant_id = #{restaurantId}
     </select>
 
-    <!-- ④ ユーザー別いいね一覧取得 -->
-    <select id="findByUserId" parameterType="java.lang.Long" resultType="RestaurantsLikes">
-        SELECT *
-        FROM restaurants_likes
-        WHERE user_id = #{userId}
-        ORDER BY created_at DESC
-    </select>
-
-    <!-- ⑤ レストランいいね存在確認 -->
-    <select id="isFavorite" parameterType="RestaurantsLikes" resultType="boolean">
+    <!-- ④ レストランいいね存在確認 -->
+    <select id="isLiked" parameterType="RestaurantsLikes" resultType="boolean">
         SELECT EXISTS(
             SELECT 1
             FROM restaurants_likes

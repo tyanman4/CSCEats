@@ -53,12 +53,29 @@ interface RestaurantDetailResponse {
 export const RestaurantDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [restaurantDetail, setRestaurantDetail] = useState<RestaurantDetailResponse | null>(null);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await appApi.delete(`/restaurants/${id}/likes`);
+        setIsFavorite(false);
+      } else {
+        await appApi.post(`/restaurants/${id}/likes`);
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error('お気に入りの更新に失敗しました', error);
+    }
+  };
+
 
   useEffect(() => {
     const fetchRestaurantDetail = async () => {
       try {
         const res = await appApi.get<RestaurantDetailResponse>(`/restaurants/${id}`);
         setRestaurantDetail(res.data);
+        setIsFavorite(res.data.favorite);
       } catch (error) {
         console.error('Error fetching restaurant detail:', error);
       }
@@ -79,11 +96,13 @@ export const RestaurantDetail = () => {
         <div className={styles.leftColumn}>
 
           <h1 className={styles.title}>{restaurantDetail.restaurant.name}</h1>
-          {restaurantDetail.favorite ? (
-            <p className={styles.favorite}>★</p>
-          ) : (
-            <p className={styles.notFavorite}>☆</p>
-          )}
+          <button
+            className={isFavorite ? styles.favorite : styles.notFavorite}
+            onClick={toggleFavorite}
+          >
+            {isFavorite ? '★ お気に入り中' : '☆ お気に入り登録'}
+          </button>
+
           <div className={styles.categoryContainer}>
             {restaurantDetail.categories.map((category) => (
               <p key={category.categoryId} className={styles.categoryTag}>

@@ -5,7 +5,7 @@
     padding: 40px;
     max-width: 1400px;
     margin: 0 auto;
-    padding-top: 8  0px;
+    padding-top: 8 0px;
 }
 
 /* 左側（店舗情報） */
@@ -96,4 +96,23 @@
 .reviewer {
     font-weight: bold;
     margin-bottom: 5px;
+}
+
+.favorite {
+    background: gold;
+    color: black;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.notFavorite {
+    background: #eee;
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
 }
