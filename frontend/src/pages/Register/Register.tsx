@@ -7,135 +7,147 @@ import { useAuth } from "../../contexts/AuthContext";
 
 
 export const Register: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    password: "",
+    password_re: "",
+    introduction: ""
+  });
 
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        name: "",
-        password: "",
-        password_re: "",
-        introduction: ""
-    });
-    const { login } = useAuth();
+  const navigate = useNavigate();
+  const { login, logout } = useAuth();
+  const [message, setMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
-    const [message, setMessage] = useState("");
+  // 入力が変更されたとき
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    // 入力が変更されたとき
-    const handleChange = (e: { target: { name: any; value: any; }; }) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  // フォーム送信時
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!formData.name || !formData.password) {
+      setMessage("ユーザ名とパスワードを入力してください。");
+      return;
+    }
 
-    // フォーム送信時
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!formData.name || !formData.password) {
-            setMessage("ユーザ名とパスワードを入力してください。");
-            return;
+    if (formData.name.length < 2) {
+      setMessage("ユーザ名は2文字以上にしてください。");
+      return;
+    }
+
+    if (formData.password.length < 4) {
+      setMessage("パスワードは4文字以上にしてください。");
+      return;
+    }
+
+    if (formData.password !== formData.password_re) {
+      setMessage("パスワードが確認用パスワードと異なります。");
+      return;
+    }
+
+    try {
+      setIsSending(true);
+      const response = await appApi.post("/save", formData);
+      if (response.status === 200) {
+        login(response.data.token);
+        navigate(response.data.redirect)
+      } else {
+        setMessage("登録に失敗しました。");
+      }
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 409) {
+          setMessage("そのユーザ名は既に存在します。");
+        } else {
+          setMessage("登録に失敗しました。")
         }
+      } else {
+        setMessage("サーバに接続できません。");
+      }
+    } finally {
+      setIsSending(false);
+    }
+  };
 
-        if (formData.name.length < 2) {
-            setMessage("ユーザ名は2文字以上にしてください。");
-            return;
-        }
+  return (
+    <>
+      <Header />
+      <div className="register-page form-page-container">
+        <form onSubmit={handleSubmit}>
+          <h2 className="form-title">新規登録</h2>
+          <p
+            className="form-description"
+          >
+            あなたの”美味しい”を共有しよう！
+          </p>
+          {message && (
+            <p className="form-message">{message}</p>
+          )}
 
-        if (formData.password.length < 4) {
-            setMessage("パスワードは4文字以上にしてください。");
-            return;
-        }
+          <div className="form-group">
+            <label htmlFor="name">ユーザ名（必須）：</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        if (formData.password !== formData.password_re) {
-            setMessage("パスワードが確認用パスワードと異なります。");
-            return;
-        }
+          <div className="form-group">
+            <label htmlFor="password">パスワード（必須）：</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        try {
-            const response = await appApi.post("/save", formData);
+          <div className="form-group">
+            <label htmlFor="password_re">パスワード確認（必須）：</label>
+            <input
+              type="password"
+              id="password_re"
+              name="password_re"
+              value={formData.password_re}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-            if (response.status === 200) {
-                login(response.data.token);
-                navigate(response.data.redirect)
+          <div className="form-group">
+            <label htmlFor="introduction">自己紹介：</label>
+            <input
+              type="text"
+              id="introduction"
+              name="introduction"
+              value={formData.introduction}
+              onChange={handleChange}
+            />
+          </div>
 
-            } else {
-                setMessage("登録に失敗しました。");
-            }
-        } catch (error: any) {
-            if (error.response) {
-                if (error.response.status === 409) {
-                    setMessage("そのユーザ名は既に存在します。");
-                } else {
-                    setMessage("登録に失敗しました。")
-                }
-            } else {
-                setMessage("サーバに接続できません。");
-            }
-
-        }
-    };
-
-    return (
-        <>
-            <Header />
-            <div>
-                <form
-                    onSubmit={handleSubmit}
-                >
-                    <h2>新規登録</h2>
-
-                    <div>
-                        <label>ユーザ名</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-
-                        />
-                        <>　(必須)2文字以上</>
-                    </div>
-
-                    <div>
-                        <label>パスワード</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                        <>　(必須)4文字以上</>
-                    </div>
-                    <div>
-                        <label>パスワード</label>
-                        <input
-                            type="password"
-                            name="password_re"
-                            value={formData.password_re}
-                            onChange={handleChange}
-                        />
-                        <>　(確認用)</>
-                    </div>
-
-                    <div>
-                        <label>自己紹介</label>
-                        <input
-                            type="text"
-                            name="introduction"
-                            value={formData.introduction}
-                            onChange={handleChange}
-                        />
-                        <>　(任意)</>
-                    </div>
-
-                    <button
-                        type="submit"
-                    >
-                        新規登録
-                    </button>
-
-                    {message && (
-                        <p>{message}</p>
-                    )}
-                </form>
-            </div>
-        </>
-    );
+          <button type="submit" disabled={isSending} className="form-button">
+            {isSending ? "送信中..." : "新規登録"}
+          </button>
+        </form>
+        <div className="auth-links">
+          <div><a href="/login">ログイン</a></div>
+          <div><a
+            href="restaurants"
+            onClick={() => logout()}
+          >
+            ゲストのまま利用する
+          </a></div>
+        </div>
+      </div>
+    </>
+  );
 };

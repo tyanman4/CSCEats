@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import com.example.backend.entity.User;
 
@@ -13,12 +12,17 @@ public interface UserMapper {
 
     List<User> selectAll();
 
-    User selectById(@Param("user_id") Integer user_id);
+    User selectById(Integer userId);
 
     void insert(User user);
 
-    // 複数件ヒットしても最初の一件だけ返す。見つからなかったらOptional.empty()が返る。
     Optional<User> findByName(String name);
 
     int countByName(String name);
+
+    void updateIntroduction(String name, String introduction);
+
+    void updatePassword(String name, String password);
+
+    void updateName(String newName, String name);
 }

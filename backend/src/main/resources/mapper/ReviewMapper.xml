@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.ReviewMapper">
+
+    <!-- ① レビュー追加 -->
+    <insert id="insert" parameterType="Review">
+        INSERT INTO reviews
+        (restaurant_id, user_id, rating, comment, created_at, updated_at)
+        VALUES
+        (#{restaurantId}, #{userId}, #{rating}, #{comment}, NOW(), NOW())
+    </insert>
+
+    <!-- ② レストラン別レビュー一覧 -->
+    <select id="findByRestaurantId" resultType="Review">
+        SELECT 
+            r.review_id,
+            r.restaurant_id,
+            r.user_id,
+            u.name AS user_name,
+            r.rating,
+            r.comment,
+            r.created_at,
+            r.updated_at
+        FROM reviews r
+        JOIN users u ON r.user_id = u.user_id
+        WHERE restaurant_id = #{restaurantId}
+        ORDER BY r.review_id DESC
+    </select>
+
+    <!-- ③ ユーザー別レビュー一覧 -->
+    <select id="findByUserId" resultType="Review">
+        SELECT *
+        FROM reviews
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+</mapper>

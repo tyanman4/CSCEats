@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.example.backend.mapper.CategoryMapper">
+
+    <!-- ① カテゴリー追加 -->
+    <insert id="insert" parameterType="Category">
+        INSERT INTO categories
+        (name, description, created_at, updated_at)
+        VALUES
+        (#{name}, #{description}, NOW(), NOW())
+    </insert>
+
+    <!-- ② 全カテゴリー取得 -->
+    <select id="findAll" resultType="Category">
+        SELECT *
+        FROM categories
+        ORDER BY name ASC
+    </select>
+
+    <!-- ③ レストラン別カテゴリー一覧 -->
+    <select id="findByRestaurantId" resultType="Category">
+        SELECT c.*
+        FROM categories c
+        JOIN restaurant_categories rc ON c.category_id = rc.category_id
+        WHERE rc.restaurant_id = #{restaurantId}
+        ORDER BY c.name ASC
+    </select>
+</mapper>

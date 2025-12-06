@@ -5,7 +5,7 @@ import appApi from "../api/appApi";
 type User = {
     name: string;
     introduction: string;
-    //roles: string[];
+    role: string;
 } | null; //ログアウト時はnull
 
 type AuthContextType = {
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const userData: User = {
                 name: res.data.name,
                 introduction: res.data.introduction,
-                //roles: res.data.roles
+                role: res.data.role
             };
             setUser(userData);
         } catch (err) {

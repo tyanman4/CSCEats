@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.RestaurantMapper">
+
+    <!-- ① レストラン追加 -->
+    <insert id="insert" parameterType="Restaurant">
+        INSERT INTO restaurants
+        (name, address, phone_number, website, created_at, updated_at)
+        VALUES
+        (#{name}, #{address}, #{phoneNumber}, #{website}, NOW(), NOW())
+    </insert>
+
+    <!-- ② レストランIDで検索 -->
+    <select id="findById" parameterType="java.lang.Long" resultType="Restaurant">
+        SELECT *
+        FROM restaurants
+        WHERE restaurant_id = #{restaurantId}
+    </select>
+</mapper>

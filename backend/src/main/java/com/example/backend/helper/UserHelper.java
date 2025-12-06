@@ -21,4 +21,8 @@ public class UserHelper {
         user.setIntroduction(form.getIntroduction());
         return user;
     }
+
+    public String encode(String password) {
+        return encoder.encode(password);
+    }
 }

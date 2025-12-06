@@ -1,0 +1,162 @@
+:root {
+  --primary-color: #2A6FFF;
+  --secondary-color: #89CFF0;
+  --register-color: #4CAF50;
+  --background-color: #F7FBFF;
+  --text-color: #333;
+  --border-radius: 12px;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: "Helvetica", "Arial", sans-serif;
+  background: var(--background-color);
+  margin: 0;
+  padding: 0;
+}
+
+.form-page-container {
+  max-width: 420px;
+  margin: 100px auto;
+  background: #fff;
+  padding: 32px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+
+  .form-title {
+    margin-bottom: 24px;
+    font-size: 22px;
+    color: var(--primary-color);
+    text-align: center;
+  }
+
+  .form-description {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: var(--text-color);
+  }
+
+  .form-message {
+    margin-bottom: 18px;
+    padding: 12px;
+    background: #ffefef;
+    border: 1px solid #ffcccc;
+    border-radius: var(--border-radius);
+    color: #d8000c;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .form-message.success {
+    background: #e6ffed;
+    border: 1px solid #b3ffcc;
+    color: #267d24;
+  }
+
+  .form-group {
+  margin-bottom: 18px;
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea,
+    input[type="file"],
+    button {
+      width: 100%;       // 横幅を揃える
+      box-sizing: border-box; // パディング込みで幅を計算
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea {
+      padding: 12px;
+      border: 1px solid #d9e8f6;
+      border-radius: var(--border-radius);
+      background: #F2F8FF;
+      transition: border-color 0.2s ease;
+      font-size: 15px;
+
+      &:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        background: #ffffff;
+      }
+    }
+
+    input[type="file"] {
+      padding: 6px;
+      border-radius: var(--border-radius);
+      background: #F7FBFF;
+      cursor: pointer;
+    }
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+
+  .link-text {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--primary-color);
+  }
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 16px;
+
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+} 
+
+.register-page {
+  .form-title {
+    color: var(--register-color);
+  }
+
+  button {
+    background: var(--register-color);
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .auth-links a{
+    color: var(--register-color);    
+  }
+}
