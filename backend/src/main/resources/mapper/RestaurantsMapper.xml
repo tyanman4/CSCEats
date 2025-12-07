@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.RestaurantsMapper">
+    <resultMap id="RestaurantsMap" type="com.example.backend.entity.Restaurants">
+        <id property="restaurantId" column="restaurant_id"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="distance" column="distance"/>
+        <result property="url" column="url"/>
+        <result property="averageBudget" column="average_budget"/>
+        <result property="description" column="description"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="averageRating" column="average_rating"/>
+        <result property="reviewCount" column="review_count"/>
+    </resultMap>
+
+    <insert id="insertApprovedRestaurant">
+        INSERT INTO restaurants (name, address, distance, url, latitude, longitude)
+        VALUES
+        (#{name}, #{address}, #{distance}, #{url}, #{latitude}, #{longitude})
+    </insert>
+
+</mapper>

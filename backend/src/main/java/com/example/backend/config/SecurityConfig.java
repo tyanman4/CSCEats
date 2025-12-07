@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,8 +51,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/save").permitAll()
                         .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/api/restaurants").permitAll()
-                        .requestMatchers("/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/restaurants").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/restaurants/**").permitAll()
                         .anyRequest().authenticated())
                 // UsernamePasswordAuthenticationFilter より前にjwtAuthFilterでフィルターする。
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -19,5 +19,6 @@ public class UserForm {
     @Size(min = 4, message = "短すぎｗ")
     private String password;
 
+    @Size(max = 1024, message = "長すぎｗ")
     private String introduction;
 }

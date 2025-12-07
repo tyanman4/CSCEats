@@ -7,6 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.example.backend.entity.User;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -25,6 +27,14 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("user_id", Long.class));
+    }
+
     // JWTの有効期限を取得
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -36,11 +46,12 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(getSignInKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+        return claims;
     }
 
     private Key getSignInKey() {
@@ -53,20 +64,22 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    // JWT生成
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        CustomUserDetails customUser = (CustomUserDetails) userDetails;
+        User user = customUser.getUser();
+        
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("user_id", user.getUserId());
+        claims.put("role", user.getRole()); // 例：admin / user / viewer 等
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(user.getName())
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1時間
+            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+            .compact();
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis())) // トークン発行時刻
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1時間有効
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
 
     // JWT検証
     public Boolean isTokenValid(String token, UserDetails userDetails) {
