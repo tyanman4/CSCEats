@@ -1,8 +1,9 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.NominatimResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import lombok.Data;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -12,51 +13,36 @@ public class GeocodingService {
 
     public GeocodingService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
-                .baseUrl("https://nominatim.openstreetmap.org")
-                .defaultHeader("User-Agent", "MySpringApp/1.0 (your_email@gmail.com)")
+                .defaultHeader("User-Agent", "MyApp/1.0")
+                .baseUrl("https://api.community-geocoder.geolonia.com")
                 .build();
     }
 
-    public Mono<NominatimResponse> getCoordinates(String address) {
+    public Mono<CommunityGeocoderResponse[]> getCoordinates(String address) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/search")
-                        .queryParam("q", address)
-                        .queryParam("format", "json")
-                        .queryParam("limit", "1")
-                        .queryParam("accept-language", "ja")
-                        .queryParam("addressdetails", "1")
-                        .queryParam("countrycodes", "jp")
+                        .path("/v1/coordinates")
+                        .queryParam("address", address)
                         .build())
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(NominatimResponse[].class)
-                                .map(res -> res.length > 0 ? res[0] : null);
-                    } else {
-                        // 4xx / 5xx / 429（レート制限）など → null を返す
-                        return Mono.just(null);
-                    }
-                })
-                .onErrorResume(e -> Mono.empty()); // 通信断など
+                .retrieve()
+                .bodyToMono(CommunityGeocoderResponse[].class)
+                .onErrorResume(e -> Mono.empty());
     }
 
-    /**
-     * ブロッキングで緯度経度を返すメソッド（RestController・Serviceなどで使いやすい）
-     */
     public double[] getLatLon(String address) {
+        CommunityGeocoderResponse[] res = getCoordinates(address).block();
 
-        NominatimResponse response = getCoordinates(address).block();
-
-        if (response == null || response.getLat() == null || response.getLon() == null) {
-            return null; // 見つからない場合
-        }
-
-        try {
-            double lat = Double.parseDouble(response.getLat());
-            double lon = Double.parseDouble(response.getLon());
-            return new double[] { lat, lon };
-        } catch (NumberFormatException e) {
+        if (res == null || res.length == 0 || res[0].getLat() == null || res[0].getLng() == null) {
             return null;
         }
+
+        return new double[] { res[0].getLat(), res[0].getLng() };
+    }
+
+    @Data
+    public static class CommunityGeocoderResponse {
+        private Double lat;
+        private Double lng;
+        private String matchedAddress;
     }
 }
