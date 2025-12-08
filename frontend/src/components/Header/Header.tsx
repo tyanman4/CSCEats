@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
 
   return (
     <div className={styles.header}>
-      <h3 className={styles.title}>CSCEats</h3>
+      <h3 className={styles.title} onClick={() => navigate("/restaurants")}>CSCEats</h3>
       <div className={styles.right}>
 
         {isAuthenticated ? <p>ようこそ、{user?.name}さん</p> : <p>ゲストとして利用中</p>}

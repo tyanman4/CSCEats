@@ -19,12 +19,11 @@ public class GeocodingService {
                 .build();
     }
 
-    // 戻り値の型を GsiResponse[] に変更
     public Mono<GsiResponse[]> getCoordinates(String address) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/address-search/AddressSearch") // 国土地理院のパス
-                        .queryParam("q", address) // パラメータは 'q'
+                        .queryParam("q", address)
                         .build())
                 .retrieve()
                 .bodyToMono(GsiResponse[].class)
