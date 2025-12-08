@@ -2,7 +2,7 @@ package com.example.backend.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
+//import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import reactor.core.publisher.Mono;
 
@@ -14,35 +14,49 @@ public class GeocodingService {
     public GeocodingService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
                 .defaultHeader("User-Agent", "MyApp/1.0")
-                .baseUrl("https://api.community-geocoder.geolonia.com")
+                // 国土地理院のAPIベースURL
+                .baseUrl("https://msearch.gsi.go.jp")
                 .build();
     }
 
-    public Mono<CommunityGeocoderResponse[]> getCoordinates(String address) {
+    // 戻り値の型を GsiResponse[] に変更
+    public Mono<GsiResponse[]> getCoordinates(String address) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/v1/coordinates")
-                        .queryParam("address", address)
+                        .path("/address-search/AddressSearch") // 国土地理院のパス
+                        .queryParam("q", address) // パラメータは 'q'
                         .build())
                 .retrieve()
-                .bodyToMono(CommunityGeocoderResponse[].class)
+                .bodyToMono(GsiResponse[].class)
+                .doOnError(e -> System.out.println("Geocoding Error: " + e.getMessage()))
                 .onErrorResume(e -> Mono.empty());
     }
 
     public double[] getLatLon(String address) {
-        CommunityGeocoderResponse[] res = getCoordinates(address).block();
+        GsiResponse[] res = getCoordinates(address).block();
 
-        if (res == null || res.length == 0 || res[0].getLat() == null || res[0].getLng() == null) {
+        if (res == null || res.length == 0 || res[0].getGeometry() == null
+                || res[0].getGeometry().getCoordinates() == null) {
+            System.out.println("住所が見つかりませんでした: " + address);
             return null;
         }
 
-        return new double[] { res[0].getLat(), res[0].getLng() };
+        // 国土地理院APIのcoordinatesは [経度(lon), 緯度(lat)] の順に入っています
+        Double lon = res[0].getGeometry().getCoordinates()[0];
+        Double lat = res[0].getGeometry().getCoordinates()[1];
+
+        return new double[] { lat, lon };
     }
 
+    // 国土地理院API用のレスポンスクラス
     @Data
-    public static class CommunityGeocoderResponse {
-        private Double lat;
-        private Double lng;
-        private String matchedAddress;
+    public static class GsiResponse {
+        private Geometry geometry;
+
+        @Data
+        public static class Geometry {
+            private String type;
+            private Double[] coordinates; // [経度, 緯度] の配列
+        }
     }
 }
