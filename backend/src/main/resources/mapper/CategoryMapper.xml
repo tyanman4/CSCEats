@@ -7,9 +7,9 @@
     <!-- ① カテゴリー追加 -->
     <insert id="insert" parameterType="Category">
         INSERT INTO categories
-        (name, description, created_at, updated_at)
+        (name, created_at)
         VALUES
-        (#{name}, #{description}, NOW(), NOW())
+        (#{name}, NOW())
     </insert>
 
     <!-- ② 全カテゴリー取得 -->
@@ -26,5 +26,12 @@
         JOIN restaurant_categories rc ON c.category_id = rc.category_id
         WHERE rc.restaurant_id = #{restaurantId}
         ORDER BY c.name ASC
+    </select>
+
+    <!-- ④ カテゴリー名検索 -->
+    <select id="findByCategoryName" resultType="Long" parameterType="String">        
+        SELECT category_id
+        FROM categories
+        WHERE name = #{categoryName}
     </select>
 </mapper>

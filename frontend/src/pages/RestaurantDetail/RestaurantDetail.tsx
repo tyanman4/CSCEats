@@ -54,6 +54,14 @@ export const RestaurantDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [restaurantDetail, setRestaurantDetail] = useState<RestaurantDetailResponse | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [message, setMessage] = useState("");
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+  const MAX_PHOTO_COUNT = 5;
 
   const toggleFavorite = async () => {
     try {
@@ -69,6 +77,74 @@ export const RestaurantDetail = () => {
     }
   };
 
+  const handlePrevPhoto = () => {
+    setCurrentPhotoIndex((prevIndex) =>
+      prevIndex === 0 ? (restaurantDetail ? restaurantDetail.photos.length - 1 : 0) : prevIndex - 1
+    );
+  };
+
+  const handleNextPhoto = () => {
+    setCurrentPhotoIndex((prevIndex) =>
+      restaurantDetail && prevIndex === restaurantDetail.photos.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const validatePhotoFiles = (files: File[]): boolean => {
+    if (files.length === 0) return false;
+
+    // ✅ アップロード枚数制限（ここが今回の要件の本体）
+    if (files.length > MAX_PHOTO_COUNT) {
+      alert(`一度にアップロードできる写真は最大${MAX_PHOTO_COUNT}枚までです`);
+      return false;
+    }
+
+    for (const file of files) {
+      // ✅ 種類チェック
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        alert('jpg / png / webp 形式のみアップロードできます。');
+        return false;
+      }
+
+      // ✅ サイズチェック
+      if (file.size > MAX_FILE_SIZE) {
+        alert('ファイルサイズは5MB以内にしてください。');
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const uploadPhotos = async () => {
+    if (!selectedFiles.length || !id) return;
+
+    const isValid = validatePhotoFiles(selectedFiles);
+    if (!isValid) return;
+
+    const formData = new FormData();
+    selectedFiles.forEach(file => {
+      formData.append('files', file); // ✅ 複数枚
+    });
+
+    try {
+      await appApi.post(
+        `/restaurants/${id}/photos`,
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+
+      setShowUploadModal(false);
+      setSelectedFiles([]);
+
+      // ✅ 再取得
+      const res = await appApi.get<RestaurantDetailResponse>(`/restaurants/${id}`);
+      setRestaurantDetail(res.data);
+
+    } catch (error) {
+      console.error('写真アップロード失敗', error);
+      alert('写真のアップロードに失敗しました');
+    }
+  };
 
   useEffect(() => {
     const fetchRestaurantDetail = async () => {
@@ -110,16 +186,52 @@ export const RestaurantDetail = () => {
               </p>
             ))}
           </div>
-          <div className={styles.potoContainer}>
-            {restaurantDetail.photos.map((photo) => (
-              <img
-                key={photo.photoId}
-                src={photo.url}
-                alt="店舗写真"
-                className={styles.photo}
-              />
-            ))}
+          <button
+            className={styles.addPhotoButton}
+            onClick={() => setShowUploadModal(true)}
+          >
+            写真を追加する
+          </button>
+          <div className={styles.photoGallery}>
+            {/* メイン画像 */}
+
+            <div className={styles.mainPhotoWrapper}>
+              <button className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
+
+              {restaurantDetail.photos.length > 0 ? (
+                <img
+                  src={`http://localhost:8080${restaurantDetail.photos[currentPhotoIndex].url}`}
+                  className={styles.mainPhoto}
+                />
+              ) : (
+                <div className={styles.noPhoto}>写真がまだありません</div>
+              )}
+
+              <button className={styles.arrowRight} onClick={handleNextPhoto}>›</button>
+            </div>
+
+            {/* サムネ */}
+            <div className={styles.thumbnailRow}>
+              {restaurantDetail.photos.map((photo, index) => (
+                <img
+                  key={photo.photoId}
+                  src={`http://localhost:8080${photo.url}`}
+                  className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
+                    }`}
+                  onClick={() => setCurrentPhotoIndex(index)}
+                />
+              ))}
+
+              {/* ✅ 追加用プラス枠 */}
+              <div
+                className={styles.addThumbnail}
+                onClick={() => setShowUploadModal(true)}
+              >
+                ＋
+              </div>
+            </div>
           </div>
+
           <h2 className={styles.sectionTitle}>基本情報</h2>
           <ul className={styles.infoList}>
             <li>住所: {restaurantDetail.restaurant.address}</li>
@@ -162,6 +274,61 @@ export const RestaurantDetail = () => {
           ))}
         </div>
       </div>
+      {showUploadModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowUploadModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} >
+            <h2>写真を追加</h2>
+
+            <p className={styles.modalNote}>
+              ※ 不適切な画像の投稿は禁止されています。
+            </p>
+
+            {/* ✅ ファイル選択UI */}
+            <div className={styles.fileSelectArea}>
+              <label className={styles.fakeFileButton}>
+                画像を選択
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple   // ✅ 複数選択
+                  hidden
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files ?? []);
+                    if (files.length === 0) return;
+
+                    const isValid = validatePhotoFiles(files);
+                    if (!isValid) return;
+
+                    setSelectedFiles(files);
+                  }}
+
+                />
+              </label>
+
+              <span className={styles.fileName}>
+                {selectedFiles.length > 0
+                  ? selectedFiles.map(f => f.name).join(', ')
+                  : '選択されていません'}
+              </span>
+            </div>
+
+            <div className={styles.modalButtons}>
+              <button onClick={() => setShowUploadModal(false)}>
+                キャンセル
+              </button>
+
+              <button
+                disabled={!selectedFiles.length}
+                onClick={uploadPhotos}
+              >
+                送信
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 };
