@@ -204,10 +204,12 @@ export const RestaurantDetail = () => {
                   className={styles.mainPhoto}
                 />
               ) : (
-                <div className={styles.noPhoto}>写真がまだありません</div>
+                <div className={styles.noPhoto}>
+                  <img src='http://localhost:8080/uploads/no-image.png' alt='no image' className={styles.mainPhoto} />
+                </div>
               )}
 
-              <button className={styles.arrowRight} onClick={handleNextPhoto}>›</button>
+              < button className={styles.arrowRight} onClick={handleNextPhoto}>›</button>
             </div>
 
             {/* サムネ */}
@@ -273,7 +275,7 @@ export const RestaurantDetail = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div >
       {showUploadModal && (
         <div className={styles.modalOverlay} onClick={() => setShowUploadModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} >
@@ -327,7 +329,8 @@ export const RestaurantDetail = () => {
             </div>
           </div>
         </div>
-      )}
+      )
+      }
 
     </>
   );
