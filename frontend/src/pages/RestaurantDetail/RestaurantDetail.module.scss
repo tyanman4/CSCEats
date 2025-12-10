@@ -20,9 +20,43 @@
     margin-bottom: 8px;
 }
 
-.category {
-    color: #666;
-    margin-bottom: 20px;
+/* カテゴリ全体の並び */
+.categoryContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 16px;
+}
+
+/* 個々のカテゴリタグ */
+.categoryTag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    /* 楕円形（ピル型） */
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 13px;
+    line-height: 1;
+}
+
+/* 先頭に # をつける */
+.categoryTag::before {
+    content: "#";
+    margin-right: 4px;
+    color: #888;
+}
+
+.addCategoryButton {
+    margin-top: 12px;
+    width: 160px;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
 }
 
 .photoGallery {
@@ -331,4 +365,51 @@
 .modalButtons button:disabled {
     background: #9ca3af;
     cursor: not-allowed;
+}
+
+.categoryInputRow {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    input {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+}
+
+.categoryPreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.categoryTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f0f0;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+.removeTag {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: #888;
 }

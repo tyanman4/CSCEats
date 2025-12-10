@@ -58,6 +58,10 @@ export const RestaurantDetail = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -185,6 +189,12 @@ export const RestaurantDetail = () => {
                 {category.name}
               </p>
             ))}
+            <button
+              className={styles.addCategoryButton}
+              onClick={() => setShowCategoryModal(true)}
+            >
+              カテゴリーを追加
+            </button>
           </div>
           <button
             className={styles.addPhotoButton}
@@ -331,6 +341,86 @@ export const RestaurantDetail = () => {
         </div>
       )
       }
+
+
+      {showCategoryModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowCategoryModal(false)}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>カテゴリーを追加</h2>
+
+            <p className={styles.modalNote}>
+              ※ 複数のカテゴリーをまとめて登録できます。
+            </p>
+
+            <div className={styles.categoryInputRow}>
+              <input
+                type="text"
+                placeholder="例：ラーメン、カフェ"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+
+              <button
+                onClick={() => {
+                  if (!newCategory.trim()) return;
+                  if (selectedCategories.includes(newCategory)) return;
+
+                  setSelectedCategories([...selectedCategories, newCategory]);
+                  setNewCategory("");
+                }}
+              >
+                追加
+              </button>
+            </div>
+
+            {/* ✅ 追加予定カテゴリ一覧 */}
+            <div className={styles.categoryPreview}>
+              {selectedCategories.map((cat, index) => (
+                <span key={index} className={styles.categoryTag}>
+                  {cat}
+                  <button
+                    className={styles.removeTag}
+                    onClick={() =>
+                      setSelectedCategories(
+                        selectedCategories.filter((_, i) => i !== index)
+                      )
+                    }
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+
+            <div className={styles.modalButtons}>
+              <button onClick={() => setShowCategoryModal(false)}>
+                キャンセル
+              </button>
+
+              <button
+                disabled={selectedCategories.length === 0}
+                onClick={async () => {
+                  await appApi.post(`/restaurants/${id}/categories`, {
+                    categories: selectedCategories, // ✅ 複数送信
+                  });
+
+                  setSelectedCategories([]);
+                  setShowCategoryModal(false);
+
+                  // ✅ 再取得
+                  const res = await appApi.get(`/restaurants/${id}`);
+                  setRestaurantDetail(res.data);
+                }}
+              >
+                登録
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </>
   );
