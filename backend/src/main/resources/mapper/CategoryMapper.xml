@@ -29,7 +29,7 @@
     </select>
 
     <!-- ④ カテゴリー名検索 -->
-    <select id="findByCategoryName" resultType="Long" parameterType="String">        
+    <select id="findIdByName" resultType="Long" parameterType="String">        
         SELECT category_id
         FROM categories
         WHERE name = #{categoryName}

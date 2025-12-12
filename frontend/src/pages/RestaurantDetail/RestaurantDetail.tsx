@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Header } from '../../components/Header/Header';
 import appApi from '../../api/appApi';
 import styles from './RestaurantDetail.module.scss';
+import { ReviewForm } from '../../components/ReviewForm/ReviewForm';
 
 interface Category {
   categoryId: number;
@@ -260,21 +261,7 @@ export const RestaurantDetail = () => {
 
         {/* 右カラム：レビュー */}
         <div className={styles.rightColumn}>
-          <div className={styles.reviewFormCard}>
-            <h2 className={styles.sectionTitle}>レビューを投稿する</h2>
-
-            <label>レビュー内容</label>
-            <textarea placeholder="ここにレビューを書いてください" />
-
-            <label>評価（1〜5）</label>
-            <select>
-              {[1, 2, 3, 4, 5].map((v) => (
-                <option key={v}>{v}</option>
-              ))}
-            </select>
-
-            <button className={styles.submitButton}>投稿する</button>
-          </div>
+          <ReviewForm />
 
           <h2 className={styles.sectionTitle}>レビュー一覧</h2>
 

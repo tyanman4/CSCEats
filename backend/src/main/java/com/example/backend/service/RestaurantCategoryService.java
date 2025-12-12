@@ -28,8 +28,10 @@ public class RestaurantCategoryService {
             Long categoryId = categoryService.getOrCreateCategoryId(categoryName);
 
             // ② 紐付け登録
-            restaurantCategoriesMapper
-                    .insert(restaurantId, categoryId);
+            if (restaurantCategoriesMapper.exists(restaurantId, categoryId) == 0) {
+                restaurantCategoriesMapper
+                        .insert(restaurantId, categoryId);
+            }
         }
     }
 }

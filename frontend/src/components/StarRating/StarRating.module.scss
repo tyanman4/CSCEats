@@ -1,0 +1,19 @@
+.stars {
+    font-size: 32px;
+    cursor: pointer;
+    user-select: none;
+
+    .star,
+    .activeStar {
+        margin-right: 6px;
+        transition: color 0.2s ease;
+    }
+
+    .star {
+        color: #ccc;
+    }
+
+    .activeStar {
+        color: #ffcc00;
+    }
+}

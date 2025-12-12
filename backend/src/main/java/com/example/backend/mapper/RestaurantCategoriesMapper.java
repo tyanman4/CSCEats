@@ -8,4 +8,8 @@ public interface RestaurantCategoriesMapper {
     void insert(
             @Param("restaurantId") Long restaurantId,
             @Param("categoryId") Long categoryId);
+
+    int exists(
+            @Param("restaurantId") Long restaurantId,
+            @Param("categoryId") Long categoryId);
 }

@@ -11,4 +11,11 @@
         VALUES
         (#{restaurantId}, #{categoryId})
     </insert>
+
+    <select id="exists" resultType="int">
+        SELECT COUNT(*)
+        FROM restaurant_categories
+        WHERE restaurant_id = #{restaurantId}
+          AND category_id = #{categoryId}
+    </select>
 </mapper>
