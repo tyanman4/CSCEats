@@ -18,6 +18,7 @@ export const Header: React.FC = () => {
 
         {isAuthenticated ? <p>ようこそ、{user?.name}さん</p> : <p>ゲストとして利用中</p>}
         {isAdmin && <button className={styles.button} onClick={() => navigate("/request-restaurants")}>リクエスト承認ページ</button>}
+        {isAdmin && <button className={styles.button} onClick={() => navigate("/restaurants-for-update")}>レストラン管理ページ</button>}
         {!isAuthenticated && location.pathname !== "/login" && <button className={styles.button} onClick={() => navigate("/login")}>ログイン</button>}
         {location.pathname !== "/mypage" && isAuthenticated && <button className={styles.button} onClick={() => navigate("/mypage")}>マイページ</button>}
         {isAuthenticated && <button onClick={logout} className={styles.button}>ログアウト</button>}

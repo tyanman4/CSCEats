@@ -28,6 +28,7 @@ public class RequestHandlingService {
     @Transactional
     public void approveRequestRestaurant(Integer requestId, Integer adminId) {
 
+        // 事務所の緯度経度
         final double CSC_OFFICE_LAT = 35.712117;
         final double CSC_OFFICE_LON = 139.704741;
 
@@ -37,8 +38,12 @@ public class RequestHandlingService {
         String address = requestRestaurants.getAddress();
         String url = requestRestaurants.getUrl();
         double[] latlon = geocodingService.getLatLon(address);
-        Double lattitude = (latlon == null) ? CSC_OFFICE_LAT : latlon[0];
-        Double longitude = (latlon == null) ? CSC_OFFICE_LON : latlon[1];
+        if (latlon == null) {
+            restaurantsMapper.insertApprovedRestaurant(restaurantName, address, null, url, null, null);
+            return;
+        }
+        Double lattitude = latlon[0];
+        Double longitude = latlon[1];
         Integer distance = (int) geoUtils.distance(lattitude, longitude, CSC_OFFICE_LAT, CSC_OFFICE_LON);
         restaurantsMapper.insertApprovedRestaurant(restaurantName, address, distance, url, lattitude, longitude);
     }

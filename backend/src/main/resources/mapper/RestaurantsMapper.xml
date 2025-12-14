@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.backend.mapper.RestaurantsMapper">
-    <resultMap id="RestaurantsMap" type="com.example.backend.entity.Restaurants">
+    <resultMap id="RestaurantsResultMap" type="com.example.backend.entity.Restaurants">
         <id property="restaurantId" column="restaurant_id"/>
         <result property="name" column="name"/>
         <result property="address" column="address"/>
@@ -23,5 +23,48 @@
         VALUES
         (#{name}, #{address}, #{distance}, #{url}, #{latitude}, #{longitude})
     </insert>
+
+    <update id="update">
+    UPDATE restaurants
+    <set>
+        <if test="form.name != null">
+        name = #{form.name},
+        </if>
+        <if test="form.address != null">
+        address = #{form.address},
+        </if>
+        <if test="form.distance != null">
+        distance = #{form.distance},
+        </if>
+        <if test="form.url != null">
+        url = #{form.url},
+        </if>
+        <if test="form.averageBudget != null">
+        average_budget = #{form.averageBudget},
+        </if>
+        <if test="form.description != null">
+        description = #{form.description},
+        </if>
+        <if test="form.imageUrl != null">
+        image_url = #{form.imageUrl},
+        </if>
+        <if test="form.latitude != null">
+        latitude = #{form.latitude},
+        </if>
+        <if test="form.longitude != null">
+        longitude = #{form.longitude},
+        </if>
+        updated_at = CURRENT_TIMESTAMP
+    </set>
+    WHERE restaurant_id = #{id}
+    </update>
+
+    <select id="selectAllRestaurants" resultMap="RestaurantsResultMap">
+        SELECT * FROM restaurants ORDER BY updated_at DESC
+    </select>
+
+    <select id="selectById" resultMap="RestaurantsResultMap">
+        SELECT * FROM restaurants WHERE restaurant_id = #{id}
+    </select>
 
 </mapper>

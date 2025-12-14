@@ -1,0 +1,13 @@
+.container {
+    position: relative;
+    top: 100px;
+}
+
+.toDetail {
+    color: rgb(101, 12, 243);
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.9;
+    }
+}

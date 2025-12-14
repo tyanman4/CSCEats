@@ -2,7 +2,6 @@ package com.example.backend.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-//import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import reactor.core.publisher.Mono;
 
@@ -40,7 +39,7 @@ public class GeocodingService {
             return null;
         }
 
-        // 国土地理院APIのcoordinatesは [経度(lon), 緯度(lat)] の順に入っています
+        // 国土地理院APIのcoordinatesは [経度(lon), 緯度(lat)] の順
         Double lon = res[0].getGeometry().getCoordinates()[0];
         Double lat = res[0].getGeometry().getCoordinates()[1];
 
