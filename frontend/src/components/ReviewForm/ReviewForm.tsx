@@ -3,7 +3,11 @@ import { StarRating } from "../StarRating/StarRating";
 import styles from "./ReviewForm.module.scss";
 import appApi from "../../api/appApi";
 
-export const ReviewForm = () => {
+interface Props {
+  restaurantId?: string;
+}
+
+export const ReviewForm: React.FC<Props> = ({ restaurantId }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -17,7 +21,8 @@ export const ReviewForm = () => {
     }
     try {
       setIsSending(true);
-      const res = await appApi.post("/reviews", {
+      const res = await appApi.post(`${restaurantId}/reviews`, {
+        restaurantId,
         rating,
         comment,
       });

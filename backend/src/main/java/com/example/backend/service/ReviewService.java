@@ -13,8 +13,12 @@ public class ReviewService {
 
     private final ReviewMapper reviewMapper;
 
-    
-    public void insert(Review review) {
+    public void insert(Integer restaurant_id, Integer user_id, Integer rating, String comment) {
+        Review review = new Review();
+        review.setRestaurantId(restaurant_id.longValue());
+        review.setUserId(user_id.longValue());
+        review.setRating(rating);
+        review.setComment(comment);
         reviewMapper.insert(review);
     }
 

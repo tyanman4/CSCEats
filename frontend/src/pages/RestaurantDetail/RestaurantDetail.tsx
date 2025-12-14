@@ -12,7 +12,7 @@ interface Category {
 }
 
 interface Restaurant {
-  RestaurantId: number;
+  restaurantId: number;
   name: string;
   address: string;
   url: string;
@@ -56,7 +56,7 @@ export const RestaurantDetail = () => {
   const [restaurantDetail, setRestaurantDetail] = useState<RestaurantDetailResponse | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
-  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showUloadModal, setShowUploadModal] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -261,7 +261,7 @@ export const RestaurantDetail = () => {
 
         {/* 右カラム：レビュー */}
         <div className={styles.rightColumn}>
-          <ReviewForm />
+          <ReviewForm restaurantId={id} />
 
           <h2 className={styles.sectionTitle}>レビュー一覧</h2>
 
@@ -273,7 +273,7 @@ export const RestaurantDetail = () => {
           ))}
         </div>
       </div >
-      {showUploadModal && (
+      {showUloadModal && (
         <div className={styles.modalOverlay} onClick={() => setShowUploadModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} >
             <h2>写真を追加</h2>
