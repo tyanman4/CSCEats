@@ -13,4 +13,6 @@ public interface CategoryMapper {
 
     List<Category> findByRestaurantId(@Param("restaurantId") Long restaurantId);
 
+    Long findIdByName(@Param("categoryName") String categoryName);
+
 }

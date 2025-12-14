@@ -1,16 +1,17 @@
 .container {
     display: flex;
     justify-content: center;
-    gap: 40px;
-    padding: 40px;
-    max-width: 1400px;
+    gap: 24px;
+    padding: 24px;
+    padding-top: 80px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding-top: 8  0px;
+    padding-top: 80px;
 }
 
 /* 左側（店舗情報） */
 .leftColumn {
-    width: 55%;
+    width: 50%;
 }
 
 .title {
@@ -19,15 +20,112 @@
     margin-bottom: 8px;
 }
 
-.category {
-    color: #666;
-    margin-bottom: 20px;
+/* カテゴリ全体の並び */
+.categoryContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 16px;
 }
 
-.mainImage {
+/* 個々のカテゴリタグ */
+.categoryTag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    /* 楕円形（ピル型） */
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 13px;
+    line-height: 1;
+}
+
+/* 先頭に # をつける */
+.categoryTag::before {
+    content: "#";
+    margin-right: 4px;
+    color: #888;
+}
+
+.addCategoryButton {
+    margin-top: 12px;
+    width: 160px;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+}
+
+.photoGallery {
+    margin-top: 16px;
+}
+
+.mainPhotoWrapper {
+    position: relative;
+    width: 520px;
+    height: 320px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.mainPhoto {
     width: 100%;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.arrowLeft,
+.arrowRight {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.arrowLeft {
+    left: 0;
+}
+
+.arrowRight {
+    right: 0;
+}
+
+/* ↓ サムネ領域 */
+.thumbnailRow {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    overflow-x: auto;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+
+    flex-shrink: 0; // ✅ これが最重要！！
+    border: 2px solid transparent;
+}
+
+
+.thumbnail:hover {
+    opacity: 1;
+}
+
+.activeThumbnail {
+    opacity: 1;
+    border: 2px solid #2196f3;
 }
 
 .sectionTitle {
@@ -47,41 +145,7 @@
 
 /* 右側（レビュー） */
 .rightColumn {
-    width: 35%;
-}
-
-/* 投稿フォームカード */
-.reviewFormCard {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.reviewFormCard textarea {
-    width: 100%;
-    height: 100px;
-    border-radius: 6px;
-    margin: 6px 0 12px;
-    padding: 10px;
-}
-
-.reviewFormCard select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 16px;
-}
-
-.submitButton {
-    width: 120px;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #007bff;
-    color: #fff;
-    cursor: pointer;
+    width: 40%;
 }
 
 /* レビューカード */
@@ -96,4 +160,222 @@
 .reviewer {
     font-weight: bold;
     margin-bottom: 5px;
+}
+
+.favorite {
+    background: gold;
+    color: black;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.notFavorite {
+    background: #eee;
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* ✅ プラス枠 */
+.addThumbnail {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0; // ✅ これで細くならない！！
+
+    border: 2px dashed #4aa3df;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 32px;
+    font-weight: bold;
+    color: #4aa3df;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.addThumbnail:hover {
+    background-color: #e6f3ff;
+}
+
+
+/* ✅ 写真追加ボタン */
+.addPhotoButton {
+    width: 120px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ✅ モーダル背景 */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* ✅ モーダル本体 */
+.modalContent {
+    width: 380px;
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    animation: fadeUp 0.2s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ✅ タイトル */
+.modalContent h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* ✅ 注意書き */
+.modalNote {
+    font-size: 13px;
+    color: #666;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+/* ✅ ファイル選択エリア */
+.fileSelectArea {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ✅ 擬似ファイルボタン */
+.fakeFileButton {
+    background: #007bff;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.fakeFileButton:hover {
+    background: #60a5fa;
+}
+
+/* ✅ ファイル名 */
+.fileName {
+    font-size: 13px;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+/* ✅ 下部ボタン */
+.modalButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.modalButtons button {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+/* ✅ キャンセル */
+.modalButtons button:first-child {
+    background: #e5e7eb;
+}
+
+/* ✅ 送信 */
+.modalButtons button:last-child {
+    background: #007bff;
+    color: white;
+}
+
+.modalButtons button:last-child:hover {
+    background: #60a5fa;
+}
+
+.modalButtons button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.categoryInputRow {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    input {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+}
+
+.categoryPreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.categoryTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f0f0;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+.removeTag {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: #888;
 }
