@@ -10,6 +10,11 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleLogout = () => {
+    logout()
+    navigate("/login")
+  }
+
 
   return (
     <div className={styles.header}>
@@ -21,7 +26,7 @@ export const Header: React.FC = () => {
         {isAdmin && <button className={styles.button} onClick={() => navigate("/restaurants-for-update")}>レストラン管理ページ</button>}
         {!isAuthenticated && location.pathname !== "/login" && <button className={styles.button} onClick={() => navigate("/login")}>ログイン</button>}
         {location.pathname !== "/mypage" && isAuthenticated && <button className={styles.button} onClick={() => navigate("/mypage")}>マイページ</button>}
-        {isAuthenticated && <button onClick={logout} className={styles.button}>ログアウト</button>}
+        {isAuthenticated && <button onClick={handleLogout} className={styles.button}>ログアウト</button>}
       </div>
     </div>
   );
