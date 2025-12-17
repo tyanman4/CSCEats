@@ -34,7 +34,6 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                 setRestaurant(res.data)
             })
             .catch((err) => {
-                //alert(err)
                 console.error(err)
             })
     }, [])
@@ -64,13 +63,26 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
             setMessage("名前と住所は必須です。");
             return;
         }
-        if (restaurant.latitude && !Number.isFinite(restaurant.latitude)) {
-            setMessage("緯度には数値を入力してください。");
-            return;
+        if (restaurant.latitude) {
+            const lat = restaurant.latitude
+            if (!Number.isFinite(lat)) {
+                setMessage("緯度には数値を入力してください。")
+                return;
+            }
+            if (lat < 30 || lat > 46) {
+                setMessage("緯度に適切な数値を入力してください。")
+                return;
+            }
         }
-        if (restaurant.longitude && !Number.isFinite(restaurant.longitude)) {
-            setMessage("経度には数値を入力してください。");
-            return;
+        if (restaurant.longitude) {
+            const lon = restaurant.longitude
+            if (!Number.isFinite(lon)) {
+                setMessage("経度には数値を入力してください。")
+                return;
+            }
+            if (lon < 129 || lon > 146) {
+                setMessage("経度には適切な数値を入力してください。")
+            }
         }
         if (restaurant.distance && !Number.isFinite(restaurant.distance)) {
             setMessage("距離には数値を入力してください。");
@@ -120,7 +132,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         <p>住所　　：
                             <input type="text" className={styles.longForm} name="address" value={restaurant?.address ?? ""} onChange={handleChange} />
                         </p>
-                        <button type="button" onClick={calcFromAddress}>緯度経度距離自動入力</button>
+                        <button type="button" onClick={calcFromAddress} className={styles.button}>緯度経度距離自動入力</button>
                         <p>説明　　：
                             <textarea name="description" className={styles.textarea} value={restaurant?.description ?? ""} onChange={handleChange} />
                         </p>
