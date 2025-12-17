@@ -45,7 +45,7 @@ public class RestaurantDetailService {
         List<Category> categories = categoryMapper.findByRestaurantId(restaurantId);
 
         // --- ⑤ お気に入り判定 ---
-        boolean favorite = favoriteMapper.isFavorite(restaurantId, userId);
+        boolean favorite = favoriteMapper.isLiked(restaurantId, userId);
 
         // --- まとめて DTO に入れる ---
         RestaurantDetailDto detailDto = new RestaurantDetailDto();

@@ -22,6 +22,9 @@
   font-weight: bold;
   margin: 0;
 
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .right {

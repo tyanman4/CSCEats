@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import appApi from "../api/appApi";
+import { useNavigate } from "react-router-dom";
 
 
 type User = {
@@ -14,6 +15,7 @@ type AuthContextType = {
     login: (token: string) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
+    isAdmin: boolean
 };
 
 //コンテキスト作成
@@ -26,6 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
     //tokenが存在すればtrue
     const isAuthenticated = !!token;
+
+    const isAdmin = user?.role === "admin"
 
     //プロフィール取得関数
     const fetchProfile = async (jwt: string) => {
@@ -66,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         //子孫要素はvalueを共有利用できる。
-        <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>
+        <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, isAdmin }}>
             {children}
         </AuthContext.Provider>
     );
