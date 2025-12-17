@@ -5,6 +5,13 @@
 }
 
 .button {
+    background: linear-gradient(180deg, #4e7bc5 0%, #062f6e 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 18px;
+    font-size: 14px;
+    font-weight: 400;
     cursor: pointer;
     margin: 10px;
 }

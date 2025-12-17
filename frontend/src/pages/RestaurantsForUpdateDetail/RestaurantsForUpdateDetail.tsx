@@ -70,29 +70,32 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         }
 
         if (restaurant.latitude) {
-            const lat = restaurant.latitude
+            const lat = Number(restaurant.latitude)
             if (!Number.isFinite(lat)) {
                 setMessage("緯度には数値を入力してください。")
                 return
             }
-            if (Number(lat) < LAT_MIN || Number(lat) > LAT_MAX) {
+            if (lat < LAT_MIN || lat > LAT_MAX) {
                 setMessage("緯度に適切な数値を入力してください。")
                 return
             }
         }
         if (restaurant.longitude) {
-            const lon = restaurant.longitude
+            const lon = Number(restaurant.longitude)
             if (!Number.isFinite(lon)) {
                 setMessage("経度には数値を入力してください。")
                 return;
             }
-            if (Number(lon) < LON_MIN || Number(lon) > LON_MAX) {
+            if (lon < LON_MIN || lon > LON_MAX) {
                 setMessage("経度には適切な数値を入力してください。")
             }
         }
-        if (restaurant.distance && !Number.isFinite(restaurant.distance)) {
-            setMessage("距離には数値を入力してください。");
-            return;
+        if (restaurant.distance) {
+            const dist = Number(restaurant.distance)
+            if (!Number.isFinite(dist)) {
+                setMessage("距離には数値を入力してください。");
+                return;
+            }
         }
 
         try {
