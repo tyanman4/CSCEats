@@ -15,12 +15,24 @@ export const RestaurantsForUpdate: React.FC = () => {
     const ITEMS_PER_PAGE = 100;
     const [currentPage, setCurrentPage] = useState(1);
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+    const [nameQuery, setNameQuery] = useState("");
+    const [addressQuery, setAddressQuery] = useState("");
+
+    const filteredRestaurants = restaurants.filter((r) => {
+        const matchesName =
+            r.name.toLowerCase().includes(nameQuery.toLowerCase());
+
+        const matchesAddress =
+            r.address.toLowerCase().includes(addressQuery.toLowerCase());
+
+        return matchesName && matchesAddress;
+    });
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
-    const totalPages = Math.ceil(restaurants.length / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(filteredRestaurants.length / ITEMS_PER_PAGE);
 
-    const currentRestaurants = restaurants.slice(startIndex, endIndex);
+    const currentRestaurants = filteredRestaurants.slice(startIndex, endIndex);
 
     const navigate = useNavigate();
 
@@ -37,6 +49,27 @@ export const RestaurantsForUpdate: React.FC = () => {
         <>
             <Header />
             <div className={styles.container}>
+                <div className={styles.searchArea}>
+                    <input
+                        type="text"
+                        placeholder="店名で検索"
+                        value={nameQuery}
+                        onChange={(e) => {
+                            setNameQuery(e.target.value);
+                            setCurrentPage(1); // 検索時は1ページ目に戻す
+                        }}
+                    />
+
+                    <input
+                        type="text"
+                        placeholder="住所で検索"
+                        value={addressQuery}
+                        onChange={(e) => {
+                            setAddressQuery(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    />
+                </div>
                 <ul>
                     {currentRestaurants.map((r) => (
                         <li key={r.restaurantId}>

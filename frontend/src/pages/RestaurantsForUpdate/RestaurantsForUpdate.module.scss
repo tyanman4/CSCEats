@@ -43,6 +43,12 @@
         cursor: not-allowed;
         background-color: #f9fafb;
     }
+}
 
-
+.searchArea {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    align-items: center;
 }
