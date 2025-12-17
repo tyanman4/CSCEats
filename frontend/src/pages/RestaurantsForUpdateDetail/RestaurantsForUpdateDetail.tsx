@@ -11,13 +11,13 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         restaurantId: number;
         name: string;
         address: string;
-        distance: number | null;
+        distance: string | null;
         url: string | null;
         averageBudget: string | null;
         description: string | null;
         imageUrl: string | null;
-        latitude: number | null;
-        longitude: number | null;
+        latitude: string | null;
+        longitude: string | null;
     }
     const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -27,10 +27,12 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
     const [isSending, setIsSending] = useState(false);
     const [message, setMessage] = useState("");
 
+    const [LON_MIN, LON_MAX] = [129, 146]
+    const [LAT_MIN, LAT_MAX] = [30, 46]
+
     useEffect(() => {
         appApi.get(`admin/restaurants/${id}`)
             .then(res => {
-                //alert(JSON.stringify(res.data, null, 2))
                 setRestaurant(res.data)
             })
             .catch((err) => {
@@ -46,32 +48,36 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
 
             return {
                 ...prev,
-                [name]:
-                    name === "latitude" || name === "longitude" || name === "distance"
-                        ? value === "" ? null : Number(value)
-                        : value,
+                [name]: value,
             };
         });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        e.preventDefault()
         if (restaurant == null) {
-            return;
+            return
         }
         if (!restaurant.name || !restaurant.address) {
-            setMessage("名前と住所は必須です。");
-            return;
+            setMessage("店名と住所は必須です。");
+            return
+        } else if (restaurant.name.length > 64) {
+            setMessage("店名が長すぎます。")
+            return
+        } else if (restaurant.address.length > 256) {
+            setMessage("住所が長すぎます。")
+            return
         }
+
         if (restaurant.latitude) {
             const lat = restaurant.latitude
             if (!Number.isFinite(lat)) {
                 setMessage("緯度には数値を入力してください。")
-                return;
+                return
             }
-            if (lat < 30 || lat > 46) {
+            if (Number(lat) < LAT_MIN || Number(lat) > LAT_MAX) {
                 setMessage("緯度に適切な数値を入力してください。")
-                return;
+                return
             }
         }
         if (restaurant.longitude) {
@@ -80,7 +86,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                 setMessage("経度には数値を入力してください。")
                 return;
             }
-            if (lon < 129 || lon > 146) {
+            if (Number(lon) < LON_MIN || Number(lon) > LON_MAX) {
                 setMessage("経度には適切な数値を入力してください。")
             }
         }
@@ -111,11 +117,11 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
             setMessage("計算できませんでした。")
             return
         }
-        const distance = Math.floor(distanceFromCSC(result[0], result[1]))
+        const distance = Math.floor(distanceFromCSC(result[0], result[1])).toString()
         setRestaurant({
             ...restaurant,
-            latitude: result[0],
-            longitude: result[1],
+            latitude: String(result[0]),
+            longitude: String(result[1]),
             distance: distance
         })
     }
