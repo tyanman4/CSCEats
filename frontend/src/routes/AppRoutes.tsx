@@ -7,6 +7,12 @@ import { MyPage } from "../pages/MyPage/MyPage";
 import { RequestRestaurants } from "../pages/RequestRestaurants/RequestRestaurants";
 import { RequestRestaurant } from "../pages/RequestRestaurant/RequestRestaurant";
 import { RestaurantDetail } from "../pages/RestaurantDetail/RestaurantDetail";
+import { RestaurantsForUpdate } from "../pages/RestaurantsForUpdate/RestaurantsForUpdate";
+import { RestaurantsForUpdateDetail } from "../pages/RestaurantsForUpdateDetail/RestaurantsForUpdateDetail";
+import { NotFound } from "../pages/NotFound";
+import { RequireAuth } from "./guards/RequireAuth";
+import { Forbidden } from "../pages/Forbidden";
+import { RequireAdmin } from "./guards/RequireAdmin";
 
 export const AppRoutes = () => {
   return (
@@ -14,12 +20,16 @@ export const AppRoutes = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage" element={<RequireAuth><MyPage /></RequireAuth>} />
           <Route path="/register" element={<Register />} />
           <Route path="/restaurants" element={<RestaurantList />} />
-          <Route path="/request-restaurants" element={<RequestRestaurants />} />
+          <Route path="/request-restaurants" element={<RequireAdmin><RequestRestaurants /></RequireAdmin>} />
+          <Route path="/restaurants-for-update" element={<RequireAdmin><RestaurantsForUpdate /></RequireAdmin>} />
+          <Route path="/restaurants-for-update/:id" element={<RequireAdmin><RestaurantsForUpdateDetail /></RequireAdmin>}></Route>
           <Route path="/restaurants/request" element={<RequestRestaurant />} />
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />
+          <Route path="/403" element={<Forbidden />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -10,17 +10,23 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleLogout = () => {
+    logout()
+    navigate("/login")
+  }
+
 
   return (
     <div className={styles.header}>
-      <h3 className={styles.title}>CSCEats</h3>
+      <h3 className={styles.title} onClick={() => navigate("/restaurants")}>CSCEats</h3>
       <div className={styles.right}>
 
         {isAuthenticated ? <p>ようこそ、{user?.name}さん</p> : <p>ゲストとして利用中</p>}
         {isAdmin && <button className={styles.button} onClick={() => navigate("/request-restaurants")}>リクエスト承認ページ</button>}
+        {isAdmin && <button className={styles.button} onClick={() => navigate("/restaurants-for-update")}>レストラン管理ページ</button>}
         {!isAuthenticated && location.pathname !== "/login" && <button className={styles.button} onClick={() => navigate("/login")}>ログイン</button>}
         {location.pathname !== "/mypage" && isAuthenticated && <button className={styles.button} onClick={() => navigate("/mypage")}>マイページ</button>}
-        {isAuthenticated && <button onClick={logout} className={styles.button}>ログアウト</button>}
+        {isAuthenticated && <button onClick={handleLogout} className={styles.button}>ログアウト</button>}
       </div>
     </div>
   );

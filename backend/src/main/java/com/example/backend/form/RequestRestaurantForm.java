@@ -11,8 +11,6 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RequestRestaurantForm {
 
     @NotBlank(message = "必須")

@@ -1,8 +1,8 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.NominatimResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import lombok.Data;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -12,51 +12,49 @@ public class GeocodingService {
 
     public GeocodingService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
-                .baseUrl("https://nominatim.openstreetmap.org")
-                .defaultHeader("User-Agent", "MySpringApp/1.0 (your_email@gmail.com)")
+                .defaultHeader("User-Agent", "MyApp/1.0")
+                // 国土地理院のAPIベースURL
+                .baseUrl("https://msearch.gsi.go.jp")
                 .build();
     }
 
-    public Mono<NominatimResponse> getCoordinates(String address) {
+    public Mono<GsiResponse[]> getCoordinates(String address) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/search")
+                        .path("/address-search/AddressSearch") // 国土地理院のパス
                         .queryParam("q", address)
-                        .queryParam("format", "json")
-                        .queryParam("limit", "1")
-                        .queryParam("accept-language", "ja")
-                        .queryParam("addressdetails", "1")
-                        .queryParam("countrycodes", "jp")
                         .build())
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(NominatimResponse[].class)
-                                .map(res -> res.length > 0 ? res[0] : null);
-                    } else {
-                        // 4xx / 5xx / 429（レート制限）など → null を返す
-                        return Mono.just(null);
-                    }
-                })
-                .onErrorResume(e -> Mono.empty()); // 通信断など
+                .retrieve()
+                .bodyToMono(GsiResponse[].class)
+                .doOnError(e -> System.out.println("Geocoding Error: " + e.getMessage()))
+                .onErrorResume(e -> Mono.empty());
     }
 
-    /**
-     * ブロッキングで緯度経度を返すメソッド（RestController・Serviceなどで使いやすい）
-     */
     public double[] getLatLon(String address) {
+        GsiResponse[] res = getCoordinates(address).block();
 
-        NominatimResponse response = getCoordinates(address).block();
-
-        if (response == null || response.getLat() == null || response.getLon() == null) {
-            return null; // 見つからない場合
+        if (res == null || res.length == 0 || res[0].getGeometry() == null
+                || res[0].getGeometry().getCoordinates() == null) {
+            System.out.println("住所が見つかりませんでした: " + address);
+            return null;
         }
 
-        try {
-            double lat = Double.parseDouble(response.getLat());
-            double lon = Double.parseDouble(response.getLon());
-            return new double[] { lat, lon };
-        } catch (NumberFormatException e) {
-            return null;
+        // 国土地理院APIのcoordinatesは [経度(lon), 緯度(lat)] の順
+        Double lon = res[0].getGeometry().getCoordinates()[0];
+        Double lat = res[0].getGeometry().getCoordinates()[1];
+
+        return new double[] { lat, lon };
+    }
+
+    // 国土地理院API用のレスポンスクラス
+    @Data
+    public static class GsiResponse {
+        private Geometry geometry;
+
+        @Data
+        public static class Geometry {
+            private String type;
+            private Double[] coordinates; // [経度, 緯度] の配列
         }
     }
 }

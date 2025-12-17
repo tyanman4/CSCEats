@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import appApi from "../../api/appApi";
+import { useEffect, useState } from "react"
+import appApi from "../../api/appApi"
 import { Header } from "../../components/Header/Header"
-import styles from "./RequestRestaurants.module.scss";
+import styles from "./RequestRestaurants.module.scss"
 
 export const RequestRestaurants: React.FC = () => {
 
@@ -77,9 +77,9 @@ export const RequestRestaurants: React.FC = () => {
                 <ul>
                     {requests.map((r) => (
                         <li key={r.requestRestaurantId}>
-                            <p>{r.createdAt}</p>
+                            <p>申請日時：{r.createdAt.substring(0, 16)}</p>
                             <p>申請者：{r.userName}</p>
-                            <p>レストラン名：{r.name}</p>
+                            <p>店名：{r.name}</p>
                             <p>住所：{r.address} </p>
                             <a href={r.url} target="_blank">URL</a>
                             <div>
