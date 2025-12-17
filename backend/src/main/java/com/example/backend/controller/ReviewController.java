@@ -1,14 +1,23 @@
 package com.example.backend.controller;
 
 import com.example.backend.service.ReviewService;
+import com.example.backend.dto.ApiResponseDto;
+import com.example.backend.dto.ReviewRequestDto;
 import com.example.backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
+
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
@@ -19,53 +28,22 @@ public class ReviewController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/api/{restaurantId}/reviews")
-    public ResponseEntity<Void> submitReview(
+    public ResponseEntity<ApiResponseDto<Void>> submitReview(
 
-            @RequestBody ReviewRequest reviewRequest,
+            @Valid @RequestBody ReviewRequestDto dto,
             HttpServletRequest request) {
         if (request.getHeader("Authorization") == null) {
-            return ResponseEntity.status(401).build(); // Unauthorized
+            return ResponseEntity.status(401).build();
         }
         String token = request.getHeader("Authorization").substring(7);
         Long userId = jwtUtil.extractUserId(token);
 
-        reviewService.insert(
-                reviewRequest.getRestaurantId(),
-                userId.intValue(),
-                reviewRequest.getRating(),
-                reviewRequest.getComment());
+        reviewService.insert(dto, userId);
 
-        return ResponseEntity.ok().build();
-    }
-
-    public static class ReviewRequest {
-        private Integer restaurantId;
-        private Integer rating;
-        private String comment;
-
-        // Getters and Setters
-        public Integer getRestaurantId() {
-            return restaurantId;
-        }
-
-        public void setRestaurantId(Integer restaurantId) {
-            this.restaurantId = restaurantId;
-        }
-
-        public Integer getRating() {
-            return rating;
-        }
-
-        public void setRating(Integer rating) {
-            this.rating = rating;
-        }
-
-        public String getComment() {
-            return comment;
-        }
-
-        public void setComment(String comment) {
-            this.comment = comment;
-        }
+        ApiResponseDto<Void> response = new ApiResponseDto<>();
+        response.setStatus(201);
+        response.setMessage("レビューを登録しました。");
+        response.setTimestamp(java.time.Instant.now().toString());
+        return ResponseEntity.created(null).body(response);
     }
 }

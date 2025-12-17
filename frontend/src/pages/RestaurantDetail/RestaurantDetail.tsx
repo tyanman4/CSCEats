@@ -59,7 +59,7 @@ export const RestaurantDetail = () => {
   const [showUloadModal, setShowUploadModal] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -187,6 +187,7 @@ export const RestaurantDetail = () => {
           <div className={styles.categoryContainer}>
             {restaurantDetail.categories.map((category) => (
               <p key={category.categoryId} className={styles.categoryTag}>
+
                 {category.name}
               </p>
             ))}
