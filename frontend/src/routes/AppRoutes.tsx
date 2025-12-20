@@ -13,6 +13,8 @@ import { NotFound } from "../pages/NotFound";
 import { RequireAuth } from "./guards/RequireAuth";
 import { Forbidden } from "../pages/Forbidden";
 import { RequireAdmin } from "./guards/RequireAdmin";
+import { InternalServiceError } from "../pages/InternalServerError";
+import { ServiceUnavailable } from "../pages/ServiceUnavailable";
 
 export const AppRoutes = () => {
   return (
@@ -29,6 +31,8 @@ export const AppRoutes = () => {
           <Route path="/restaurants/request" element={<RequestRestaurant />} />
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />
           <Route path="/403" element={<Forbidden />} />
+          <Route path="/500" element={<InternalServiceError />} />
+          <Route path="/503" element={<ServiceUnavailable />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
