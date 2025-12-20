@@ -78,20 +78,20 @@ export const RequestRestaurants: React.FC = () => {
                     {requests.map((r) => (
                         <li key={r.requestRestaurantId}>
                             <p>申請日時：{r.createdAt.substring(0, 16)}</p>
-                            <p>申請者：{r.userName}</p>
-                            <p>店名：{r.name}</p>
-                            <p>住所：{r.address} </p>
+                            <p>申請者　：{r.userName}</p>
+                            <p>店名　　：{r.name}</p>
+                            <p>住所　　：{r.address} </p>
                             <a href={r.url} target="_blank">URL</a>
                             <div>
-                                <button onClick={() => handleApprove(r.requestRestaurantId)}>承認する</button>
-                                <button onClick={() => handleReject(r.requestRestaurantId)}>拒否する</button>
+                                <button onClick={() => handleApprove(r.requestRestaurantId)} className={styles.button}>承認する</button>
+                                <button onClick={() => handleReject(r.requestRestaurantId)} className={styles.button}>拒否する</button>
                                 拒否理由：<textarea
                                     value={rejectReasons[r.requestRestaurantId] || ""}
                                     onChange={(e) => handleRejectReasonChange(r.requestRestaurantId, e.target.value)}
 
                                 />
                             </div>
-                            <p>{message[r.requestRestaurantId]}</p>
+                            <p className={styles.message}>{message[r.requestRestaurantId]}</p>
                         </li>
                     ))}
                 </ul>
