@@ -178,7 +178,6 @@ export const MyPage: React.FC = () => {
                         {user?.role === "admin" && <p>あなたは管理者です</p>}
                         {nameChanging ?
                             <form onSubmit={handleSubmitName}>
-                                <label className={styles.label}>ユーザ名</label>
                                 <div>
                                     <label className={styles.label} htmlFor="new_username">新しいユーザ名</label>
                                     <input className={styles.input}
@@ -216,7 +215,6 @@ export const MyPage: React.FC = () => {
 
                         {passwordChanging ?
                             <form onSubmit={handleSubmitPassword}>
-                                <label className={styles.label}>パスワード</label>
                                 <div>
                                     <label className={styles.label} htmlFor="password_with_new_password">新しいパスワード</label>
                                     <input className={styles.input}

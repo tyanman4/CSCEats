@@ -69,8 +69,9 @@ export const RestaurantsForUpdate: React.FC = () => {
                             setCurrentPage(1);
                         }}
                     />
+                    <>(全{filteredRestaurants.length}件)</>
                 </div>
-                <ul>
+                <ul className={styles.list}>
                     {currentRestaurants.map((r) => (
                         <li key={r.restaurantId}>
                             <p>店名：<span className={styles.toDetail} onClick={() => navigate(`/restaurants-for-update/${r.restaurantId}`)}>{r.name}</span></p>

@@ -29,7 +29,6 @@ export const RequestRestaurants: React.FC = () => {
     useEffect(() => {
         appApi.post("admin/pending-list")
             .then((res) => {
-                console.log(res.data);
                 setRequests(res.data);
             })
             .catch((err) => console.error(err));
@@ -73,19 +72,19 @@ export const RequestRestaurants: React.FC = () => {
             <Header />
 
             <div className={styles.container}>
-                <h3>申請中レストラン</h3>
-                <ul>
+                <h2>申請中レストラン</h2>
+                <ul className={styles.list}>
                     {requests.map((r) => (
-                        <li key={r.requestRestaurantId}>
+                        <li key={r.requestRestaurantId} >
                             <p>申請日時：{r.createdAt.substring(0, 16)}</p>
                             <p>申請者　：{r.userName}</p>
                             <p>店名　　：{r.name}</p>
                             <p>住所　　：{r.address} </p>
-                            <a href={r.url} target="_blank">URL</a>
+                            {r.url && <p>URL　　：<a href={r.url} target="_blank">{r.url.length > 50 ? r.url.slice(0, 50) + "..." : r.url}</a></p>}
                             <div>
                                 <button onClick={() => handleApprove(r.requestRestaurantId)} className={styles.button}>承認する</button>
                                 <button onClick={() => handleReject(r.requestRestaurantId)} className={styles.button}>拒否する</button>
-                                拒否理由：<textarea
+                                拒否理由：<input type="text"
                                     value={rejectReasons[r.requestRestaurantId] || ""}
                                     onChange={(e) => handleRejectReasonChange(r.requestRestaurantId, e.target.value)}
 

@@ -29,7 +29,7 @@
 }
 
 .button_container {
-    margin: 5px;
+    margin: 15px;
 }
 
 .center {
@@ -40,7 +40,8 @@
 .label {
     display: inline-block;
     width: 250px;
-    color: #034703
+    color: #0d5f0d;
+    font-weight: 700;
 }
 
 .input {
@@ -53,8 +54,15 @@
 }
 
 .textarea {
+    margin-top: 10px;
+    width: 330px;
+    height: 250px;
     border: 1px solid #77c9ff;
     border-radius: 8px;
     background-color: #f0fbff;
-
+    padding: 5px;
+    font-family: "Noto Sans JP", sans-serif;
+    line-height: 1.5;
+    font-size: 16px;
+    resize: vertical;
 }
