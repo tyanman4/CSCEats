@@ -2,12 +2,14 @@ package com.example.backend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.backend.dto.ApiResponseDto;
 import com.example.backend.entity.Photo;
 import com.example.backend.form.RequestRestaurantForm;
 import com.example.backend.service.PhotoService;
@@ -24,16 +26,26 @@ public class PhotoController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/api/restaurants/{restaurantId}/photos")
-    public ResponseEntity<?> uploadPhotos(
+    public ResponseEntity<ApiResponseDto<Void>> uploadPhotos(
             @PathVariable Long restaurantId,
             @RequestParam("files") List<MultipartFile> files, // ✅ 複数枚
             HttpServletRequest request) {
+        ApiResponseDto<Void> response = new ApiResponseDto<>();
         if (files == null || files.isEmpty()) {
-            return ResponseEntity.badRequest().body("ファイルが選択されていません");
+            response.setStatus(400);
+            response.setMessage("写真が選択されていません。");
+            response.setPath(request.getRequestURI());
+            response.setTimestamp(Instant.now().toString());
+            return ResponseEntity.badRequest().body(response);
         }
 
         if (files.size() > 5) {
-            return ResponseEntity.badRequest().body("一度にアップロードできる写真は最大5枚までです");
+
+            response.setStatus(400);
+            response.setMessage("一度にアップロードできる写真は最大5枚までです");
+            response.setPath(request.getRequestURI());
+            response.setTimestamp(Instant.now().toString());
+            return ResponseEntity.badRequest().body(response);
         }
 
         String token = request.getHeader("Authorization").substring(7);
@@ -41,6 +53,10 @@ public class PhotoController {
 
         photoService.savePhotos(restaurantId, null, userId, files);
 
-        return ResponseEntity.ok("写真をアップロードしました");
+        response.setStatus(201);
+        response.setMessage("写真をアップロードしました。");
+        response.setPath(request.getRequestURI());
+        response.setTimestamp(Instant.now().toString());
+        return ResponseEntity.ok(response);
     }
 }

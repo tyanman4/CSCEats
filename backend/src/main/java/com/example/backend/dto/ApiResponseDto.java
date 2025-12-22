@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class ApiResponseDto<T> {
     private int status;
     private String message;
+    private String path;
     private String timestamp;
     private T data;
 }

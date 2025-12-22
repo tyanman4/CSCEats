@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
         response.setMessage("バリデーションエラーが起きました。");
         response.setData(errors);
         response.setTimestamp(Instant.now().toString());
+        response.setPath(request.getRequestURI());
 
         return ResponseEntity.badRequest().body(response);
 

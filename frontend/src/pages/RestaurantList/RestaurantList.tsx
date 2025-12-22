@@ -10,6 +10,14 @@ import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
 
 export const RestaurantList: React.FC = () => {
+
+  interface ApiResponse<T> {
+    data: T;
+    message: string;
+    status: number;
+    path: string;
+    timestamp: string;
+  }
   interface Category {
     categoryId: number;
     name: string;
@@ -51,15 +59,15 @@ export const RestaurantList: React.FC = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const res = await appApi.get<RestaurantResponse>("/restaurants", {
+        const res = await appApi.get<ApiResponse<RestaurantResponse>>("/restaurants", {
           params: {
             search: searchWord,
             sorts: sortOptions,
             page: page,
           },
         });
-        setRestaurants(res.data.restaurants);
-        setTotalCount(res.data.totalCount);
+        setRestaurants(res.data.data.restaurants);
+        setTotalCount(res.data.data.totalCount);
       } catch (err) {
         console.error("Error fetching restaurants:", err);
       }
@@ -71,8 +79,8 @@ export const RestaurantList: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await appApi.get<Category[]>("/categories");
-        setCategories(res.data);
+        const res = await appApi.get<ApiResponse<Category[]>>("/categories");
+        setCategories(res.data.data);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }

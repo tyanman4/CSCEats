@@ -7,17 +7,12 @@ import com.example.backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Null;
-
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
@@ -43,6 +38,7 @@ public class ReviewController {
         ApiResponseDto<Void> response = new ApiResponseDto<>();
         response.setStatus(201);
         response.setMessage("レビューを登録しました。");
+        response.setPath(request.getRequestURI());
         response.setTimestamp(java.time.Instant.now().toString());
         return ResponseEntity.created(null).body(response);
     }
