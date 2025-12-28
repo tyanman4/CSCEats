@@ -8,7 +8,7 @@ spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USER_NAME}
-    password: ${DB_PASSWPRD}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa: 
     hibernate:
@@ -23,3 +23,6 @@ mybatis:
   type-aliases-package: com.example.backend.entity
   configuration:
     map-underscore-to-camel-case: true
+
+jwt: 
+  secret: ${JWT_SECRET_KEY}
