@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.dto.ApiResponseDto;
-import com.example.backend.entity.Photo;
-import com.example.backend.form.RequestRestaurantForm;
 import com.example.backend.service.PhotoService;
 import com.example.backend.security.JwtUtil;
 
@@ -19,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
 public class PhotoController {
 
     private final PhotoService photoService;
