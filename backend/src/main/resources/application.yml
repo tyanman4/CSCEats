@@ -6,9 +6,9 @@ spring:
       max-file-size: 5MB
       max-request-size: 25MB
   datasource:
-    url: jdbc:postgresql://localhost:5432/csceats_test
-    username: postgres
-    password: babanotakada
+    url: ${DATABASE_URL}
+    username: ${DB_USER_NAME}
+    password: ${DB_PASSWPRD}
     driver-class-name: org.postgresql.Driver
   jpa: 
     hibernate:
