@@ -48,13 +48,35 @@ public class SecurityConfig {
                 .formLogin(fl -> fl.disable())
                 .httpBasic(hb -> hb.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // 静的ファイル + SPAルート許可
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/register",
+                                "/restaurants/**",
+                                "/index.html",
+                                "/assets/**",
+                                "/favicon.ico",
+                                "/static/**")
+                        .permitAll()
+
+                        // APIの一部の許可
+                        .requestMatchers(
+                                "/api/save",
+                                "/api/login",
+                                "/uploads/**")
+                        .permitAll()
+
+                        // GETのみ許可
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/restaurants/**",
+                                "/api/categories/**")
+                        .permitAll()
+
+                        // ADMINのみ許可
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/save").permitAll()
-                        .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/restaurants").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/restaurants/**").permitAll()
+
+                        // 上記以外は認証必須
                         .anyRequest().authenticated())
                 // UsernamePasswordAuthenticationFilter より前にjwtAuthFilterでフィルターする。
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
