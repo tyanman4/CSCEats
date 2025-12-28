@@ -1,31 +1,13 @@
-# ===============================
-# ① 実行環境のベースイメージ
-# ===============================
-# Java 17 を実行するための軽量JRE
-# （JDKではなくJREなのがポイント：本番用）
-FROM eclipse-temurin:17-jre
-
-# ===============================
-# ② 作業ディレクトリを作成
-# ===============================
-# コンテナ内の /app を作業場所にする
+# ===== build stage =====
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# ===============================
-# ③ Spring Boot の jar をコピー
-# ===============================
-# ローカルで mvn package した jar を
-# コンテナ内にコピーする
-COPY target/*.jar app.jar
-
-# ===============================
-# ④ Spring Boot が使うポート
-# ===============================
-# Render では必須ではないが、明示しておく
+# ===== runtime stage =====
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# ===============================
-# ⑤ アプリ起動コマンド
-# ===============================
-# コンテナ起動時に Spring Boot を実行
-CMD ["java", "-jar", "app.jar"]
+CMD ["java","-jar","app.jar"]
