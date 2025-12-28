@@ -87,12 +87,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173")); // Viteを許可
+        config.setAllowedOrigins(List.of(
+                "https://csceats.onrender.com",
+                "http://localhost:5173")); // Viteを許可
         // CORS では実際のリクエストの前に「プリフライト OPTIONS リクエスト」が来るので、OPTIONS も必ず含める。
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        // JWT を Authorization ヘッダーで送るために許可
-        config.setAllowCredentials(true);
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
