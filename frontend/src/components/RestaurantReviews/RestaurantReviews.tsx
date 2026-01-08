@@ -13,6 +13,7 @@ interface Props {
   reviews: Review[];
   restaurantId: string;
   onRefresh: () => Promise<void>;
+  onRequireLogin: (callback: () => Promise<void>) => Promise<void>;
 }
 
 export const RestaurantReviews: React.FC<Props> = ({

@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantDetail.module.scss";
@@ -59,11 +61,18 @@ interface RestaurantDetailResponse {
 
 export const RestaurantDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const [detail, setDetail] = useState<RestaurantDetailResponse | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  /* ===== 初回取得 ===== */
+  useEffect(() => {
+    refresh();
+  }, [id]);
 
   /* ===== 再取得 ===== */
   const refresh = async () => {
@@ -77,10 +86,14 @@ export const RestaurantDetail = () => {
     setIsFavorite(res.data.data.favorite);
   };
 
-  /* ===== 初回取得 ===== */
-  useEffect(() => {
-    refresh();
-  }, [id]);
+  /* ===== ログインがチェック ===== */
+  const requireLogin = async (callback: () => Promise<void>) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    await callback();
+  };
 
   /* ===== お気に入り切り替え ===== */
   const toggleFavorite = async () => {
@@ -116,12 +129,16 @@ export const RestaurantDetail = () => {
             name={detail.restaurant.name}
             isFavorite={isFavorite}
             onToggleFavorite={toggleFavorite}
+            onRequireLogin={requireLogin}
           />
 
           <RestaurantCategories
             categories={detail.categories}
             restaurantId={id!}
+            onSuccess={(msg) => setMessage(msg)}
+            onError={(msg) => setErrorMessage(msg)}
             onRefresh={refresh}
+            onRequireLogin={requireLogin}
           />
 
           <RestaurantPhotos
@@ -130,6 +147,7 @@ export const RestaurantDetail = () => {
             onSuccess={(msg) => setMessage(msg)}
             onError={(msg) => setErrorMessage(msg)}
             onRefresh={refresh}
+            onRequireLogin={requireLogin}
           />
 
           <RestaurantInfo
@@ -155,6 +173,7 @@ export const RestaurantDetail = () => {
             reviews={detail.reviews}
             restaurantId={id!}
             onRefresh={refresh}
+            onRequireLogin={requireLogin}
           />
         </div>
       </div>

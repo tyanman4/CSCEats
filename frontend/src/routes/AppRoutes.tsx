@@ -26,7 +26,7 @@ export const AppRoutes = () => {
           <Route path="/request-restaurants" element={<RequireAdmin><RequestRestaurants /></RequireAdmin>} />
           <Route path="/restaurants-for-update" element={<RequireAdmin><RestaurantsForUpdate /></RequireAdmin>} />
           <Route path="/restaurants-for-update/:id" element={<RequireAdmin><RestaurantsForUpdateDetail /></RequireAdmin>}></Route>
-          <Route path="/restaurants/request" element={<RequestRestaurant />} />
+          <Route path="/restaurants/request" element={<RequireAuth><RequestRestaurant /></RequireAuth>} />
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />
           <Route path="/403" element={<Forbidden />} />
           <Route path="*" element={<NotFound />} />
