@@ -1,0 +1,181 @@
+.container {
+    background-color: aliceblue;
+    position: relative;
+    top: 100px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    margin: 0 20px;
+
+    .containerName {
+        font-weight: 500;
+        font-size: 130%;
+        border-left: 3px solid skyblue;
+        padding-left: 15px;
+        margin-bottom: 20px;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    p {
+        margin: 5px 0;
+    }
+
+}
+
+.profileContainer,
+.notificationContainer,
+.favoriteContainer,
+.reviewContainer,
+.requestContainer {
+    background-color: white;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px rgb(221, 202, 245) solid;
+}
+
+.profileContainer {
+    .userName {
+        font-size: 150%;
+        font-weight: 600;
+        margin-bottom: 15px
+    }
+
+    .toMypageP {
+        color: rgb(3, 3, 80);
+        font-size: 90%;
+        text-align: right;
+    }
+
+    .toMypage {
+        cursor: pointer;
+        color: blue;
+    }
+
+    .introduction {
+        margin: 20px 0 15px 30px;
+    }
+}
+
+.notificationContainer {
+
+    .notification {
+        margin-left: 30px;
+        margin-bottom: 15px;
+    }
+
+    .buttons {
+        margin: auto;
+        margin-right: 5px;
+        display: flex;
+        gap: 8px;
+
+        button {
+            background-color: rgb(0, 153, 255);
+            color: white;
+            border-radius: 5px;
+            border: none;
+            padding: 3px 8px;
+            cursor: pointer;
+        }
+
+        .all,
+        .unread {
+            border-radius: 15px;
+        }
+
+        .pushed {
+            border: 2px solid rgb(50, 25, 190);
+            background-color: rgb(24, 24, 177);
+        }
+    }
+
+    .read {
+        color: gray;
+        white-space: pre-wrap;
+    }
+
+    .unread {
+        color: blue;
+        cursor: pointer;
+        white-space: pre-wrap;
+    }
+
+    .date {
+        font-size: 80%;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+}
+
+.favoriteContainer {
+    .lists {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .likes {
+        background-color: rgb(243, 253, 253);
+        padding: 3px 10px;
+        border-radius: 10px;
+        border: 1px solid rgb(203, 219, 219);
+        cursor: pointer;
+    }
+}
+
+.reviewContainer {
+    .toRestaurant {
+        color: rgb(8, 8, 224);
+        cursor: pointer;
+    }
+
+    .review {
+        background-color: rgb(252, 255, 255);
+        border-radius: 10px;
+        padding: 10px;
+        margin: 15px 5px 15px 30px;
+        border: 1px solid rgb(217, 243, 243);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .star {
+        margin: auto;
+        margin-right: 5px;
+    }
+
+    .content {
+        font-size: 90%;
+    }
+}
+
+.requestContainer {
+    .toRestaurant {
+        font-size: 110%;
+        color: rgb(20, 20, 209);
+        cursor: pointer;
+    }
+
+    .title {
+        font-size: 110%;
+    }
+
+    .request {
+        border-left: 5px solid orange;
+        padding: 5px 0px 5px 15px;
+        margin: 10px 15px 15px 30px;
+        background-color: rgb(248, 251, 253);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .reject {
+        border-left: 5px solid brown;
+    }
+
+    .approved {
+        border-left: 5px solid rgb(70, 132, 214);
+    }
+
+}

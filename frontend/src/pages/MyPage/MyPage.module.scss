@@ -1,22 +1,23 @@
 .container {
     position: relative;
-    top: 50px;
-    min-height: calc(100vh - 50px);
+    top: 180px;
+    min-height: calc(100vh - 180px);
+    background-color: aliceblue;
 
 }
 
 .main_container {
-    background-color: rgb(237, 247, 245);
-    border: 1px solid #baeed8;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #e2e5ec;
     width: 350px;
-    margin: 150px auto 0;
+    margin: 0px auto 0;
     padding: 20px;
     border-radius: 8px;
 }
 
 .button {
     border: none;
-    background-color: #0A7A0A;
+    background-color: #4b3dcc;
     color: white;
     padding: 6px 16px;
     margin: 0 5px;
@@ -49,8 +50,9 @@
     border: 1px solid #77c9ff;
     border-radius: 8px;
     background-color: #f0fbff;
-    padding: 12px;
+    padding: 10px;
     box-sizing: border-box;
+
 }
 
 .textarea {

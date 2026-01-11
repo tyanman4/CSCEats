@@ -3,6 +3,12 @@
     top: 80px;
     margin-left: 20px;
     margin-right: 20px;
+
+    input {
+        width: 300px;
+        border: 1px solid #b8dbf3;
+        padding: 4px;
+    }
 }
 
 .button {
@@ -50,5 +56,16 @@
         p {
             margin: 4px 0;
         }
+    }
+}
+
+.imgFrame {
+    width: 520px;
+    height: 347px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 }
