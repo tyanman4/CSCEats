@@ -49,17 +49,43 @@
 
     <!-- ⑥ ステータス別写真一覧 -->
     <select id="findByStatus" resultType="Photo">
-        SLECT *
-        FROM photos
-        WHERE status = #{status}
-        ORDER BY created_at DESC
+        SELECT 
+        p.*,
+        r.name AS restaurantName,
+        u.name AS userName
+        FROM photos p
+        LEFT JOIN restaurants r
+        ON p.restaurant_id = r.restaurant_id
+        LEFT JOIN users u
+        ON p.user_id = u.user_id
+        WHERE p.status = #{status}
+        ORDER BY p.created_at DESC
     </select>
 
     <select id="findApprovedByRestaurantId" resultType="Photo">
-        SELECT *
-        FROM photos
+        SELECT 
+        FROM photos 
         WHERE restaurant_id = #{restaurantId}
           AND status = 'approved'
         ORDER BY created_at DESC
     </select>
+
+    <update id="updateRestaurantIdByRequestId">
+        UPDATE photos
+        SET restaurant_id = #{restaurantId},
+        updated_at = NOW()
+        WHERE request_restaurant_id = #{requestRestaurantId}
+    </update>
+
+    <update id="update">
+        UPDATE photos
+        <set>
+            status = #{status},
+            <if test="rejectReason != null">
+                reject_reason = #{rejectReason},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE photo_id = #{photoId}
+    </update>
 </mapper>
