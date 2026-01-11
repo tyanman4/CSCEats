@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../../components/Header/Header';
 import appApi from '../../api/appApi';
 import styles from './RestaurantDetail.module.scss';
@@ -40,6 +40,7 @@ interface Review {
   comment: string;
   createdAt: string;
   updatedAt: string;
+  userId: number;
   userName: string;
 }
 
@@ -63,6 +64,8 @@ export const RestaurantDetail = () => {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  const navigate = useNavigate()
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -267,7 +270,7 @@ export const RestaurantDetail = () => {
 
           {restaurantDetail.reviews.map((review) => (
             <div key={review.reviewId} className={styles.reviewCard}>
-              <p className={styles.reviewer}>{review.userName} {'⭐'.repeat(review.rating)}</p>
+              <p className={styles.reviewer} onClick={() => { navigate(`/user-detail/${review.userId}`) }}>{review.userName} {'⭐'.repeat(review.rating)}</p>
               <p>{review.comment}</p>
             </div>
           ))}

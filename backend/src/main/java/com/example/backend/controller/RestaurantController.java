@@ -3,7 +3,6 @@ package com.example.backend.controller;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,23 +21,21 @@ import java.util.HashMap;
 import com.example.backend.service.RestaurantDetailService;
 import com.example.backend.security.JwtUtil;
 
-
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
 public class RestaurantController {
 
     private final RestaurantListService restaurantListService;
     private final RestaurantDetailService restaurantDetailService;
     private final JwtUtil jwtUtil;
 
-
     @GetMapping("/api/restaurants")
     public Map<String, Object> getRestaurants(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) List<String> sorts,
             @RequestParam(defaultValue = "1") int page) {
-        List<RestaurantReview> listRestaurants = restaurantListService.findRestaurantsWithReviewSummary(search, sorts, page);
+        List<RestaurantReview> listRestaurants = restaurantListService.findRestaurantsWithReviewSummary(search, sorts,
+                page);
         long totalCount = restaurantListService.findTotalCountRestaurants(search);
         List<Map<String, Object>> restaurants = new ArrayList<>();
         for (RestaurantReview rt : listRestaurants) {
@@ -58,7 +55,6 @@ public class RestaurantController {
             restaurant.put("averageRating", rt.getAverageRating());
             restaurant.put("reviewCount", rt.getReviewCount());
             restaurant.put("categories", rt.getCategories());
- 
 
             restaurants.add(restaurant);
         }
@@ -69,13 +65,12 @@ public class RestaurantController {
         response.put("totalCount", totalCount);
 
         return response;
-    }   
+    }
 
     @GetMapping("/api/restaurants/{id}")
     public ResponseEntity<?> getDetail(
-        @PathVariable("id") Long restaurantId,
-        HttpServletRequest request
-    ) {
+            @PathVariable("id") Long restaurantId,
+            HttpServletRequest request) {
         // --- JWT から userId 抽出 ---
         String authHeader = request.getHeader("Authorization");
         String token = null;
@@ -83,10 +78,9 @@ public class RestaurantController {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             userId = jwtUtil.extractUserId(token);
-        } 
+        }
         // --- Service 呼び出し ---
-        RestaurantDetailDto dto =
-                restaurantDetailService.getRestaurantDetail(restaurantId, userId);
+        RestaurantDetailDto dto = restaurantDetailService.getRestaurantDetail(restaurantId, userId);
 
         return ResponseEntity.ok(dto);
     }

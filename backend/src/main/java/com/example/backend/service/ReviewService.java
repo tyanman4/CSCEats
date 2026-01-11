@@ -25,4 +25,8 @@ public class ReviewService {
     public List<Review> getReviewsByRestaurant(Long restaurantId) {
         return reviewMapper.findByRestaurantId(restaurantId);
     }
+
+    public List<Review> getByUserId(Long userId) {
+        return reviewMapper.findByUserId(userId);
+    }
 }

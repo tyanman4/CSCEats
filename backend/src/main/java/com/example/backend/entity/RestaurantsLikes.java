@@ -6,4 +6,6 @@ import lombok.Data;
 public class RestaurantsLikes {
     private Long userId;
     private Long restaurantId;
+
+    private String restaurantName;
 }

@@ -31,9 +31,20 @@
 
     <!-- ③ ユーザー別レビュー一覧 -->
     <select id="findByUserId" resultType="Review">
-        SELECT *
-        FROM reviews
-        WHERE user_id = #{userId}
-        ORDER BY created_at DESC
+        SELECT 
+            rev.review_id,
+            rev.restaurant_id,
+            rev.user_id,
+            rev.rating,
+            rev.comment,
+            rev.created_at,
+            rev.updated_at,
+            res.name AS restaurant_name
+        FROM reviews rev
+        JOIN restaurants res ON rev.restaurant_id = res.restaurant_id
+        WHERE rev.user_id = #{userId}
+        ORDER BY rev.created_at DESC
     </select>
+
+    
 </mapper>

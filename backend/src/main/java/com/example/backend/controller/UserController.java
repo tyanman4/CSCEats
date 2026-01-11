@@ -31,18 +31,15 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
 public class UserController {
 
     private final UserService userService;
     private final UserHelper userHelper;
 
     @GetMapping("/user/{id}")
-    public List<Map<String, Object>> getUser(@PathVariable Integer id) {
+    public ResponseEntity<User> getUser(@PathVariable Integer id) {
         User user = userService.findByIdUser(id);
-        List<Map<String, Object>> users = new ArrayList<>();
-        users.add(Map.of("id", user.getUserId(), "name", user.getName(), "intro", user.getIntroduction()));
-        return users;
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/login")
@@ -74,11 +71,13 @@ public class UserController {
     }
 
     @GetMapping("/users/me")
-    public ResponseEntity<Map<String, String>> getMyProfile(
+    public ResponseEntity<Map<String, Object>> getMyProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         // @AuthenticationPrincipal で現在ログイン中のユーザ情報を取得
         return ResponseEntity
-                .ok(Map.of("name", userDetails.getUsername(),
+                .ok(Map.of(
+                        "id", userDetails.getUserId(),
+                        "name", userDetails.getUsername(),
                         "introduction", userDetails.getIntroduction(),
                         "role", userDetails.getRole()));
     }

@@ -141,9 +141,9 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         <p>住所　　：
                             <input type="text" className={styles.longForm} name="address" value={restaurant?.address ?? ""} onChange={handleChange} />
                         </p>
-                        <button type="button" onClick={calcFromAddress} className={styles.button}>緯度経度距離自動入力</button>
+                        <button type="button" onClick={calcFromAddress}>緯度経度距離自動入力</button>
                         <p>説明　　：
-                            <textarea name="description" className={styles.textarea} value={restaurant?.description ?? ""} onChange={handleChange} />
+                            <textarea name="description" value={restaurant?.description ?? ""} onChange={handleChange} />
                         </p>
                         <p>URL　　：
                             <input type="text" className={styles.longForm} name="url" value={restaurant?.url ?? ""} onChange={handleChange} />
@@ -164,10 +164,10 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                             <input type="text" name="distance" value={restaurant?.distance ?? ""} onChange={handleChange} />
                         </p>
                     </div>
-                    <button className={styles.button} type="submit" disabled={isSending} >
+                    <button type="submit" disabled={isSending} >
                         {isSending ? "送信中..." : "変更する"}
                     </button>
-                    <button className={styles.button} type="button" onClick={() => navigate(-1)}>戻る</button>
+                    <button type="button" onClick={() => navigate(-1)}>戻る</button>
                 </form>
                 <p>{message}</p>
             </div>

@@ -36,6 +36,7 @@
             rr.updated_at
         FROM request_restaurants rr JOIN users u ON rr.user_id = u.user_id
         WHERE rr.status = 'pending'
+        ORDER BY rr.created_at DESC
     </select>
 
     <update id="approveRequestRestaurant">
@@ -55,11 +56,42 @@
         WHERE request_restaurant_id = #{requestId}
     </update>
 
-    <insert id="insert" 
-            parameterType="com.example.backend.entity.RequestRestaurants"
-            useGeneratedKeys="true"
-            keyProperty="requestRestaurantId">
-        INSERT INTO request_restaurants(user_id ,name, address, url, status, created_at, updated_at)
-        VALUES(#{userId}, #{name}, #{address}, #{url}, #{status}, NOW(), NOW())
+    <insert id="insert"
+        parameterType="com.example.backend.entity.RequestRestaurants"
+        useGeneratedKeys="true"
+        keyProperty="requestRestaurantId"
+        keyColumn="request_restaurant_id">
+        INSERT INTO request_restaurants(
+        user_id, name, address, url, status, created_at, updated_at
+        )
+        VALUES(
+        #{userId}, #{name}, #{address}, #{url}, #{status}, NOW(), NOW()
+        )
     </insert>
+
+    <select id="findByUserId"
+            parameterType="long"
+            resultMap="RequestRestaurantsResultMap">
+        SELECT
+            request_restaurant_id,
+            user_id,
+            name,
+            url,
+            created_at,
+            address,
+            status,
+            approved_restaurant_id,
+            admin_user_id,
+            reject_reason,
+            updated_at
+        FROM request_restaurants
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="updateApprovedRestaurantId">
+        UPDATE "request_restaurants"
+        SET approved_restaurant_id =#{restaurantId}
+        WHERE request_restaurant_id =#{requestId}
+    </update>
 </mapper>

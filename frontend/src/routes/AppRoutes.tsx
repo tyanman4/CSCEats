@@ -15,6 +15,7 @@ import { Forbidden } from "../pages/Forbidden";
 import { RequireAdmin } from "./guards/RequireAdmin";
 import { InternalServiceError } from "../pages/InternalServerError";
 import { ServiceUnavailable } from "../pages/ServiceUnavailable";
+import { UserDetail } from "../pages/UserDetail/UserDetail";
 
 export const AppRoutes = () => {
   return (
@@ -23,12 +24,14 @@ export const AppRoutes = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<RequireAuth><MyPage /></RequireAuth>} />
+          <Route path="/user-detail/:id" element={<RequireAuth><UserDetail /></RequireAuth>} />
           <Route path="/register" element={<Register />} />
           <Route path="/restaurants" element={<RestaurantList />} />
           <Route path="/request-restaurants" element={<RequireAdmin><RequestRestaurants /></RequireAdmin>} />
           <Route path="/restaurants-for-update" element={<RequireAdmin><RestaurantsForUpdate /></RequireAdmin>} />
           <Route path="/restaurants-for-update/:id" element={<RequireAdmin><RestaurantsForUpdateDetail /></RequireAdmin>}></Route>
-          <Route path="/restaurants/request" element={<RequestRestaurant />} />
+          <Route path="/restaurants/request" element={<RequireAuth><RequestRestaurant /></RequireAuth>} />
+          <Route path=" " element={<RequestRestaurant />} />
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />
           <Route path="/403" element={<Forbidden />} />
           <Route path="/500" element={<InternalServiceError />} />

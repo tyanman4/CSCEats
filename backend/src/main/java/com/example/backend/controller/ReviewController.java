@@ -1,17 +1,23 @@
 package com.example.backend.controller;
 
 import com.example.backend.service.ReviewService;
+import com.example.backend.entity.Review;
 import com.example.backend.security.JwtUtil;
+
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -38,34 +44,15 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
+    @Data
     public static class ReviewRequest {
         private Integer restaurantId;
         private Integer rating;
         private String comment;
+    }
 
-        // Getters and Setters
-        public Integer getRestaurantId() {
-            return restaurantId;
-        }
-
-        public void setRestaurantId(Integer restaurantId) {
-            this.restaurantId = restaurantId;
-        }
-
-        public Integer getRating() {
-            return rating;
-        }
-
-        public void setRating(Integer rating) {
-            this.rating = rating;
-        }
-
-        public String getComment() {
-            return comment;
-        }
-
-        public void setComment(String comment) {
-            this.comment = comment;
-        }
+    @GetMapping("/api/reviews/user/{userId}")
+    public ResponseEntity<List<Review>> getByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(reviewService.getByUserId(userId));
     }
 }
