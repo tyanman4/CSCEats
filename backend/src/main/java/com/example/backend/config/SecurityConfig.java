@@ -48,13 +48,35 @@ public class SecurityConfig {
                 .formLogin(fl -> fl.disable())
                 .httpBasic(hb -> hb.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // 静的ファイル + SPAルート許可
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/register",
+                                "/restaurants/**",
+                                "/index.html",
+                                "/assets/**",
+                                "/favicon.ico",
+                                "/static/**")
+                        .permitAll()
+
+                        // APIの一部の許可
+                        .requestMatchers(
+                                "/api/save",
+                                "/api/login",
+                                "/uploads/**")
+                        .permitAll()
+
+                        // GETのみ許可
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/restaurants/**",
+                                "/api/categories/**")
+                        .permitAll()
+
+                        // ADMINのみ許可
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/save").permitAll()
-                        .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/restaurants").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/restaurants/**").permitAll()
+
+                        // 上記以外は認証必須
                         .anyRequest().authenticated())
                 // UsernamePasswordAuthenticationFilter より前にjwtAuthFilterでフィルターする。
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -65,12 +87,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173")); // Viteを許可
+        config.setAllowedOrigins(List.of(
+                "https://csceats.onrender.com",
+                "http://localhost:5173")); // Viteを許可
         // CORS では実際のリクエストの前に「プリフライト OPTIONS リクエスト」が来るので、OPTIONS も必ず含める。
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        // JWT を Authorization ヘッダーで送るために許可
-        config.setAllowCredentials(true);
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

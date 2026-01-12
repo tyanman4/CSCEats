@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const appApi = axios.create({
+  // TODO: 本番環境用のURLに変更する
   baseURL: "http://localhost:8080/api",
   headers: {
     "Content-Type": "application/json",

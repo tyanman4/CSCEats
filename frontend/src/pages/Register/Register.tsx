@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
-import styles from "./Register.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 

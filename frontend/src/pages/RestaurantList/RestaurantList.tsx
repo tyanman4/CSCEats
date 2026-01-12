@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
 import { MapView } from "../../components/Map/MapView";
@@ -9,35 +9,52 @@ import { Pagination } from "../../components/Pagination/Pagination";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantList.module.scss";
 
+interface ApiResponse<T> {
+  data: T;
+  message: string;
+  status: number;
+  path: string;
+  timestamp: string;
+}
+interface Category {
+  categoryId: number;
+  name: string;
+  usageCount?: number;
+}
+
+interface RestaurantReview {
+  id: number;
+  name: string;
+  address: string;
+  distance: number;
+  url: string;
+  averageBudget: string;
+  description: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  latitude: number;
+  longitude: number;
+  averageRating: number;
+  reviewCount: number;
+  categories: Category[];
+}
+
+interface RestaurantResponse {
+  restaurants: RestaurantReview[];
+  totalCount: number;
+}
+
+type MapRestaurant = {
+  id: number;
+  name: string;
+  lat: number;
+  lng: number;
+  address: string;
+  imageUrl?: string | null;
+};
+
 export const RestaurantList: React.FC = () => {
-  interface Category {
-    categoryId: number;
-    name: string;
-    usageCount?: number;
-  }
-
-  interface RestaurantReview {
-    id: number;
-    name: string;
-    address: string;
-    distance: number;
-    url: string;
-    averageBudget: string;
-    description: string;
-    imageUrl: string;
-    createdAt: string;
-    updatedAt: string;
-    latitude: number;
-    longitude: number;
-    averageRating: number;
-    reviewCount: number;
-    categories: Category[];
-  }
-
-  interface RestaurantResponse {
-    restaurants: RestaurantReview[];
-    totalCount: number;
-  }
 
   const [restaurants, setRestaurants] = useState<RestaurantReview[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -51,15 +68,15 @@ export const RestaurantList: React.FC = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const res = await appApi.get<RestaurantResponse>("/restaurants", {
+        const res = await appApi.get<ApiResponse<RestaurantResponse>>("/restaurants", {
           params: {
             search: searchWord,
             sorts: sortOptions,
             page: page,
           },
         });
-        setRestaurants(res.data.restaurants);
-        setTotalCount(res.data.totalCount);
+        setRestaurants(res.data.data.restaurants);
+        setTotalCount(res.data.data.totalCount);
       } catch (err) {
         console.error("Error fetching restaurants:", err);
       }
@@ -71,8 +88,8 @@ export const RestaurantList: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await appApi.get<Category[]>("/categories");
-        setCategories(res.data);
+        const res = await appApi.get<ApiResponse<Category[]>>("/categories");
+        setCategories(res.data.data);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
@@ -80,6 +97,29 @@ export const RestaurantList: React.FC = () => {
 
     fetchCategories();
   }, []);
+
+  const mapRestaurants = useMemo<MapRestaurant[]>(() => {
+    return restaurants
+      .map((r) => {
+        const lat = Number(r.latitude);
+        const lng = Number(r.longitude);
+
+        // 不正な座標は Map には渡さない
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+          return null;
+        }
+
+        return {
+          id: r.id,
+          name: r.name,
+          lat,
+          lng,
+          address: r.address,
+          imageUrl: r.imageUrl ?? null,
+        };
+      })
+      .filter(Boolean) as MapRestaurant[];
+  }, [restaurants]);
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -110,7 +150,7 @@ export const RestaurantList: React.FC = () => {
       <Header />
       <div className={styles.container}>
         <div className={styles.map}>
-          <MapView restaurants={restaurants} />
+          <MapView markers={mapRestaurants} />
         </div>
         <div className={styles.listArea}>
           <SearchBar onSearch={onClickSearch} categories={categories} />

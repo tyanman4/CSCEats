@@ -1,6 +1,5 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.RestaurantsLikes;
 import com.example.backend.mapper.RestaurantsLikesMapper;
 import lombok.RequiredArgsConstructor;
 

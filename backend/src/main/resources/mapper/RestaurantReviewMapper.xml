@@ -40,8 +40,8 @@
       r.updated_at,
       r.latitude,
       r.longitude,
-      COALESCE(ROUND(AVG(rv.rating)::numeric, 1), 0) AS average_rating,
-      COUNT(rv.review_id) AS review_count
+      COALESCE(ROUND(AVG(DISTINCT rv.rating)::numeric, 1), 0) AS average_rating,
+      COUNT(DISTINCT rv.review_id) AS review_count
     FROM restaurants r
       LEFT JOIN reviews rv ON r.restaurant_id = rv.restaurant_id
       LEFT JOIN restaurant_categories rc ON r.restaurant_id = rc.restaurant_id

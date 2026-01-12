@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApiResponseDto<T> {
-    private boolean success;
+    private int status;
     private String message;
+    private String path;
+    private String timestamp;
     private T data;
 }

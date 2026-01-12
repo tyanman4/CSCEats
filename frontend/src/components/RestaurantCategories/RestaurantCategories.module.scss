@@ -1,0 +1,155 @@
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 16px;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 13px;
+
+    &::before {
+        content: "#";
+        margin-right: 4px;
+        color: #888;
+    }
+}
+
+.addTag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    color: #007bff;
+    font-size: 13px;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.addTag:hover {
+    background: #e0e7ff;
+}
+
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.modalContent {
+    width: 380px;
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    animation: fadeUp 0.2s ease;
+}
+
+/* アニメーション */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 入力行 */
+.inputRow {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    input {
+        flex: 1;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+}
+
+/* 選択済みカテゴリ */
+.preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.previewTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f0f0;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+.remove {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: #ef4444;
+    line-height: 1;
+}
+
+/* 下部ボタン */
+.modalButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    button {
+        padding: 7px 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .cancel {
+        background: #e5e7eb;
+    }
+
+    .submit {
+        background: #22c55e;
+        color: white;
+    }
+
+    .submit:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+    }
+
+}
