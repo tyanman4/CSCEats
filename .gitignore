@@ -18,3 +18,9 @@ frontend/build/
 # Logs and environment variables
 *.log
 .env
+
+# アップロードした写真
+backend/uploads/*
+!backend/uploads/no-image.png
+!backend/uploads/mainimage/
+!backend/uploads/mainimage/*
