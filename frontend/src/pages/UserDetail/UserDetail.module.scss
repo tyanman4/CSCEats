@@ -1,10 +1,17 @@
 .container {
-    background-color: aliceblue;
+
     position: relative;
     top: 100px;
     display: grid;
     grid-template-columns: 1fr 2fr;
     margin: 0 20px;
+
+    &.mypage {
+        display: block;
+        grid-template-columns: unset;
+        width: 700px;
+        margin: auto;
+    }
 
     .containerName {
         font-weight: 500;
@@ -20,6 +27,14 @@
 
     p {
         margin: 5px 0;
+    }
+
+    .leftGrid {
+        min-width: 370px;
+    }
+
+    .rightGrid {
+        min-width: 500px;
     }
 
 }
@@ -60,6 +75,8 @@
 }
 
 .notificationContainer {
+
+    padding-right: 30px;
 
     .notification {
         margin-left: 30px;
@@ -113,12 +130,16 @@
 .favoriteContainer {
     .lists {
         display: flex;
+        flex-wrap: wrap;
         gap: 10px;
         margin-top: 15px;
+        margin-left: 30px;
     }
 
     .likes {
-        background-color: rgb(243, 253, 253);
+        background-color: rgb(246, 255, 255);
+        color: rgb(42, 42, 83);
+        font-weight: 450;
         padding: 3px 15px;
         border-radius: 10px;
         border: 1px solid rgb(203, 219, 219);

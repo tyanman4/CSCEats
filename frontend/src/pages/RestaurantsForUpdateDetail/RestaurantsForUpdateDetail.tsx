@@ -38,7 +38,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
             .catch((err) => {
                 console.error(err)
             })
-    }, [])
+    }, [id])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;

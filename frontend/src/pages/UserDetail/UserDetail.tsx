@@ -136,7 +136,7 @@ export const UserDetail: React.FC = () => {
                 })
                 .catch((err) => console.error(err))
         }
-    }, [])
+    }, [userId])
 
 
 
@@ -144,7 +144,7 @@ export const UserDetail: React.FC = () => {
         <>
             <Header />
 
-            <div className={styles.container}>
+            <div className={`${styles.container} ${isMyPage ? "" : styles.mypage}`}>
                 <div className={styles.leftGrid}>
                     <div className={styles.profileContainer}>
                         <p className={styles.userName}>{targetUser?.name}</p>
