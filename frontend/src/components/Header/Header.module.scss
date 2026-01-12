@@ -44,6 +44,10 @@
   &:hover {
     opacity: 0.9;
   }
+
+  &.admin {
+    background-color: rgb(33, 182, 112);
+  }
 }
 
 .toUserDetail {
