@@ -3,25 +3,32 @@ package com.example.backend.controller;
 import com.example.backend.service.ReviewService;
 import com.example.backend.dto.ApiResponseDto;
 import com.example.backend.dto.ReviewRequestDto;
+import com.example.backend.entity.Review;
 import com.example.backend.security.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class ReviewController {
 
     private final ReviewService reviewService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/api/{restaurantId}/reviews")
+    @PostMapping("/{restaurantId}/reviews")
     public ResponseEntity<ApiResponseDto<Void>> submitReview(
 
             @Valid @RequestBody ReviewRequestDto dto,
@@ -40,5 +47,10 @@ public class ReviewController {
         response.setPath(request.getRequestURI());
         response.setTimestamp(java.time.Instant.now().toString());
         return ResponseEntity.created(null).body(response);
+    }
+
+    @GetMapping("/reviews/user/{userId}")
+    public ResponseEntity<List<Review>> getByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(reviewService.getByUserId(userId));
     }
 }

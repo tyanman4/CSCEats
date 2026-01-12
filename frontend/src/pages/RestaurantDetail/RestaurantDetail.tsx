@@ -34,6 +34,7 @@ interface Review {
   reviewId: number;
   rating: number;
   comment: string;
+  userId: number;
   userName: string;
 }
 
