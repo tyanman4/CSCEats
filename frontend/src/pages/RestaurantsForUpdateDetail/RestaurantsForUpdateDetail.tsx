@@ -136,7 +136,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                 <form onSubmit={handleSubmit}>
                     <div>
                         <p>店名　　：
-                            <input type="text" name="name" value={restaurant?.name} onChange={handleChange} />
+                            <input type="text" name="name" value={restaurant?.name ?? ""} onChange={handleChange} />
                         </p>
                         <p>住所　　：
                             <input type="text" className={styles.longForm} name="address" value={restaurant?.address ?? ""} onChange={handleChange} />
