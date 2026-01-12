@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.ApiResponseDto;
+import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.service.RequestRestaurantService;
 import com.example.backend.service.PhotoService;
 import com.example.backend.form.RequestRestaurantForm;
@@ -15,7 +16,10 @@ import com.example.backend.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Instant;
 import java.util.Map;

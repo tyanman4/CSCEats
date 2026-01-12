@@ -32,7 +32,7 @@ public class RestaurantController {
         private final JwtUtil jwtUtil;
 
         @GetMapping("/api/restaurants")
-        public Map<String, Object> getRestaurants(
+        public ResponseEntity<ApiResponseDto<Map<String, Object>>> getRestaurants(
                         @RequestParam(required = false) String search,
                         @RequestParam(required = false) List<String> sorts,
                         @RequestParam(defaultValue = "1") int page) {
@@ -67,7 +67,14 @@ public class RestaurantController {
                 data.put("restaurants", restaurants);
                 data.put("totalCount", totalCount);
 
-                return response;
+                ApiResponseDto<Map<String, Object>> response = new ApiResponseDto<>();
+                response.setData(data);
+                response.setStatus(200);
+                response.setMessage("レストラン一覧を取得しました。");
+                response.setPath("/api/restaurants");
+                response.setTimestamp(Instant.now().toString());
+
+                return ResponseEntity.ok(response);
         }
 
         @GetMapping("/api/restaurants/{id}")

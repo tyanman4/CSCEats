@@ -1,6 +1,5 @@
 import { use, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";

@@ -78,7 +78,6 @@ export const RestaurantPhotos: React.FC<Props> = ({
     <>
       <div className={styles.mainPhotoWrapper}>
         <button className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
-
         {photos.length > 0 ? (
           //TODO: URL直書き修正
           <img

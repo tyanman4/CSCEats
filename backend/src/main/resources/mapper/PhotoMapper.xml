@@ -63,7 +63,7 @@
     </select>
 
     <select id="findApprovedByRestaurantId" resultType="Photo">
-        SELECT 
+        SELECT *
         FROM photos 
         WHERE restaurant_id = #{restaurantId}
           AND status = 'approved'
