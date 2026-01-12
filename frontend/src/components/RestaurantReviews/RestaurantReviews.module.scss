@@ -1,0 +1,36 @@
+/* レビュー全体ラッパー */
+.reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 個々のレビューカード */
+.review {
+    background: #ffffff;
+    padding: 16px 18px;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ユーザー名 + 評価 */
+.review strong {
+    display: inline-block;
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+/* コメント */
+.comment {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.reviewer {
+    font-size: 110%;
+    font-weight: 350;
+    color: rgb(7, 7, 187);
+    cursor: pointer;
+}

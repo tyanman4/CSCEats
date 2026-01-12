@@ -2,6 +2,9 @@ package com.example.backend.service;
 
 import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.mapper.RequestRestaurantsMapper;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,11 @@ public class RequestRestaurantService {
         requestRestaurant.setUserId(userId);
         requestRestaurant.setStatus("pending");
 
-        return requestRestaurantMapper.insert(requestRestaurant);
+        requestRestaurantMapper.insert(requestRestaurant);
+        return requestRestaurant.getRequestRestaurantId();
     };
+
+    public List<RequestRestaurants> findByUserId(Long userId) {
+        return requestRestaurantMapper.findByUserId(userId);
+    }
 }

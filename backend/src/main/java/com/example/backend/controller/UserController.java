@@ -6,15 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.backend.entity.User;
 import com.example.backend.form.LoginForm;
@@ -25,30 +23,24 @@ import com.example.backend.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173") // ReactサーバのURL
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
     private final UserHelper userHelper;
 
-    @GetMapping("/api/user/{id}")
-    public List<Map<String, Object>> getUser(@PathVariable Integer id) {
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Integer id) {
         User user = userService.findByIdUser(id);
-        List<Map<String, Object>> users = new ArrayList<>();
-        users.add(Map.of("id", user.getUserId(), "name", user.getName(), "intro", user.getIntroduction()));
-        return users;
+        return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/api/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginForm form) {
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginForm form) {
 
         try {
             String token = userService.login(form.getName(), form.getPassword());
@@ -59,31 +51,30 @@ public class UserController {
 
     }
 
-    @PostMapping("/api/save")
-    public ResponseEntity<?> create(@Valid @RequestBody UserForm form) {
+    @PostMapping("/save")
+    public ResponseEntity<Map<String, String>> create(@Valid @RequestBody UserForm form) {
 
         // 既に存在するユーザ名かチェック
         if (userService.checkExistsByName(form.getName())) {
             return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
+                    .status(HttpStatus.CONFLICT)// 409
                     .body(Map.of("error", "Username already exists"));
         }
         User user = userHelper.convertUser(form);
         userService.insertUser(user);
         String token = userService.login(form.getName(), form.getPassword());
 
-        Map<String, String> response = new HashMap<>();
-        response.put("redirect", "/restaurants");
-        response.put("token", token);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
-    @GetMapping("/api/users/me")
-    public ResponseEntity<?> getMyProfile(
+    @GetMapping("/users/me")
+    public ResponseEntity<Map<String, Object>> getMyProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         // @AuthenticationPrincipal で現在ログイン中のユーザ情報を取得
         return ResponseEntity
-                .ok(Map.of("name", userDetails.getUsername(),
+                .ok(Map.of(
+                        "id", userDetails.getUserId(),
+                        "name", userDetails.getUsername(),
                         "introduction", userDetails.getIntroduction(),
                         "role", userDetails.getRole()));
     }

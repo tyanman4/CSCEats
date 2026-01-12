@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.ReviewRequestDto;
 import com.example.backend.entity.Review;
 import com.example.backend.mapper.ReviewMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +14,20 @@ public class ReviewService {
 
     private final ReviewMapper reviewMapper;
 
-    public void insert(Integer restaurant_id, Integer user_id, Integer rating, String comment) {
+    public void insert(ReviewRequestDto reviewRequestDto, Long user_id) {
         Review review = new Review();
-        review.setRestaurantId(restaurant_id.longValue());
-        review.setUserId(user_id.longValue());
-        review.setRating(rating);
-        review.setComment(comment);
+        review.setRestaurantId(reviewRequestDto.getRestaurantId());
+        review.setUserId(user_id);
+        review.setRating(reviewRequestDto.getRating());
+        review.setComment(reviewRequestDto.getComment());
         reviewMapper.insert(review);
     }
 
     public List<Review> getReviewsByRestaurant(Long restaurantId) {
         return reviewMapper.findByRestaurantId(restaurantId);
+    }
+
+    public List<Review> getByUserId(Long userId) {
+        return reviewMapper.findByUserId(userId);
     }
 }

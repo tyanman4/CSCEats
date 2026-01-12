@@ -1,13 +1,12 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import appApi from "../api/appApi";
-import { useNavigate } from "react-router-dom";
-
 
 type User = {
-    name: string;
-    introduction: string;
-    role: string;
-} | null; //ログアウト時はnull
+    id: string
+    name: string
+    introduction: string
+    role: string
+} | null //ログアウト時はnull
 
 type AuthContextType = {
     user: User;
@@ -39,6 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 headers: { Authorization: `Bearer ${jwt}` },
             });
             const userData: User = {
+                id: res.data.id,
                 name: res.data.name,
                 introduction: res.data.introduction,
                 role: res.data.role

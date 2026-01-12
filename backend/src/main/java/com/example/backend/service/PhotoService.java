@@ -4,7 +4,7 @@ import com.example.backend.entity.Photo;
 import com.example.backend.mapper.PhotoMapper;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;      // ← import が漏れていた
+import org.springframework.stereotype.Service; // ← import が漏れていた
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -16,9 +16,9 @@ public class PhotoService {
     private final PhotoMapper photoMapper;
     private final FileStorageService fileStorageService; // 同じ package なので import 不要
 
-    public void savePhotos(Long restaurantId, Long requestRestaurantId,Long userID, List<MultipartFile> files) {
+    public void savePhotos(Long restaurantId, Long requestRestaurantId, Long userID, List<MultipartFile> files) {
         for (MultipartFile f : files) {
-            savePhoto(restaurantId, requestRestaurantId,userID, f);
+            savePhoto(restaurantId, requestRestaurantId, userID, f);
         }
     }
 
@@ -51,7 +51,7 @@ public class PhotoService {
         return photoMapper.findByUserId(userId);
     }
 
-    public List<Photo> getPhotosByStatus(String status) {
+    public List<Photo> getByStatus(String status) {
         return photoMapper.findByStatus(status);
     }
 }

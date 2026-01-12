@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestRestaurants {
-    private Integer requestRestaurantId;
+    private Long requestRestaurantId;
     private Long userId;
     private String userName; // UsersテーブルをJOINしている。
     private String name;

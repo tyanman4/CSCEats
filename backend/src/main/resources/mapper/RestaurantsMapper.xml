@@ -18,7 +18,10 @@
         <result property="reviewCount" column="review_count"/>
     </resultMap>
 
-    <insert id="insertApprovedRestaurant">
+    <insert id="insertApprovedRestaurant"
+        useGeneratedKeys="true"
+        keyProperty="restaurantId"
+        keyColumn="restaurant_id">
         INSERT INTO restaurants (name, address, distance, url, latitude, longitude)
         VALUES
         (#{name}, #{address}, #{distance}, #{url}, #{latitude}, #{longitude})

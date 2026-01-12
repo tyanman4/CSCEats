@@ -18,9 +18,9 @@
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: bold;
-  margin: 0;
+  margin-left: 10px;
 
   &:hover {
     cursor: pointer;
@@ -44,4 +44,14 @@
   &:hover {
     opacity: 0.9;
   }
+
+  &.admin {
+    background-color: rgb(33, 182, 112);
+  }
+}
+
+.toUserDetail {
+  cursor: pointer;
+  color: rgb(5, 20, 233);
+  font-weight: bold;
 }

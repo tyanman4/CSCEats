@@ -4,61 +4,67 @@ import styles from "./ReviewForm.module.scss";
 import appApi from "../../api/appApi";
 
 interface Props {
-  restaurantId?: string;
+  restaurantId: string;
+  onSuccess: () => Promise<void>;
 }
 
-export const ReviewForm: React.FC<Props> = ({ restaurantId }) => {
+export const ReviewForm: React.FC<Props> = ({
+  restaurantId,
+  onSuccess,
+}) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async () => {
     if (isSending) return;
-    if (rating === 0 || comment.length === 0) {
-      setMessage("評価とコメントは必須です");
+
+    // フロントバリデーション
+    if (rating === 0 || comment.trim().length === 0) {
+      setErrorMessage("評価とコメントは必須です");
       return;
     }
+
     try {
       setIsSending(true);
-      const res = await appApi.post(`${restaurantId}/reviews`, {
-        restaurantId,
-        rating,
-        comment,
-      });
-      if (res.status === 200) {
-        setMessage("レビューが投稿されました");
-        setRating(0);
-        setComment("");
-      } else {
-        setMessage("レビューの投稿に失敗しました");
-      }
+      setErrorMessage(null);
 
-    } catch (error) {
-      setMessage("サーバーエラーが発生しました");
+      await appApi.post(
+        `/${restaurantId}/reviews`,
+        {
+          restaurantId,
+          rating,
+          comment,
+        }
+      );
+
+      // 入力リセット
+      setRating(0);
+      setComment("");
+
+      // 親に通知（再取得・成功メッセージは親の責務）
+      await onSuccess();
+
+    } catch (err: any) {
+      if (err.response?.status === 400) {
+        // ApiResponseDto の message をそのまま使う
+        setErrorMessage(err.response.data.message);
+      } else {
+        setErrorMessage("レビューの投稿に失敗しました");
+      }
     } finally {
       setIsSending(false);
     }
   };
 
   return (
-    // <div className={styles.reviewFormCard}>
-    //         <h2 className={styles.sectionTitle}>レビューを投稿する</h2>
-
-    //         <label>レビュー内容</label>
-    //         <textarea placeholder="ここにレビューを書いてください" />
-
-    //         <label>評価（1〜5）</label>
-    //         <select>
-    //           {[1, 2, 3, 4, 5].map((v) => (
-    //             <option key={v}>{v}</option>
-    //           ))}
-    //         </select>
-
-    //         <button className={styles.submitButton}>投稿する</button>
-    //       </div>
     <div className={styles.reviewFormCard}>
       <h2 className={styles.sectionTitle}>レビューを投稿する</h2>
+
+      {errorMessage && (
+        <p className={styles.errorMessage}>{errorMessage}</p>
+      )}
 
       <label>評価</label>
       <StarRating value={rating} onChange={setRating} />
@@ -72,10 +78,10 @@ export const ReviewForm: React.FC<Props> = ({ restaurantId }) => {
 
       <button
         className={styles.submitButton}
-        disabled={rating === 0 || comment.length === 0}
+        disabled={isSending}
         onClick={handleSubmit}
       >
-        投稿する
+        {isSending ? "送信中..." : "投稿する"}
       </button>
     </div>
   );

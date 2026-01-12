@@ -11,13 +11,13 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         restaurantId: number;
         name: string;
         address: string;
-        distance: number | null;
+        distance: string | null;
         url: string | null;
         averageBudget: string | null;
         description: string | null;
         imageUrl: string | null;
-        latitude: number | null;
-        longitude: number | null;
+        latitude: string | null;
+        longitude: string | null;
     }
     const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -27,17 +27,18 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
     const [isSending, setIsSending] = useState(false);
     const [message, setMessage] = useState("");
 
+    const [LON_MIN, LON_MAX] = [129, 146]
+    const [LAT_MIN, LAT_MAX] = [30, 46]
+
     useEffect(() => {
         appApi.get(`admin/restaurants/${id}`)
             .then(res => {
-                //alert(JSON.stringify(res.data, null, 2))
                 setRestaurant(res.data)
             })
             .catch((err) => {
-                //alert(err)
                 console.error(err)
             })
-    }, [])
+    }, [id])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -47,34 +48,54 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
 
             return {
                 ...prev,
-                [name]:
-                    name === "latitude" || name === "longitude" || name === "distance"
-                        ? value === "" ? null : Number(value)
-                        : value,
+                [name]: value,
             };
         });
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        e.preventDefault()
         if (restaurant == null) {
-            return;
+            return
         }
         if (!restaurant.name || !restaurant.address) {
-            setMessage("名前と住所は必須です。");
-            return;
+            setMessage("店名と住所は必須です。");
+            return
+        } else if (restaurant.name.length > 64) {
+            setMessage("店名が長すぎます。")
+            return
+        } else if (restaurant.address.length > 256) {
+            setMessage("住所が長すぎます。")
+            return
         }
-        if (restaurant.latitude && !Number.isFinite(restaurant.latitude)) {
-            setMessage("緯度には数値を入力してください。");
-            return;
+
+        if (restaurant.latitude) {
+            const lat = Number(restaurant.latitude)
+            if (!Number.isFinite(lat)) {
+                setMessage("緯度には数値を入力してください。")
+                return
+            }
+            if (lat < LAT_MIN || lat > LAT_MAX) {
+                setMessage("緯度に適切な数値を入力してください。")
+                return
+            }
         }
-        if (restaurant.longitude && !Number.isFinite(restaurant.longitude)) {
-            setMessage("経度には数値を入力してください。");
-            return;
+        if (restaurant.longitude) {
+            const lon = Number(restaurant.longitude)
+            if (!Number.isFinite(lon)) {
+                setMessage("経度には数値を入力してください。")
+                return;
+            }
+            if (lon < LON_MIN || lon > LON_MAX) {
+                setMessage("経度には適切な数値を入力してください。")
+            }
         }
-        if (restaurant.distance && !Number.isFinite(restaurant.distance)) {
-            setMessage("距離には数値を入力してください。");
-            return;
+        if (restaurant.distance) {
+            const dist = Number(restaurant.distance)
+            if (!Number.isFinite(dist)) {
+                setMessage("距離には数値を入力してください。");
+                return;
+            }
         }
 
         try {
@@ -99,11 +120,11 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
             setMessage("計算できませんでした。")
             return
         }
-        const distance = Math.floor(distanceFromCSC(result[0], result[1]))
+        const distance = Math.floor(distanceFromCSC(result[0], result[1])).toString()
         setRestaurant({
             ...restaurant,
-            latitude: result[0],
-            longitude: result[1],
+            latitude: String(result[0]),
+            longitude: String(result[1]),
             distance: distance
         })
     }
@@ -115,14 +136,14 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                 <form onSubmit={handleSubmit}>
                     <div>
                         <p>店名　　：
-                            <input type="text" name="name" value={restaurant?.name} onChange={handleChange} />
+                            <input type="text" name="name" value={restaurant?.name ?? ""} onChange={handleChange} />
                         </p>
                         <p>住所　　：
                             <input type="text" className={styles.longForm} name="address" value={restaurant?.address ?? ""} onChange={handleChange} />
                         </p>
                         <button type="button" onClick={calcFromAddress}>緯度経度距離自動入力</button>
                         <p>説明　　：
-                            <textarea name="description" className={styles.textarea} value={restaurant?.description ?? ""} onChange={handleChange} />
+                            <textarea name="description" value={restaurant?.description ?? ""} onChange={handleChange} />
                         </p>
                         <p>URL　　：
                             <input type="text" className={styles.longForm} name="url" value={restaurant?.url ?? ""} onChange={handleChange} />
@@ -143,10 +164,10 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                             <input type="text" name="distance" value={restaurant?.distance ?? ""} onChange={handleChange} />
                         </p>
                     </div>
-                    <button className={styles.button} type="submit" disabled={isSending} >
+                    <button type="submit" disabled={isSending} >
                         {isSending ? "送信中..." : "変更する"}
                     </button>
-                    <button className={styles.button} type="button" onClick={() => navigate(-1)}>戻る</button>
+                    <button type="button" onClick={() => navigate(-1)}>戻る</button>
                 </form>
                 <p>{message}</p>
             </div>

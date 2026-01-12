@@ -3,6 +3,9 @@ package com.example.backend.service;
 import com.example.backend.entity.RestaurantsLikes;
 import com.example.backend.mapper.RestaurantsLikesMapper;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,5 +42,9 @@ public class RestaurantsLikesService {
      */
     public int getLikeCount(Long restaurantId) {
         return restaurantsLikesMapper.countByRestaurantId(restaurantId);
+    }
+
+    public List<RestaurantsLikes> findByUserId(Long userId) {
+        return restaurantsLikesMapper.findRestaurantsByUserId(userId);
     }
 }

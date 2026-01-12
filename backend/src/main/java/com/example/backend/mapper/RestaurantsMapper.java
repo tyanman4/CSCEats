@@ -10,13 +10,15 @@ import com.example.backend.form.RestaurantsUpdateForm;
 @Mapper
 public interface RestaurantsMapper {
 
-        int insertApprovedRestaurant(
+        Long insertApprovedRestaurant(
                         String name,
                         String address,
                         Integer distance,
                         String url,
                         Double latitude,
                         Double longitude);
+
+        int insertApprovedRestaurant(Restaurants restaurants);
 
         int update(Long id, RestaurantsUpdateForm form);
 
