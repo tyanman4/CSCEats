@@ -110,11 +110,6 @@ export const UserDetail: React.FC = () => {
             })
             .catch((err) => console.error(err))
 
-        appApi.get(`request-restaurants/${userId}`)
-            .then(res => {
-                setRequestRestaurants(res.data)
-            })
-            .catch((err) => console.error(err))
 
         appApi.get(`reviews/user/${userId}`)
             .then(res => {
@@ -122,17 +117,25 @@ export const UserDetail: React.FC = () => {
             })
             .catch((err) => console.error(err))
 
-        appApi.get(`restaurantLikes/user/${userId}`)
+        appApi.get(`restaurant-likes/user/${userId}`)
             .then(res => {
                 setLikes(res.data)
             })
             .catch((err) => console.error(err))
 
-        appApi.get(`notifications/user/${userId}`)
-            .then(res => {
-                setNotifications(res.data)
-            })
-            .catch((err) => console.error(err))
+        if (isMyPage) {
+            appApi.get(`request-restaurants/${userId}`)
+                .then(res => {
+                    setRequestRestaurants(res.data)
+                })
+                .catch((err) => console.error(err))
+
+            appApi.get(`notifications/user/${userId}`)
+                .then(res => {
+                    setNotifications(res.data)
+                })
+                .catch((err) => console.error(err))
+        }
     }, [])
 
 

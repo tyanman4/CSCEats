@@ -24,7 +24,7 @@ export const AppRoutes = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<RequireAuth><MyPage /></RequireAuth>} />
-          <Route path="/user-detail/:id" element={<RequireAuth><UserDetail /></RequireAuth>} />
+          <Route path="/user-detail/:id" element={<UserDetail />} />
           <Route path="/register" element={<Register />} />
           <Route path="/restaurants" element={<RestaurantList />} />
           <Route path="/request-restaurants" element={<RequireAdmin><RequestRestaurants /></RequireAdmin>} />
