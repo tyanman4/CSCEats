@@ -62,4 +62,10 @@
         (#{userId}, #{type}, #{relatedId})
     </insert>
 
+    <select id="countUnread" resultType="int">
+        SELECT COUNT(*) FROM notifications
+        WHERE read_flag = false
+        AND user_id = #{userId}
+    </select>
+
 </mapper>

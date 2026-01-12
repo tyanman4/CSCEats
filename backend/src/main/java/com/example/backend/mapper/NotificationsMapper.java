@@ -14,4 +14,6 @@ public interface NotificationsMapper {
     int toRead(Long notificationId);
 
     int insert(Long userId, String type, Long relatedId);
+
+    int countUnread(Long userId);
 }

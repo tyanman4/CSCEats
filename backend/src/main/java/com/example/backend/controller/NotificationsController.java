@@ -26,9 +26,15 @@ public class NotificationsController {
         return ResponseEntity.ok(notificationsService.findByUserId(userId));
     }
 
-    @PostMapping("to-read/{notificationsId}")
+    @PostMapping("/to-read/{notificationsId}")
     public ResponseEntity<String> toRead(@PathVariable Long notificationsId) {
         notificationsService.toRead(notificationsId);
         return ResponseEntity.ok("既読に変更されました。");
     }
+
+    @GetMapping("/user/{userId}/all-read")
+    public ResponseEntity<Boolean> isAllRead(@PathVariable Long userId) {
+        return ResponseEntity.ok(notificationsService.isAllRead(userId));
+    }
+
 }

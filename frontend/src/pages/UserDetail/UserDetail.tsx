@@ -101,6 +101,7 @@ export const UserDetail: React.FC = () => {
                     )
                 )
             })
+            .catch((err) => console.error(err))
     }
 
     useEffect(() => {
