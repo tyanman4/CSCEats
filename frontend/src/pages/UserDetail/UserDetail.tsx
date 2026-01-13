@@ -4,6 +4,7 @@ import styles from "./UserDetail.module.scss"
 import { useAuth } from "../../contexts/AuthContext"
 import { useEffect, useState } from "react"
 import appApi from "../../api/appApi"
+import { ReviewList, type Review } from "./ReviewList"
 
 export const UserDetail: React.FC = () => {
 
@@ -20,14 +21,6 @@ export const UserDetail: React.FC = () => {
         adminUserId: number
         rejectReason: string
         updatedAt: string
-    }
-
-    interface Reviews {
-        reviewId: number
-        restaurantId: number
-        rating: number
-        comment: number
-        restaurantName: string
     }
 
     interface Likes {
@@ -61,7 +54,7 @@ export const UserDetail: React.FC = () => {
 
     const [targetUser, serTargetUser] = useState<User>()
     const [requestRestaurants, setRequestRestaurants] = useState<RequestRestaurants[]>([])
-    const [reviews, setReviews] = useState<Reviews[]>([])
+    const [reviews, setReviews] = useState<Review[]>([])
     const [likes, setLikes] = useState<Likes[]>([])
     const [notifications, setNotifications] = useState<Notifications[]>([])
 
@@ -206,21 +199,7 @@ export const UserDetail: React.FC = () => {
 
                     </div>
 
-                    <div className={styles.reviewContainer}>
-                        <p className={styles.containerName}>レビュー</p>
-                        {reviews.map(r => (
-                            <div key={r.reviewId} className={styles.review}>
-                                <div className={styles.flex}>
-                                    <p className={styles.toRestaurant} onClick={() => {
-                                        navigate(`/restaurants/${r.restaurantId}`)
-                                    }}>{r.restaurantName}</p>
-                                    <p className={styles.star}>{"⭐".repeat(r.rating)}</p>
-                                </div>
-                                <p className={styles.content}>{"　" + r.comment}</p>
-
-                            </div>
-                        ))}
-                    </div>
+                    <ReviewList reviews={reviews} />
 
                     {isMyPage &&
                         <div className={styles.requestContainer}>

@@ -21,10 +21,6 @@
         margin-bottom: 20px;
     }
 
-    .flex {
-        display: flex;
-    }
-
     p {
         margin: 5px 0;
     }
@@ -42,7 +38,6 @@
 .profileContainer,
 .notificationContainer,
 .favoriteContainer,
-.reviewContainer,
 .requestContainer {
     background-color: white;
     margin: 10px;
@@ -148,31 +143,6 @@
         &:hover {
             outline: 2px solid rgb(38, 102, 102);
         }
-    }
-}
-
-.reviewContainer {
-    .toRestaurant {
-        color: rgb(8, 8, 224);
-        cursor: pointer;
-    }
-
-    .review {
-        background-color: rgb(252, 255, 255);
-        border-radius: 10px;
-        padding: 10px;
-        margin: 15px 5px 15px 30px;
-        border: 1px solid rgb(217, 243, 243);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .star {
-        margin: auto;
-        margin-right: 5px;
-    }
-
-    .content {
-        font-size: 90%;
     }
 }
 
