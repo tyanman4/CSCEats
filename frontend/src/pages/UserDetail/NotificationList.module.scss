@@ -1,0 +1,47 @@
+.notification {
+    margin-left: 30px;
+    margin-bottom: 15px;
+}
+
+.buttons {
+    margin: auto;
+    margin-right: 5px;
+    display: flex;
+    gap: 8px;
+
+    button {
+        background-color: rgb(0, 153, 255);
+        color: white;
+        border-radius: 5px;
+        border: none;
+        padding: 3px 8px;
+        cursor: pointer;
+    }
+
+    .all,
+    .unread {
+        border-radius: 15px;
+    }
+
+    .pushed {
+        border: 2px solid rgb(50, 25, 190);
+        background-color: rgb(24, 24, 177);
+    }
+}
+
+.read {
+    color: gray;
+    white-space: pre-wrap;
+}
+
+.unread {
+    color: blue;
+    cursor: pointer;
+    white-space: pre-wrap;
+}
+
+.date {
+    font-size: 80%;
+    text-align: right;
+    margin-bottom: 20px;
+}
