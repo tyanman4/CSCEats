@@ -13,7 +13,8 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         address: string;
         distance: string | null;
         url: string | null;
-        averageBudget: string | null;
+        underBudget: string | null;
+        topBudget: string | null;
         description: string | null;
         imageUrl: string | null;
         latitude: string | null;
@@ -151,8 +152,9 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         <p>画像URL：
                             <input type="text" className={styles.longForm} name="imageUrl" value={restaurant?.imageUrl ?? ""} onChange={handleChange} />
                         </p>
-                        <p>平均予算：
-                            <input type="text" name="averageBudget" value={restaurant?.averageBudget ?? ""} onChange={handleChange} />
+                        <p>予算：
+                            <input type="text" name="underBudget" value={restaurant?.underBudget ?? ""} onChange={handleChange} />～
+                            <input type="text" name="topBudget" value={restaurant?.topBudget ?? ""} onChange={handleChange} />
                         </p>
                         <p>緯度　　：
                             <input type="text" name="latitude" value={restaurant?.latitude ?? ""} onChange={handleChange} />

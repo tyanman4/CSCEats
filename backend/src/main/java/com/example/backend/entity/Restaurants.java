@@ -9,6 +9,8 @@ public class Restaurants {
     private String address;
     private Integer distance;
     private String url;
+    private Integer underBudget;
+    private Integer topBudget;
     private String averageBudget;
     private String description;
     private String imageUrl;
