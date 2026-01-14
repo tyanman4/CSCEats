@@ -23,7 +23,10 @@ export const Profile: React.FC<Props> = ({
     return (
         <div className={commonStyles.container}>
             <p className={styles.userName}>{user?.name}</p>
-            <p className={styles.introduction}>{user?.introduction}</p>
+            {user?.introduction ?
+                <p className={styles.introduction}>{user?.introduction}</p> :
+                <p className={styles.noIntroduction}>（自己紹介はありません）</p>
+            }
 
             {isMyPage && (
                 <p className={styles.toMypageP}>
