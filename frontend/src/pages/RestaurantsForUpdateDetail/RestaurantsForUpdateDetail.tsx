@@ -20,9 +20,20 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         latitude: string | null;
         longitude: string | null;
     }
+
+    interface Photo {
+        photoId: number
+        url: string
+    }
+
     const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+    const [photos, setPhotos] = useState<Photo[]>([]);
+    const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
+    const findPhotoIndexByUrl = (someUrl: string): number => {
+        return photos.findIndex(photo => photo.url === someUrl)
+    }
     const id = useParams().id
 
     const [isSending, setIsSending] = useState(false);
@@ -39,7 +50,33 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
             .catch((err) => {
                 console.error(err)
             })
+
+        appApi.get(`admin/photo/restaurant/${id}`)
+            .then(res => {
+                setPhotos(res.data)
+            })
+            .catch((err) => {
+                console.error(err)
+            })
     }, [id])
+
+    useEffect(() => {
+        if (!restaurant?.imageUrl || photos.length === 0) return;
+
+        const index = findPhotoIndexByUrl(restaurant.imageUrl);
+        if (index >= 0) {
+            setCurrentPhotoIndex(index);
+        }
+    }, [restaurant, photos])
+
+    useEffect(() => {
+        setRestaurant((prev) => {
+            if (!prev) return prev;
+            return {
+                ...prev, imageUrl: photos[currentPhotoIndex].url
+            }
+        })
+    }, [currentPhotoIndex])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -130,6 +167,17 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         })
     }
 
+    const handlePrevPhoto = () => {
+        setCurrentPhotoIndex((prevIndex) =>
+            prevIndex === 0 ? (photos ? photos.length - 1 : 0) : prevIndex - 1
+        );
+    };
+    const handleNextPhoto = () => {
+        setCurrentPhotoIndex((prevIndex) =>
+            photos ? (prevIndex === photos.length - 1 ? 0 : prevIndex + 1) : 0
+        );
+    };
+
     return (
         <>
             <Header />
@@ -152,6 +200,41 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         <p>画像URL：
                             <input type="text" className={styles.longForm} name="imageUrl" value={restaurant?.imageUrl ?? ""} onChange={handleChange} />
                         </p>
+
+                        <div className={styles.mainPhotoWrapper}>
+                            <button type="button" className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
+                            {photos.length > 0 ? (
+                                //TODO: URL直書き修正
+                                <img
+                                    src={`http://localhost:8080${photos[currentPhotoIndex].url}`}
+                                    className={styles.mainPhoto}
+                                />
+                            ) : (
+                                //TODO: URL直書き修正
+                                <div className={styles.noPhoto}>
+                                    <img src='http://localhost:8080/uploads/no-image.png' alt='no image' className={styles.mainPhoto} />
+                                </div>
+                            )}
+
+                            < button type="button" className={styles.arrowRight} onClick={handleNextPhoto}>›</button>
+                        </div>
+
+                        <div className={styles.thumbnailRow}>
+                            {photos.map((photo, index) => (
+                                <img
+                                    key={photo.photoId}
+                                    //TODO: URL直書き修正
+                                    src={`http://localhost:8080${photo.url}`}
+                                    className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
+                                        }`}
+                                    onClick={() => setCurrentPhotoIndex(index)}
+                                />
+                            ))}
+                        </div>
+
+
+
+
                         <p>予算：
                             <input type="text" name="underBudget" value={restaurant?.underBudget ?? ""} onChange={handleChange} />～
                             <input type="text" name="topBudget" value={restaurant?.topBudget ?? ""} onChange={handleChange} />

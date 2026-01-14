@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { Header } from "../../components/Header/Header"
 import styles from "./UserDetail.module.scss"
 import { useAuth } from "../../contexts/AuthContext"

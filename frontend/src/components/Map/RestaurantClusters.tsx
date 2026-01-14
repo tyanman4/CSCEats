@@ -32,7 +32,7 @@ export const RestaurantClusters: React.FC<Props> = ({ markers }) => {
       const marker = L.marker([m.lat, m.lng]);
 
       const imageUrl = m.imageUrl
-        ? `http://localhost:8080/uploads/mainimage/${m.imageUrl}`
+        ? `http://localhost:8080${m.imageUrl}`
         : "http://localhost:8080/uploads/no-image.png";
 
       marker.bindPopup(`

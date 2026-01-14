@@ -152,6 +152,7 @@ export const RequestRestaurants: React.FC = () => {
                         </li>
                     ))}
                 </ul>
+                <hr></hr>
                 <h2>申請中写真</h2>
                 <ul className={styles.list}>
                     {photos.filter(r => r.restaurantId).map(r => (
