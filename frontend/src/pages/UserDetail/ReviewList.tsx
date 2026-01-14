@@ -18,7 +18,7 @@ interface Props {
 export const ReviewList: React.FC<Props> = ({ reviews }) => {
     const navigate = useNavigate()
 
-    const REVIEWS_PER_PAGE = 3
+    const REVIEWS_PER_PAGE = 5
     const [currentPage, setCurrentPage] = useState(1)
 
     const totalPages = Math.ceil(reviews.length / REVIEWS_PER_PAGE)
@@ -47,25 +47,27 @@ export const ReviewList: React.FC<Props> = ({ reviews }) => {
             ))}
 
             {/* ページネーション */}
-            <div className={commonStyles.pagination}>
-                <button
-                    onClick={() => setCurrentPage(p => p - 1)}
-                    disabled={currentPage === 1}
-                >
-                    ←Prev
-                </button>
+            {totalPages > 1 &&
+                <div className={commonStyles.pagination}>
+                    <button
+                        onClick={() => setCurrentPage(p => p - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        ←Prev
+                    </button>
 
-                <span>
-                    {currentPage} / {totalPages}
-                </span>
+                    <span>
+                        {currentPage} / {totalPages}
+                    </span>
 
-                <button
-                    onClick={() => setCurrentPage(p => p + 1)}
-                    disabled={currentPage === totalPages}
-                >
-                    Next→
-                </button>
-            </div>
+                    <button
+                        onClick={() => setCurrentPage(p => p + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next→
+                    </button>
+                </div>
+            }
         </div>
     )
 }
