@@ -1,9 +1,12 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.ApiResponseDto;
+import com.example.backend.dto.InquiryRequestDto;
 import com.example.backend.entity.Inquiry;
+import com.example.backend.security.JwtUtil;
 import com.example.backend.service.InquiryService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +21,26 @@ import java.util.List;
 public class InquiryController {
 
     private final InquiryService inquiryService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping
     public ResponseEntity<ApiResponseDto<Void>> submitInquiry(
-            @RequestBody Inquiry inquiry,
+            @Valid @RequestBody InquiryRequestDto dto,
             HttpServletRequest request) {
+        if (request.getHeader("Authorization") == null) {
+            return ResponseEntity.status(401).build();
+        }
+        Inquiry inquiry = new Inquiry();
+        inquiry.setSubject(dto.getSubject());
+        inquiry.setMessage(dto.getMessage());
+        String token = request.getHeader("Authorization").substring(7);
+        Long userId = jwtUtil.extractUserId(token);
+        inquiry.setUserId(userId);
         inquiryService.submitInquiry(inquiry);
 
         ApiResponseDto<Void> response = new ApiResponseDto<>(
                 HttpStatus.CREATED.value(),
-                "Inquiry submitted successfully",
+                "お問い合わせが承認されました",
                 request.getRequestURI(),
                 LocalDateTime.now().toString(),
                 null);
