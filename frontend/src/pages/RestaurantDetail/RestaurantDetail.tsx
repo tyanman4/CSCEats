@@ -62,7 +62,7 @@ interface RestaurantDetailResponse {
 export const RestaurantDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
 
   const [detail, setDetail] = useState<RestaurantDetailResponse | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -189,6 +189,10 @@ export const RestaurantDetail = () => {
         <div className={styles.error} onClick={() => setErrorMessage(null)}>
           {errorMessage}
         </div>
+      )}
+
+      {isAdmin && (
+        <button className={styles.toUpdatePage} onClick={() => navigate(`/restaurants-for-update/${id}`)} > 編集ページへ</button >
       )}
     </>
   );
