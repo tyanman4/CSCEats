@@ -69,4 +69,13 @@ public class RequestHandlingController {
         return ResponseEntity.ok("rejected");
     }
 
+    @PostMapping("answer/inquity/{id}")
+    public ResponseEntity<String> answerInquiry(@PathVariable Long id,
+            @RequestBody Map<String, String> body,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = Long.parseLong(body.get("userId"));
+        String answer = body.get("answer");
+        requestHandlingService.answerInquiry(id, answer, userDetails.getUserId(), userId);
+        return ResponseEntity.ok("answered");
+    }
 }

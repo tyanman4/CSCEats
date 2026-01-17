@@ -161,7 +161,7 @@ export const RequestRestaurants: React.FC = () => {
                             <p>申請者　：{r.userName}</p>
                             <p>店名　　：{r.restaurantName}</p>
                             <div className={styles.imgFrame}>
-                                <img src={`http://localhost:8080${r.url}`} />
+                                <img src={`${import.meta.env.VITE_API_BASE_URL}/uploads/${r.url}`} />
                             </div>
                             <div>
                                 <button onClick={() => handleApprovePhoto(r.photoId, r.userId)} className={styles.button}>承認する</button>
