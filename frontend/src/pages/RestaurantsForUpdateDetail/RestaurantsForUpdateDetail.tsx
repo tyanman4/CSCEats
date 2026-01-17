@@ -57,9 +57,12 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         }
 
         fetchData().then(() => {
-            if (!restaurant?.imageUrl || photos.length === 0) return
-            const index = findPhotoIndexByUrl(photos, restaurant?.imageUrl)
-            setCurrentPhotoIndex(index >= 0 ? index : 0);
+            if (!restaurant?.imageUrl || photos.length === 0) {
+                setCurrentPhotoIndex(0)
+            } else {
+                const index = findPhotoIndexByUrl(photos, restaurant?.imageUrl)
+                setCurrentPhotoIndex(index >= 0 ? index : 0);
+            }
         })
 
     }, [id])
@@ -67,6 +70,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
 
 
     useEffect(() => {
+        if (currentPhotoIndex < 0 || photos.length <= currentPhotoIndex) return
         setRestaurant((prev) => {
             if (!prev) return prev;
             return {
