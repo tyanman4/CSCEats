@@ -23,7 +23,6 @@ export const Header: React.FC = () => {
     appApi.get(`notifications/user/${user?.id}/all-read`)
       .then((r) => {
         setIsAllRead(r.data)
-        console.log(r.data)
       })
       .catch((err) => console.error(err))
   }), [])

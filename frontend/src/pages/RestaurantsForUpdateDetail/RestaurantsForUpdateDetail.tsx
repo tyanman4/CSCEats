@@ -31,8 +31,8 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
     const [photos, setPhotos] = useState<Photo[]>([]);
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(-1);
 
-    const findPhotoIndexByUrl = (someUrl: string): number => {
-        return photos.findIndex(photo => photo.url === someUrl)
+    const findPhotoIndexByUrl = (photos: Photo[], someUrl: string): number => {
+        return photos.findIndex(photos => photos.url === someUrl)
     }
     const id = useParams().id
 
@@ -42,47 +42,29 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
     const [LON_MIN, LON_MAX] = [129, 146]
     const [LAT_MIN, LAT_MAX] = [30, 46]
 
-    useEffect(() => {
-        appApi.get(`admin/restaurants/${id}`)
-            .then(res => {
-                setRestaurant(res.data)
-            })
-            .catch((err) => {
-                console.error(err)
-            })
 
-        appApi.get(`admin/photo/restaurant/${id}`)
-            .then(res => {
-                setPhotos(res.data)
-            })
-            .catch((err) => {
-                console.error(err)
-            })
+    useEffect(() => {
+
+        let restaurant: Restaurant | null, photos: Photo[]
+        const fetchData = async () => {
+            const restaurantRes = await appApi.get(`admin/restaurants/${id}`)
+            restaurant = restaurantRes.data
+            setRestaurant(restaurant)
+
+            const photoRes = await appApi.get(`admin/photo/restaurant/${id}`)
+            photos = photoRes.data
+            setPhotos(photos)
+        }
+
+        fetchData().then(() => {
+            if (!restaurant?.imageUrl || photos.length === 0) return
+            const index = findPhotoIndexByUrl(photos, restaurant?.imageUrl)
+            setCurrentPhotoIndex(index >= 0 ? index : 0);
+        })
+
     }, [id])
 
 
-    useEffect(() => {
-        if (photos.length === 0) return
-        setCurrentPhotoIndex(0)
-        setRestaurant((prev) => {
-            if (!prev) return prev;
-            return {
-                ...prev, imageUrl: photos[0].url
-            }
-        })
-    }, [photos])
-
-    const [flag, setFlag] = useState(true)
-    useEffect(() => {
-        if (!restaurant?.imageUrl || photos.length === 0) return;
-        if (flag) {
-            setFlag(false)
-            const index = findPhotoIndexByUrl(restaurant.imageUrl)
-            if (index >= 0) {
-                setCurrentPhotoIndex(index)
-            }
-        }
-    }, [restaurant, photos])
 
     useEffect(() => {
         setRestaurant((prev) => {
@@ -201,6 +183,9 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                     <div>
                         <p>店名　　：
                             <input type="text" name="name" value={restaurant?.name ?? ""} onChange={handleChange} />
+                            <button onClick={() => {
+                                navigate(`/restaurants/${id}`)
+                            }}>レストランのページへ</button>
                         </p>
                         <p>住所　　：
                             <input type="text" className={styles.longForm} name="address" value={restaurant?.address ?? ""} onChange={handleChange} />
@@ -214,7 +199,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         </p>
 
 
-                        <p>画像URL：
+                        <p>サムネURL：
                             <input type="text" className={styles.longForm} name="imageUrl" value={restaurant?.imageUrl ?? ""} onChange={handleChange} />
                         </p>
                         {photos.length > 0 && currentPhotoIndex >= 0 && <>
@@ -261,9 +246,9 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         {isSending ? "送信中..." : "変更する"}
                     </button>
                     <button type="button" onClick={() => navigate(-1)}>戻る</button>
-                </form>
+                </form >
                 <p>{message}</p>
-            </div>
+            </div >
         </>
     )
 }
