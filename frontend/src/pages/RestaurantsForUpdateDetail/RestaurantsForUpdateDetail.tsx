@@ -136,6 +136,17 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                 return;
             }
         }
+        if ((restaurant.topBudget && !restaurant.underBudget) || (!restaurant.topBudget && restaurant.underBudget)) {
+            setMessage("予算は入力する場合は下限・上限両方を入力してください")
+            return;
+        } else if (restaurant.topBudget && restaurant.underBudget) {
+            const top = Number(restaurant.topBudget)
+            const under = Number(restaurant.underBudget)
+            if (!Number.isFinite(top) || !Number.isFinite(under)) {
+                setMessage("予算には数値を入力してください。");
+                return;
+            }
+        }
 
         try {
             setIsSending(true);

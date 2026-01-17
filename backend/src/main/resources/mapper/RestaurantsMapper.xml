@@ -44,6 +44,7 @@
         <if test="form.url != null">
         url = #{form.url},
         </if>
+
         <if test="form.averageBudget != null">
         average_budget = #{form.averageBudget},
         </if>        
@@ -53,6 +54,7 @@
         <if test="form.topBudget != null">
         top_budget = #{form.topBudget},
         </if>
+
         <if test="form.description != null">
         description = #{form.description},
         </if>

@@ -15,7 +15,7 @@ public class RestaurantsUpdateForm {
     private Integer distance;
     @URL(protocol = "https", message = "URL形式が正しくありません。")
     private String url;
-    private String averageBudget;
+    private Integer averageBudget;
     private Integer underBudget;
     private Integer topBudget;
     private String description;
