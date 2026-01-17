@@ -47,7 +47,8 @@ public class RestaurantController {
             restaurant.put("distance", rt.getDistance());
             restaurant.put("address", rt.getAddress());
             restaurant.put("url", rt.getUrl());
-            restaurant.put("averageBudget", rt.getAverageBudget());
+            restaurant.put("underBudget", rt.getUnderBudget());
+            restaurant.put("topBudget", rt.getTopBudget());
             restaurant.put("description", rt.getDescription());
             restaurant.put("imageUrl", rt.getImageUrl());
             restaurant.put("createdAt", rt.getCreatedAt());

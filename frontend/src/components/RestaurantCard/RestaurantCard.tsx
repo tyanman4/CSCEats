@@ -7,8 +7,9 @@ interface RestaurantCardProps {
     name: string;
     address: string;
     distance: number;
-    averageBudget: string;
     description: string;
+    underBudget: number;
+    topBudget: number;
     averageRating?: number;
     reviewCount?: number;
     categories?: { categoryId: number; name: string }[];
@@ -28,15 +29,18 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
         📍 {restaurant.address}（{restaurant.distance}m）
       </p>
 
-      <p className={styles.budget}>
-        💰 予算: {restaurant.averageBudget}
-      </p>
-
-      {restaurant.averageRating !== undefined && (
-        <p className={styles.review}>
-          ⭐ {restaurant.averageRating.toFixed(1)}（{restaurant.reviewCount}件）
+      {restaurant.underBudget && restaurant.topBudget && (
+        <p className={styles.budget}>
+          💰 予算: {restaurant.underBudget}円〜{restaurant.topBudget}円
         </p>
       )}
+
+      {restaurant.averageRating != null &&
+        restaurant.reviewCount != null && (
+          <p className={styles.review}>
+            ⭐ {restaurant.averageRating.toFixed(1)}（{restaurant.reviewCount}件）
+          </p>
+        )}
 
       {restaurant.categories && restaurant.categories.length > 0 && (
         <p className={styles.categories}>

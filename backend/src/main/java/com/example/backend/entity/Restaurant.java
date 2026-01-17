@@ -5,12 +5,13 @@ import java.time.LocalDateTime;
 
 @Data
 public class Restaurant {
-    private Long restaurantId;          
+    private Long restaurantId;
     private String name;
     private Double distance;
     private String address;
     private String url;
-    private String averageBudget;
+    private Integer underBudget;
+    private Integer topBudget;
     private String description;
     private String imageUrl;
     private LocalDateTime createdAt;

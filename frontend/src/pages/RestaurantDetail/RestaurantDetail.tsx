@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -43,7 +43,8 @@ interface Restaurant {
   name: string;
   address: string;
   url: string;
-  averageBudget: string;
+  underBudget: number;
+  topBudget: number;
   description: string;
   latitude: number;
   longitude: number;
@@ -152,7 +153,10 @@ export const RestaurantDetail = () => {
 
           <RestaurantInfo
             address={detail.restaurant.address}
-            budget={detail.restaurant.averageBudget}
+            budget={detail.restaurant.topBudget && detail.restaurant.underBudget
+              ? `${detail.restaurant.underBudget}円〜${detail.restaurant.topBudget}円`
+              : undefined
+            }
             url={detail.restaurant.url}
             description={detail.restaurant.description}
           />
