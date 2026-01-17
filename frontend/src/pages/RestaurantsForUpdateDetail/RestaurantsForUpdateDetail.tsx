@@ -29,7 +29,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
     const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const [photos, setPhotos] = useState<Photo[]>([]);
-    const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+    const [currentPhotoIndex, setCurrentPhotoIndex] = useState(-1);
 
     const findPhotoIndexByUrl = (someUrl: string): number => {
         return photos.findIndex(photo => photo.url === someUrl)
@@ -60,12 +60,27 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
             })
     }, [id])
 
+
+    useEffect(() => {
+        if (photos.length === 0) return
+        setCurrentPhotoIndex(0)
+        setRestaurant((prev) => {
+            if (!prev) return prev;
+            return {
+                ...prev, imageUrl: photos[0].url
+            }
+        })
+    }, [photos])
+
+    const [flag, setFlag] = useState(true)
     useEffect(() => {
         if (!restaurant?.imageUrl || photos.length === 0) return;
-
-        const index = findPhotoIndexByUrl(restaurant.imageUrl);
-        if (index >= 0) {
-            setCurrentPhotoIndex(index);
+        if (flag) {
+            setFlag(false)
+            const index = findPhotoIndexByUrl(restaurant.imageUrl)
+            if (index >= 0) {
+                setCurrentPhotoIndex(index)
+            }
         }
     }, [restaurant, photos])
 
@@ -197,42 +212,35 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         <p>URL　　：
                             <input type="text" className={styles.longForm} name="url" value={restaurant?.url ?? ""} onChange={handleChange} />
                         </p>
+
+
                         <p>画像URL：
                             <input type="text" className={styles.longForm} name="imageUrl" value={restaurant?.imageUrl ?? ""} onChange={handleChange} />
                         </p>
-
-                        <div className={styles.mainPhotoWrapper}>
-                            <button type="button" className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
-                            {photos.length > 0 ? (
-                                //TODO: URL直書き修正
+                        {photos.length > 0 && currentPhotoIndex >= 0 && <>
+                            <div className={styles.mainPhotoWrapper}>
+                                <button type="button" className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
                                 <img
                                     src={`http://localhost:8080${photos[currentPhotoIndex].url}`}
                                     className={styles.mainPhoto}
                                 />
-                            ) : (
-                                //TODO: URL直書き修正
-                                <div className={styles.noPhoto}>
-                                    <img src='http://localhost:8080/uploads/no-image.png' alt='no image' className={styles.mainPhoto} />
-                                </div>
-                            )}
 
-                            < button type="button" className={styles.arrowRight} onClick={handleNextPhoto}>›</button>
-                        </div>
+                                < button type="button" className={styles.arrowRight} onClick={handleNextPhoto}>›</button>
+                            </div>
 
-                        <div className={styles.thumbnailRow}>
-                            {photos.map((photo, index) => (
-                                <img
-                                    key={photo.photoId}
-                                    //TODO: URL直書き修正
-                                    src={`http://localhost:8080${photo.url}`}
-                                    className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
-                                        }`}
-                                    onClick={() => setCurrentPhotoIndex(index)}
-                                />
-                            ))}
-                        </div>
-
-
+                            <div className={styles.thumbnailRow}>
+                                {photos.map((photo, index) => (
+                                    <img
+                                        key={photo.photoId}
+                                        //TODO: URL直書き修正
+                                        src={`http://localhost:8080${photo.url}`}
+                                        className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
+                                            }`}
+                                        onClick={() => setCurrentPhotoIndex(index)}
+                                    />
+                                ))}
+                            </div>
+                        </>}
 
 
                         <p>予算：
