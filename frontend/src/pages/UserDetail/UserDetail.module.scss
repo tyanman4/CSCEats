@@ -1,0 +1,29 @@
+.container {
+
+    position: relative;
+    top: 100px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    margin: 0 20px;
+
+    &.mypage {
+        display: block;
+        grid-template-columns: unset;
+        width: 700px;
+        margin: auto;
+    }
+
+
+    p {
+        margin: 5px 0;
+    }
+
+    .leftGrid {
+        min-width: 370px;
+    }
+
+    .rightGrid {
+        min-width: 500px;
+    }
+
+}

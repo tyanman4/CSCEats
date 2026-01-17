@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
@@ -35,6 +34,7 @@ interface Review {
   reviewId: number;
   rating: number;
   comment: string;
+  userId: number;
   userName: string;
 }
 
@@ -63,7 +63,7 @@ interface RestaurantDetailResponse {
 export const RestaurantDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
 
   const [detail, setDetail] = useState<RestaurantDetailResponse | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -193,6 +193,10 @@ export const RestaurantDetail = () => {
         <div className={styles.error} onClick={() => setErrorMessage(null)}>
           {errorMessage}
         </div>
+      )}
+
+      {isAdmin && (
+        <button className={styles.toUpdatePage} onClick={() => navigate(`/restaurants-for-update/${id}`)} > 編集ページへ</button >
       )}
     </>
   );

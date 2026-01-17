@@ -14,4 +14,5 @@ public class Review {
 
     // 追加: ユーザー名フィールド
     private String userName;
+    private String restaurantName;
 }

@@ -35,4 +35,20 @@
                 AND user_id = #{userId}
         )
     </select>
+
+    <select id="findRestaurantsByUserId"
+        parameterType="long" resultType="RestaurantsLikes">
+
+        SELECT 
+            r.name AS restaurant_name,
+            r.restaurant_id
+        FROM restaurants_likes rl
+        INNER JOIN restaurants r
+            ON rl.restaurant_id = r.restaurant_id
+        WHERE rl.user_id = #{userId}
+        ORDER BY r.updated_at DESC
+    </select>
+
+
+
 </mapper>

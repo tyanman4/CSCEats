@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.dto.ApiResponseDto;
 import com.example.backend.dto.CategoryDto;
 import com.example.backend.service.RestaurantListService;
-import com.example.backend.service.RestaurantCategoryService;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import com.example.backend.service.RestaurantCategoryService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

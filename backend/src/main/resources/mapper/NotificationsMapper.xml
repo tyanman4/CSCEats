@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.NotificationsMapper">
+
+    <resultMap id="NotificationsResultMap" type="com.example.backend.entity.Notifications">
+        <id     property="notificationId" column="notification_id"/>
+        <result property="userId"          column="user_id"/>
+        <result property="type"            column="type"/>
+        <result property="relatedId"       column="related_id"/>
+        <result property="createdAt"       column="created_at"/>
+        <result property="readFlag"        column="read_flag"/>
+
+        <result property="relatedInfo"     column="relatedInfo" />
+        <result property="relatedSubInfo"     column="relatedSubInfo" />
+    </resultMap>
+
+    <select id="findByUserId" resultMap="NotificationsResultMap">
+        SELECT
+            n.notification_id,
+            n.user_id,
+            n.type,
+            n.related_id,
+            n.created_at,
+            n.read_flag,
+            CASE n.type
+                WHEN 'request_approved' THEN rr.name
+                WHEN 'request_rejected' THEN rr.name
+                WHEN 'photo_approved' THEN r.name
+                WHEN 'photo_rejected' THEN r.name
+                ELSE NULL
+            END AS relatedInfo,
+            CASE n.type
+                WHEN 'request_rejected' THEN rr.reject_reason
+                WHEN 'photo_rejected' THEN p.reject_reason
+                ELSE NULL
+            END AS relatedSubInfo
+        FROM notifications n
+        LEFT JOIN request_restaurants rr
+            ON n.type IN ('request_approved', 'request_rejected')
+            AND n.related_id = rr.request_restaurant_id
+        LEFT JOIN photos p
+            ON n.type IN ('photo_approved', 'photo_rejected')
+            AND n.related_id = p.photo_id
+        LEFT JOIN restaurants r
+            ON n.type IN ('photo_approved', 'photo_rejected')
+            AND p.restaurant_id = r.restaurant_id
+        WHERE n.user_id = #{userId}
+        ORDER BY n.created_at DESC
+    </select>
+
+
+    <update id="toRead">
+        UPDATE notifications
+        SET read_flag = true
+        WHERE notification_id = #{notificationId}
+    </update>
+
+    <insert id="insert">
+        INSERT INTO notifications (user_id, type, related_id)
+        VALUES
+        (#{userId}, #{type}, #{relatedId})
+    </insert>
+
+    <select id="countUnread" resultType="int">
+        SELECT COUNT(*) FROM notifications
+        WHERE read_flag = false
+        AND user_id = #{userId}
+    </select>
+
+</mapper>

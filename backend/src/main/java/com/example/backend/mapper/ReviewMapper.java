@@ -13,4 +13,6 @@ public interface ReviewMapper {
 
     List<Review> findByRestaurantId(@Param("restaurantId") Long restaurantId);
 
+    List<Review> findByUserId(Long userId);
+
 }

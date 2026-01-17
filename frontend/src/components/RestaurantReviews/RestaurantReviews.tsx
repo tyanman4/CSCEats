@@ -1,11 +1,15 @@
 // components/RestaurantReviews/RestaurantReviews.tsx
 import { ReviewForm } from "../ReviewForm/ReviewForm";
 import styles from "./RestaurantReviews.module.scss";
+import { useNavigate } from 'react-router-dom';
+
+
 
 interface Review {
   reviewId: number;
   rating: number;
   comment: string;
+  userId: number;
   userName: string;
 }
 
@@ -21,14 +25,15 @@ export const RestaurantReviews: React.FC<Props> = ({
   restaurantId,
   onRefresh,
 }) => {
+  const navigate = useNavigate()
   return (
     <div className={styles.reviews}>
       <ReviewForm restaurantId={restaurantId} onSuccess={onRefresh} />
 
       {reviews.map((r) => (
         <div key={r.reviewId} className={styles.review}>
-          <strong>{r.userName}</strong> {"⭐".repeat(r.rating)}
-          <p>{r.comment}</p>
+          <p className={styles.reviewer} onClick={() => { navigate(`/user-detail/${r.userId}`) }}>{r.userName} &nbsp; {'⭐'.repeat(r.rating)}</p>
+          <p className={styles.comment}>{r.comment}</p>
         </div>
       ))}
     </div>

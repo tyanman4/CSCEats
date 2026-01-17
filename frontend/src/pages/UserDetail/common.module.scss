@@ -1,0 +1,44 @@
+ .container {
+     background-color: white;
+     margin: 10px;
+     padding: 20px;
+     padding-right: 40px;
+     border-radius: 20px;
+     border: 1px rgb(221, 202, 245) solid;
+ }
+
+ .containerName {
+     font-weight: 500;
+     font-size: 130%;
+     border-left: 3px solid skyblue;
+     padding-left: 20px;
+     padding-bottom: 20px;
+ }
+
+ .pagination {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 12px;
+     margin-top: 20px;
+
+     button {
+         padding: 6px 12px;
+         cursor: pointer;
+         border-radius: 30px;
+         border: 1px solid rgb(49, 92, 148);
+         background-color: rgb(12, 92, 161);
+         font-weight: 550;
+         color: rgb(240, 240, 248);
+
+         &:disabled {
+             opacity: 0.5;
+             cursor: not-allowed;
+         }
+     }
+ }
+
+ .flex {
+     display: flex;
+     gap: 20px;
+ }

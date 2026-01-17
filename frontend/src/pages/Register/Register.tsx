@@ -24,6 +24,10 @@ export const Register: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const passwordRegex = /^[\x21-\x7E]{4,}$/;
+  //空白や全角英数字は不可
+  const usernameRegex = /^[a-zA-Z0-9ぁ-んァ-ヶ一-龠々・ー_-]{2,}$/;
+
   // フォーム送信時
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,13 +36,13 @@ export const Register: React.FC = () => {
       return;
     }
 
-    if (formData.name.length < 2) {
-      setMessage("ユーザ名は2文字以上にしてください。");
+    if (!usernameRegex.test(formData.name)) {
+      setMessage("ユーザ名は2文字以上で、使用できない文字を含めないでください。");
       return;
     }
 
-    if (formData.password.length < 4) {
-      setMessage("パスワードは4文字以上にしてください。");
+    if (!passwordRegex.test(formData.password)) {
+      setMessage("パスワードは4文字以上で、英数字・記号（半角）を使用してください。");
       return;
     }
 
@@ -52,7 +56,7 @@ export const Register: React.FC = () => {
       const response = await appApi.post("/save", formData);
       if (response.status === 200) {
         login(response.data.token);
-        navigate(response.data.redirect)
+        navigate("/restaurants")
       } else {
         setMessage("登録に失敗しました。");
       }

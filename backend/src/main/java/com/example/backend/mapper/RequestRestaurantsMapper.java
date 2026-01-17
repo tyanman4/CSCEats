@@ -7,13 +7,17 @@ import java.util.List;
 @Mapper
 public interface RequestRestaurantsMapper {
 
-    Long insert(RequestRestaurants requestRestaurant);
+    int insert(RequestRestaurants requestRestaurant);
 
-    RequestRestaurants selectRequestRestaurantsById(Integer requestId);
+    RequestRestaurants selectRequestRestaurantsById(Long requestId);
 
     List<RequestRestaurants> selectPendingRequestRestaurants();
 
-    void approveRequestRestaurant(Integer requestId, Integer adminId);
+    void approveRequestRestaurant(Long requestId, Long adminId);
 
-    void rejectRequestRestaurant(Integer requestId, Integer adminId, String reason);
+    void rejectRequestRestaurant(Long requestId, Long adminId, String reason);
+
+    List<RequestRestaurants> findByUserId(Long userId);
+
+    int updateApprovedRestaurantId(Long restaurantId, Long requestId);
 }

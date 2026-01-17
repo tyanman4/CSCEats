@@ -36,7 +36,9 @@ public class RestaurantController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) List<String> sorts,
             @RequestParam(defaultValue = "1") int page) {
-        List<RestaurantReview> listRestaurants = restaurantListService.findRestaurantsWithReviewSummary(search, sorts,
+        List<RestaurantReview> listRestaurants = restaurantListService.findRestaurantsWithReviewSummary(
+                search,
+                sorts,
                 page);
         long totalCount = restaurantListService.findTotalCountRestaurants(search);
         List<Map<String, Object>> restaurants = new ArrayList<>();
@@ -78,16 +80,15 @@ public class RestaurantController {
     }
 
     @GetMapping("/api/restaurants/{id}")
-    public ResponseEntity<ApiResponseDto<RestaurantDetailDto>> getDetail(
+    public ResponseEntity<?> getDetail(
             @PathVariable("id") Long restaurantId,
             HttpServletRequest request) {
-
         // --- JWT から userId 抽出 ---
         String authHeader = request.getHeader("Authorization");
+        String token = null;
         Long userId = null;
-
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+            token = authHeader.substring(7);
             userId = jwtUtil.extractUserId(token);
         }
 

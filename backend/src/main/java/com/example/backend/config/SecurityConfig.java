@@ -72,7 +72,10 @@ public class SecurityConfig {
                                                 // GETのみ許可
                                                 .requestMatchers(HttpMethod.GET,
                                                                 "/api/restaurants/**",
-                                                                "/api/categories/**")
+                                                                "/api/categories/**",
+                                                                "/api/user/*",
+                                                                "/api/restaurant-likes/user/*",
+                                                                "/api/reviews/user/*")
                                                 .permitAll()
 
                                                 // ADMINのみ許可
