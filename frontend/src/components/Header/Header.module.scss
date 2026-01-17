@@ -51,7 +51,20 @@
 }
 
 .toUserDetail {
+  position: relative;
   cursor: pointer;
   color: rgb(5, 20, 233);
   font-weight: bold;
+
+  &.unreadSign::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: -4px;
+
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+  }
 }

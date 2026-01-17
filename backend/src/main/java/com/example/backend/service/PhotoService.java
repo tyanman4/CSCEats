@@ -54,4 +54,8 @@ public class PhotoService {
     public List<Photo> getByStatus(String status) {
         return photoMapper.findByStatus(status);
     }
+
+    public List<Photo> getApprovedByRestaurantId(Long restaurantId) {
+        return photoMapper.findApprovedByRestaurantId(restaurantId);
+    }
 }

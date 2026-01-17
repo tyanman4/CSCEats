@@ -62,14 +62,4 @@ public class AccountUpdateController {
         return ResponseEntity.ok(Map.of("token", token, "msg", "introduction has changed"));
 
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
-        String errorMsg = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .collect(Collectors.joining(", "));
-        return ResponseEntity.badRequest().body(errorMsg);
-    }
 }

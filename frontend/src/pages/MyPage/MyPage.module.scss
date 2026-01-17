@@ -52,12 +52,13 @@
     background-color: #f0fbff;
     padding: 10px;
     box-sizing: border-box;
+    margin-left: 30px;
 
 }
 
 .textarea {
     margin-top: 10px;
-    width: 330px;
+    width: 340px;
     height: 250px;
     border: 1px solid #77c9ff;
     border-radius: 8px;
@@ -67,4 +68,8 @@
     line-height: 1.5;
     font-size: 16px;
     resize: vertical;
+}
+
+.indent {
+    margin-left: 30px;
 }

@@ -13,15 +13,27 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         address: string;
         distance: string | null;
         url: string | null;
-        averageBudget: string | null;
+        underBudget: string | null;
+        topBudget: string | null;
         description: string | null;
         imageUrl: string | null;
         latitude: string | null;
         longitude: string | null;
     }
+
+    interface Photo {
+        photoId: number
+        url: string
+    }
+
     const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+    const [photos, setPhotos] = useState<Photo[]>([]);
+    const [currentPhotoIndex, setCurrentPhotoIndex] = useState(-1);
 
+    const findPhotoIndexByUrl = (photos: Photo[], someUrl: string): number => {
+        return photos.findIndex(photos => photos.url === someUrl)
+    }
     const id = useParams().id
 
     const [isSending, setIsSending] = useState(false);
@@ -30,15 +42,42 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
     const [LON_MIN, LON_MAX] = [129, 146]
     const [LAT_MIN, LAT_MAX] = [30, 46]
 
+
     useEffect(() => {
-        appApi.get(`admin/restaurants/${id}`)
-            .then(res => {
-                setRestaurant(res.data)
-            })
-            .catch((err) => {
-                console.error(err)
-            })
+
+        let restaurant: Restaurant | null, photos: Photo[]
+        const fetchData = async () => {
+            const restaurantRes = await appApi.get(`admin/restaurants/${id}`)
+            restaurant = restaurantRes.data
+            setRestaurant(restaurant)
+
+            const photoRes = await appApi.get(`admin/photo/restaurant/${id}`)
+            photos = photoRes.data
+            setPhotos(photos)
+        }
+
+        fetchData().then(() => {
+            if (!restaurant?.imageUrl || photos.length === 0) {
+                setCurrentPhotoIndex(0)
+            } else {
+                const index = findPhotoIndexByUrl(photos, restaurant?.imageUrl)
+                setCurrentPhotoIndex(index >= 0 ? index : 0);
+            }
+        })
+
     }, [id])
+
+
+
+    useEffect(() => {
+        if (currentPhotoIndex < 0 || photos.length <= currentPhotoIndex) return
+        setRestaurant((prev) => {
+            if (!prev) return prev;
+            return {
+                ...prev, imageUrl: photos[currentPhotoIndex].url
+            }
+        })
+    }, [currentPhotoIndex])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -97,6 +136,17 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                 return;
             }
         }
+        if ((restaurant.topBudget && !restaurant.underBudget) || (!restaurant.topBudget && restaurant.underBudget)) {
+            setMessage("予算は入力する場合は下限・上限両方を入力してください")
+            return;
+        } else if (restaurant.topBudget && restaurant.underBudget) {
+            const top = Number(restaurant.topBudget)
+            const under = Number(restaurant.underBudget)
+            if (!Number.isFinite(top) || !Number.isFinite(under)) {
+                setMessage("予算には数値を入力してください。");
+                return;
+            }
+        }
 
         try {
             setIsSending(true);
@@ -129,6 +179,17 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
         })
     }
 
+    const handlePrevPhoto = () => {
+        setCurrentPhotoIndex((prevIndex) =>
+            prevIndex === 0 ? (photos ? photos.length - 1 : 0) : prevIndex - 1
+        );
+    };
+    const handleNextPhoto = () => {
+        setCurrentPhotoIndex((prevIndex) =>
+            photos ? (prevIndex === photos.length - 1 ? 0 : prevIndex + 1) : 0
+        );
+    };
+
     return (
         <>
             <Header />
@@ -137,6 +198,9 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                     <div>
                         <p>店名　　：
                             <input type="text" name="name" value={restaurant?.name ?? ""} onChange={handleChange} />
+                            <button onClick={() => {
+                                navigate(`/restaurants/${id}`)
+                            }}>レストランのページへ</button>
                         </p>
                         <p>住所　　：
                             <input type="text" className={styles.longForm} name="address" value={restaurant?.address ?? ""} onChange={handleChange} />
@@ -148,11 +212,40 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         <p>URL　　：
                             <input type="text" className={styles.longForm} name="url" value={restaurant?.url ?? ""} onChange={handleChange} />
                         </p>
-                        <p>画像URL：
+
+
+                        <p>サムネURL：
                             <input type="text" className={styles.longForm} name="imageUrl" value={restaurant?.imageUrl ?? ""} onChange={handleChange} />
                         </p>
-                        <p>平均予算：
-                            <input type="text" name="averageBudget" value={restaurant?.averageBudget ?? ""} onChange={handleChange} />
+                        {photos.length > 0 && currentPhotoIndex >= 0 && <>
+                            <div className={styles.mainPhotoWrapper}>
+                                <button type="button" className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
+                                <img
+                                    src={`http://localhost:8080${photos[currentPhotoIndex].url}`}
+                                    className={styles.mainPhoto}
+                                />
+
+                                < button type="button" className={styles.arrowRight} onClick={handleNextPhoto}>›</button>
+                            </div>
+
+                            <div className={styles.thumbnailRow}>
+                                {photos.map((photo, index) => (
+                                    <img
+                                        key={photo.photoId}
+                                        //TODO: URL直書き修正
+                                        src={`http://localhost:8080${photo.url}`}
+                                        className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
+                                            }`}
+                                        onClick={() => setCurrentPhotoIndex(index)}
+                                    />
+                                ))}
+                            </div>
+                        </>}
+
+
+                        <p>予算：
+                            <input type="text" name="underBudget" value={restaurant?.underBudget ?? ""} onChange={handleChange} />～
+                            <input type="text" name="topBudget" value={restaurant?.topBudget ?? ""} onChange={handleChange} />
                         </p>
                         <p>緯度　　：
                             <input type="text" name="latitude" value={restaurant?.latitude ?? ""} onChange={handleChange} />
@@ -168,9 +261,9 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                         {isSending ? "送信中..." : "変更する"}
                     </button>
                     <button type="button" onClick={() => navigate(-1)}>戻る</button>
-                </form>
+                </form >
                 <p>{message}</p>
-            </div>
+            </div >
         </>
     )
 }

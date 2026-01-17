@@ -22,4 +22,8 @@ public class NotificationsService {
     public int toRead(Long notificationsId) {
         return notificationsMapper.toRead(notificationsId);
     }
+
+    public boolean isAllRead(Long userId) {
+        return notificationsMapper.countUnread(userId) == 0;
+    }
 }

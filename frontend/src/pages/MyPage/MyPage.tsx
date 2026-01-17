@@ -208,7 +208,7 @@ export const MyPage: React.FC = () => {
                             :
                             <div>
                                 <label className={styles.label}>ユーザ名</label>{changing || <button onClick={() => setNameChanging(true)} className={styles.button}>変更する</button>}
-                                <p>{user?.name}</p>
+                                <p className={styles.indent}>{user?.name}</p>
                             </div>
                         }
 
@@ -244,7 +244,7 @@ export const MyPage: React.FC = () => {
                             :
                             <div>
                                 <label className={styles.label}>パスワード</label>{changing || <button onClick={() => setPasswordChanging(true)} className={styles.button}>変更する</button>}
-                                <p>********</p>
+                                <p className={styles.indent}>********</p>
                             </div>
                         }
 
@@ -270,7 +270,7 @@ export const MyPage: React.FC = () => {
                             :
                             <div>
                                 <label className={styles.label}>自己紹介</label>{changing || <button onClick={() => setIntroductionChanging(true)} className={styles.button}>変更する</button>}
-                                <p>{user?.introduction}</p>
+                                <p className={styles.indent}>{user?.introduction}</p>
 
                             </div>
                         }
