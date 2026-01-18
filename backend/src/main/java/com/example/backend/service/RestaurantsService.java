@@ -28,6 +28,9 @@ public class RestaurantsService {
     @Transactional
     public void update(
             Long id, RestaurantsUpdateForm form) {
+        if (form.getTopBudget() != null && form.getUnderBudget() != null) {
+            form.setAverageBudget((form.getUnderBudget() + form.getTopBudget()) / 2);
+        }
         int updated = restaurantsMapper.update(id, form);
         if (updated == 0) {
             throw new ResourceNotFoundException("restaurants not found");

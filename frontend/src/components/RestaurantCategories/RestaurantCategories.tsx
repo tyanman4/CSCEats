@@ -11,12 +11,16 @@ interface Category {
 interface Props {
   categories: Category[];
   restaurantId: string;
+  onSuccess: (message: string) => void;
+  onError: (message: string) => void;
   onRefresh: () => Promise<void>;
+  onRequireLogin: (callback: () => Promise<void>) => Promise<void>;
 }
 
 export const RestaurantCategories: React.FC<Props> = ({
   categories,
   restaurantId,
+
   onRefresh,
 }) => {
   const [showModal, setShowModal] = useState(false);

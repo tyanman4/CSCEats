@@ -42,7 +42,7 @@ public class CustomUserDetails implements UserDetails {
         return user.getIntroduction();
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return user.getUserId();
     }
 

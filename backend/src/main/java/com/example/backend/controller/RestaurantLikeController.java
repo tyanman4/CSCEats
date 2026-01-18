@@ -2,29 +2,32 @@ package com.example.backend.controller;
 
 import com.example.backend.service.RestaurantsLikesService;
 import com.example.backend.dto.ApiResponseDto;
+import com.example.backend.entity.RestaurantsLikes;
 import com.example.backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/restaurants/{restaurantId}/likes")
+@RequestMapping
 @RequiredArgsConstructor
 public class RestaurantLikeController {
 
         private final RestaurantsLikesService restaurantsLikesService;
         private final JwtUtil jwtUtil;
 
-        @PostMapping
+        @PostMapping("/api/restaurants/{restaurantId}/likes")
         public ResponseEntity<ApiResponseDto<Void>> likeRestaurant(
                         @PathVariable Long restaurantId,
                         HttpServletRequest request) {
@@ -54,7 +57,7 @@ public class RestaurantLikeController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
 
-        @DeleteMapping
+        @DeleteMapping("/api/restaurants/{restaurantId}/likes")
         public ResponseEntity<ApiResponseDto<Void>> unlikeRestaurant(
                         @PathVariable Long restaurantId,
                         HttpServletRequest request) {
@@ -82,5 +85,10 @@ public class RestaurantLikeController {
                                 null);
 
                 return ResponseEntity.ok(response);
+        }
+
+        @GetMapping("/api/restaurant-likes/user/{userId}")
+        public ResponseEntity<List<RestaurantsLikes>> getByUserId(@PathVariable Long userId) {
+                return ResponseEntity.ok(restaurantsLikesService.findByUserId(userId));
         }
 }

@@ -178,7 +178,6 @@ export const MyPage: React.FC = () => {
                         {user?.role === "admin" && <p>あなたは管理者です</p>}
                         {nameChanging ?
                             <form onSubmit={handleSubmitName}>
-                                <label className={styles.label}>ユーザ名</label>
                                 <div>
                                     <label className={styles.label} htmlFor="new_username">新しいユーザ名</label>
                                     <input className={styles.input}
@@ -209,14 +208,13 @@ export const MyPage: React.FC = () => {
                             :
                             <div>
                                 <label className={styles.label}>ユーザ名</label>{changing || <button onClick={() => setNameChanging(true)} className={styles.button}>変更する</button>}
-                                <p>{user?.name}</p>
+                                <p className={styles.indent}>{user?.name}</p>
                             </div>
                         }
 
 
                         {passwordChanging ?
                             <form onSubmit={handleSubmitPassword}>
-                                <label className={styles.label}>パスワード</label>
                                 <div>
                                     <label className={styles.label} htmlFor="password_with_new_password">新しいパスワード</label>
                                     <input className={styles.input}
@@ -246,7 +244,7 @@ export const MyPage: React.FC = () => {
                             :
                             <div>
                                 <label className={styles.label}>パスワード</label>{changing || <button onClick={() => setPasswordChanging(true)} className={styles.button}>変更する</button>}
-                                <p>********</p>
+                                <p className={styles.indent}>********</p>
                             </div>
                         }
 
@@ -272,7 +270,7 @@ export const MyPage: React.FC = () => {
                             :
                             <div>
                                 <label className={styles.label}>自己紹介</label>{changing || <button onClick={() => setIntroductionChanging(true)} className={styles.button}>変更する</button>}
-                                <p>{user?.introduction}</p>
+                                <p className={styles.indent}>{user?.introduction}</p>
 
                             </div>
                         }

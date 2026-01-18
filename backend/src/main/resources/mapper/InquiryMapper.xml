@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.InquiryMapper">
+
+    <!-- ① 問い合わせ追加 -->
+    <insert id="insert" parameterType="Inquiry">
+        INSERT INTO inquiries
+        (user_id, subject, message, created_at, updated_at)
+        VALUES
+        (#{userId}, #{subject}, #{message}, NOW(), NOW())
+    </insert>
+
+    <!-- ② ユーザー別ステータス別問い合わせ一覧 -->
+    <select id="findByUserIdAndStatus" resultType="Inquiry">
+        SELECT *
+        FROM inquiries
+        WHERE user_id = #{userId}
+        AND status = #{status}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- ③ ステータス別問い合わせ一覧 -->
+    <select id="findByStatus" resultType="Inquiry">
+        SELECT 
+        i.*,
+        u.name as userName
+        FROM inquiries i
+        LEFT JOIN users u
+        ON i.user_id = u.user_id
+        WHERE status = #{status}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- ④ 回答を確定させる -->
+    <update id="updateAnswer" parameterType="Inquiry">
+        UPDATE inquiries
+        SET answer = #{answer}, updated_at = NOW(), status = 'closed', admin_user_id = #{adminUserId}
+        WHERE inquiry_id = #{inquiryId}
+    </update>
+
+   <!-- ⑤ ステータスを調査中に更新する -->
+    <update id="updateStatusToInProgress" parameterType="Inquiry">
+        UPDATE inquiries
+        SET status = 'in_progress', updated_at = NOW(), admin_user_id = #{adminUserId}
+        WHERE inquiry_id = #{inquiryId}
+    </update>
+</mapper>

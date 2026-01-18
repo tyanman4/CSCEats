@@ -8,14 +8,16 @@ import lombok.Data;
 @Data
 public class RestaurantsUpdateForm {
 
-    @NotBlank
+    @NotBlank(message = "店名は必須です。")
     private String name;
-    @NotBlank
+    @NotBlank(message = "住所は必須です。")
     private String address;
     private Integer distance;
-    @URL
+    @URL(protocol = "https", message = "URL形式が正しくありません。")
     private String url;
-    private String averageBudget;
+    private Integer averageBudget;
+    private Integer underBudget;
+    private Integer topBudget;
     private String description;
     private String imageUrl;
     private Double latitude;

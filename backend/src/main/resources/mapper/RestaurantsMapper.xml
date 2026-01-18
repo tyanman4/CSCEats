@@ -7,6 +7,8 @@
         <result property="address" column="address"/>
         <result property="distance" column="distance"/>
         <result property="url" column="url"/>
+        <result property="underBudget" column="under_budget"/>
+        <result property="topBudget" column="top_budget"/>
         <result property="averageBudget" column="average_budget"/>
         <result property="description" column="description"/>
         <result property="imageUrl" column="image_url"/>
@@ -18,7 +20,10 @@
         <result property="reviewCount" column="review_count"/>
     </resultMap>
 
-    <insert id="insertApprovedRestaurant">
+    <insert id="insertApprovedRestaurant"
+        useGeneratedKeys="true"
+        keyProperty="restaurantId"
+        keyColumn="restaurant_id">
         INSERT INTO restaurants (name, address, distance, url, latitude, longitude)
         VALUES
         (#{name}, #{address}, #{distance}, #{url}, #{latitude}, #{longitude})
@@ -39,9 +44,17 @@
         <if test="form.url != null">
         url = #{form.url},
         </if>
+
         <if test="form.averageBudget != null">
         average_budget = #{form.averageBudget},
+        </if>        
+        <if test="form.underBudget != null">
+        under_budget = #{form.underBudget},
         </if>
+        <if test="form.topBudget != null">
+        top_budget = #{form.topBudget},
+        </if>
+
         <if test="form.description != null">
         description = #{form.description},
         </if>

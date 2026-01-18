@@ -18,8 +18,7 @@ public interface PhotoMapper {
     // 却下（理由つき）
     void rejectPhoto(
             @Param("photoId") Long photoId,
-            @Param("reason") String reason
-    );
+            @Param("reason") String reason);
 
     // レストラン別一覧
     List<Photo> findByRestaurantId(@Param("restaurantId") Long restaurantId);
@@ -32,4 +31,9 @@ public interface PhotoMapper {
 
     // レストラン別承認写真一覧
     List<Photo> findApprovedByRestaurantId(@Param("restaurantId") Long restaurandtId);
+
+    int updateRestaurantIdByRequestId(Long restaurantId, Long requestRestaurantId);
+
+    int update(Photo photo);
+
 }

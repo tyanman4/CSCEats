@@ -18,9 +18,9 @@
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: bold;
-  margin: 0;
+  margin-left: 10px;
 
   &:hover {
     cursor: pointer;
@@ -43,5 +43,28 @@
 
   &:hover {
     opacity: 0.9;
+  }
+
+  &.admin {
+    background-color: rgb(33, 182, 112);
+  }
+}
+
+.toUserDetail {
+  position: relative;
+  cursor: pointer;
+  color: rgb(5, 20, 233);
+  font-weight: bold;
+
+  &.unreadSign::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: -4px;
+
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
   }
 }

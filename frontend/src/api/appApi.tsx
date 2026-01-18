@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const appApi = axios.create({
-  baseURL: "https://csceats.onrender.com/api",
+  // TODO: 本番環境用のURLに変更する
+  baseURL: import.meta.env.VITE_API_BASE_URL + "/api",
   headers: {
     "Content-Type": "application/json",
   },

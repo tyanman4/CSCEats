@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.form.IntroductionForm;
@@ -25,20 +26,21 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/update")
 public class AccountUpdateController {
 
     private final UserService userService;
     private final UserHelper userHelper;
     private final AccountUpdateService accountUpdateService;
 
-    @PostMapping("/api/update/introduction")
+    @PostMapping("/introduction")
     public ResponseEntity<?> introductionUpdate(@Valid @RequestBody IntroductionForm form,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         accountUpdateService.updateIntroduction(userDetails.getUsername(), form.getIntroduction());
         return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
     }
 
-    @PostMapping("/api/update/password")
+    @PostMapping("/password")
     public ResponseEntity<?> passwordUpdate(@Valid @RequestBody PasswordForm form,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         String encodedPass = userHelper.encode(form.getPassword());
@@ -46,7 +48,7 @@ public class AccountUpdateController {
         return ResponseEntity.ok(Map.of("msg", "introduction has changed"));
     }
 
-    @PostMapping("/api/update/name")
+    @PostMapping("/name")
     public ResponseEntity<?> nameUpdate(@Valid @RequestBody LoginForm form,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         // 既に存在するユーザ名かチェック
@@ -59,15 +61,5 @@ public class AccountUpdateController {
         String token = userService.login(form.getName(), form.getPassword());
         return ResponseEntity.ok(Map.of("token", token, "msg", "introduction has changed"));
 
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
-        String errorMsg = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .collect(Collectors.joining(", "));
-        return ResponseEntity.badRequest().body(errorMsg);
     }
 }

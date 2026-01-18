@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantDetail.module.scss";
@@ -33,6 +34,7 @@ interface Review {
   reviewId: number;
   rating: number;
   comment: string;
+  userId: number;
   userName: string;
 }
 
@@ -41,10 +43,11 @@ interface Restaurant {
   name: string;
   address: string;
   url: string;
-  averageBudget: string;
+  underBudget: number;
+  topBudget: number;
   description: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface RestaurantDetailResponse {
@@ -59,11 +62,18 @@ interface RestaurantDetailResponse {
 
 export const RestaurantDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { isAuthenticated, isAdmin } = useAuth();
 
   const [detail, setDetail] = useState<RestaurantDetailResponse | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  /* ===== 初回取得 ===== */
+  useEffect(() => {
+    refresh();
+  }, [id]);
 
   /* ===== 再取得 ===== */
   const refresh = async () => {
@@ -77,10 +87,14 @@ export const RestaurantDetail = () => {
     setIsFavorite(res.data.data.favorite);
   };
 
-  /* ===== 初回取得 ===== */
-  useEffect(() => {
-    refresh();
-  }, [id]);
+  /* ===== ログインがチェック ===== */
+  const requireLogin = async (callback: () => Promise<void>) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    await callback();
+  };
 
   /* ===== お気に入り切り替え ===== */
   const toggleFavorite = async () => {
@@ -105,6 +119,13 @@ export const RestaurantDetail = () => {
     return <div>Loading...</div>;
   }
 
+  const lat = detail.restaurant.latitude;
+  const lng = detail.restaurant.longitude;
+
+  const hasLocation =
+    Number.isFinite(lat) &&
+    Number.isFinite(lng);
+
   return (
     <>
       <Header />
@@ -116,12 +137,16 @@ export const RestaurantDetail = () => {
             name={detail.restaurant.name}
             isFavorite={isFavorite}
             onToggleFavorite={toggleFavorite}
+            onRequireLogin={requireLogin}
           />
 
           <RestaurantCategories
             categories={detail.categories}
             restaurantId={id!}
+            onSuccess={(msg) => setMessage(msg)}
+            onError={(msg) => setErrorMessage(msg)}
             onRefresh={refresh}
+            onRequireLogin={requireLogin}
           />
 
           <RestaurantPhotos
@@ -130,23 +155,32 @@ export const RestaurantDetail = () => {
             onSuccess={(msg) => setMessage(msg)}
             onError={(msg) => setErrorMessage(msg)}
             onRefresh={refresh}
+            onRequireLogin={requireLogin}
           />
 
           <RestaurantInfo
             address={detail.restaurant.address}
-            budget={detail.restaurant.averageBudget}
+            budget={detail.restaurant.topBudget && detail.restaurant.underBudget
+              ? `${detail.restaurant.underBudget}円〜${detail.restaurant.topBudget}円`
+              : undefined
+            }
             url={detail.restaurant.url}
             description={detail.restaurant.description}
           />
 
-          <RestaurantMap
-            restaurant={{
-              name: detail.restaurant.name,
-              address: detail.restaurant.address,
-              latitude: detail.restaurant.latitude,
-              longitude: detail.restaurant.longitude,
-            }}
-          />
+          {hasLocation && (
+            <RestaurantMap
+              restaurant={{
+                name: detail.restaurant.name,
+                address: detail.restaurant.address,
+                latitude: lat!,
+                longitude: lng!,
+              }}
+            />
+          )}
+          {!hasLocation && (
+            <p className={styles.noLocation}>地図情報は現在準備中です</p>
+          )}
         </div>
 
         {/* ===== 右カラム ===== */}
@@ -155,6 +189,7 @@ export const RestaurantDetail = () => {
             reviews={detail.reviews}
             restaurantId={id!}
             onRefresh={refresh}
+            onRequireLogin={requireLogin}
           />
         </div>
       </div>
@@ -170,6 +205,10 @@ export const RestaurantDetail = () => {
         <div className={styles.error} onClick={() => setErrorMessage(null)}>
           {errorMessage}
         </div>
+      )}
+
+      {isAdmin && (
+        <button className={styles.toUpdatePage} onClick={() => navigate(`/restaurants-for-update/${id}`)} > 編集ページへ</button >
       )}
     </>
   );

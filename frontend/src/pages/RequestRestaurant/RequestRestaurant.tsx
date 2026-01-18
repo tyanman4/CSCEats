@@ -3,6 +3,12 @@ import { Header } from "../../components/Header/Header";
 import appApi from "../../api/appApi";
 import '../../styles/_form.scss';
 
+interface ApiResponse<T> {
+  status: number;
+  message: string;
+  data: T;
+}
+
 export const RequestRestaurant: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -72,25 +78,31 @@ export const RequestRestaurant: React.FC = () => {
       formPayload.append("name", formData.name);
       formPayload.append("address", formData.address);
       formPayload.append("url", formData.url);
-      formData.photos.forEach((file) =>  {
+      formData.photos.forEach((file) => {
         formPayload.append("photos", file);
       });
 
-      const response = await appApi.post("/request-restaurants", formPayload, {
+      const res = await appApi.post<ApiResponse<null>>("/request-restaurants",
+        formPayload, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      if (response.status === 200) {
-        setMessage("リクエストが送信されました。");
+      if (res.status === 201) {
+        setMessage(res.data.message);
         setMessageType("success");
         setFormData({ name: "", address: "", url: "", photos: [] });
       } else {
         setMessageType("error");
-        setMessage("リクエストの送信に失敗しました。");
+        setMessage(res.data.message || "リクエストの送信に失敗しました。");
       }
-    } catch (error) {
-      setMessageType("error");
-      setMessage("サーバーエラーが発生しました。");
+    } catch (err: any) {
+      if (err.response) {
+        setMessageType("error");
+        setMessage(err.response.data.message);
+      } else {
+        setMessageType("error");
+        setMessage("通信エラーが発生しました");
+      }
     } finally {
       setIsSending(false);
     }
@@ -104,7 +116,7 @@ export const RequestRestaurant: React.FC = () => {
         <p className="form-description">おすすめのお店、教えてください！</p>
 
         {message && (
-          <p className={`form-message ${messageType === "success" ? "success" : "" }`}>{message}</p>
+          <p className={`form-message ${messageType === "success" ? "success" : ""}`}>{message}</p>
         )}
 
         <form className="request-form" onSubmit={handleSubmit}>
