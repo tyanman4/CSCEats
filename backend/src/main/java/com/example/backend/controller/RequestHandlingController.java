@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,4 +70,13 @@ public class RequestHandlingController {
         return ResponseEntity.ok("rejected");
     }
 
+    @PatchMapping("answer/inquiry/{id}")
+    public ResponseEntity<String> answerInquiry(@PathVariable Long id,
+            @RequestBody Map<String, String> body,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = Long.parseLong(body.get("userId"));
+        String answer = body.get("answer");
+        requestHandlingService.answerInquiry(id, answer, userDetails.getUserId(), userId);
+        return ResponseEntity.ok("answered");
+    }
 }

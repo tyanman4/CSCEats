@@ -4,7 +4,7 @@ import commonStyles from "./common.module.scss"
 
 export interface Notification {
     notificationId: number
-    type: "request_approved" | "request_rejected" | "photo_approved" | "photo_rejected"
+    type: "request_approved" | "request_rejected" | "photo_approved" | "photo_rejected" | "inquiry_answered"
     relatedId: number
     createdAt: string
     readFlag: boolean
@@ -46,6 +46,9 @@ export const NotificationList: React.FC<Props> = ({ notifications, toRead }) => 
             case "photo_rejected":
                 return `レストラン(${r.relatedInfo})への写真追加は承認されませんでした。`
                     + "\r\n" + `理由：${r.relatedSubInfo}`
+            case "inquiry_answered":
+                return `お問い合わせ(${r.relatedInfo})への回答が届きました。`
+                    + "\r\n" + `回答内容：${r.relatedSubInfo}`
             default:
                 return ""
         }

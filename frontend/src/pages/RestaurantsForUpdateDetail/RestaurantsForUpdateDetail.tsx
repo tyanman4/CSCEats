@@ -221,7 +221,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                             <div className={styles.mainPhotoWrapper}>
                                 <button type="button" className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
                                 <img
-                                    src={`http://localhost:8080${photos[currentPhotoIndex].url}`}
+                                    src={`${import.meta.env.VITE_API_BASE_URL}${photos[currentPhotoIndex].url}`}
                                     className={styles.mainPhoto}
                                 />
 
@@ -232,8 +232,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                                 {photos.map((photo, index) => (
                                     <img
                                         key={photo.photoId}
-                                        //TODO: URL直書き修正
-                                        src={`http://localhost:8080${photo.url}`}
+                                        src={`${import.meta.env.VITE_API_BASE_URL}${photo.url}`}
                                         className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
                                             }`}
                                         onClick={() => setCurrentPhotoIndex(index)}

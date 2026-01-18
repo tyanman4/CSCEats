@@ -30,14 +30,29 @@ export const RequestRestaurants: React.FC = () => {
         userName: string
     }
 
+    interface Inquiry {
+        inquiryId: number;
+        userId: number;
+        userName?: string;
+        subject: string;
+        message: string;
+        answer?: string;
+        status: string;
+        createdAt: string;
+        updatedAt: string;
+    }
+
     const [requests, setRequests] = useState<RequestRestaurants[]>([]);
     const [photos, setPhotos] = useState<Photos[]>([]);
+    const [inquiries, setInquiries] = useState<Inquiry[]>([]);
 
     const [rejectReasons, setRejectReasons] = useState<{ [key: number]: string }>({});
     const [rejectReasonsPhoto, setRejectReasonsPhoto] = useState<{ [key: number]: string }>({});
+    const [answer, setAnswer] = useState<{ [key: number]: string }>({});
 
     const [message, setMessage] = useState<{ [key: number]: string }>({})
     const [messagePhoto, setMessagePhoto] = useState<{ [key: number]: string }>({})
+    const [messageInquiry, setMessageInquiry] = useState<{ [key: number]: string }>({})
 
     useEffect(() => {
         appApi.get("admin/pending")
@@ -49,6 +64,11 @@ export const RequestRestaurants: React.FC = () => {
         appApi.get("admin/photo/pending")
             .then(res => {
                 setPhotos(res.data)
+            })
+            .catch((err) => console.error(err));
+        appApi.get("admin/inquiries/open")
+            .then(res => {
+                setInquiries(res.data)
             })
             .catch((err) => console.error(err));
     }, []);
@@ -123,7 +143,27 @@ export const RequestRestaurants: React.FC = () => {
         setRejectReasonsPhoto(prev => ({ ...prev, [id]: value }));
     };
 
+    const handleAnswerInquiry = (inquiryId: number, userId: number) => {
 
+        if (!answer[inquiryId] || answer[inquiryId].length < 4) {
+            setMessageInquiry(prev => ({ ...prev, [inquiryId]: "回答を4文字以上入力してください" }));
+            return;
+        }
+        setMessageInquiry(prev => ({ ...prev, [inquiryId]: "" }));
+
+        appApi.patch(`admin/answer/inquiry/${inquiryId}`, {
+            userId: userId,
+            answer: answer[inquiryId]
+        })
+            .then(() => {
+                setInquiries(prev => prev.filter(i => i.inquiryId !== inquiryId));
+            })
+            .catch((e) => console.error(e));
+    }
+
+    const handleAnswerChange = (id: number, value: string) => {
+        setAnswer(prev => ({ ...prev, [id]: value }));
+    }
 
     return (
         <>
@@ -161,7 +201,7 @@ export const RequestRestaurants: React.FC = () => {
                             <p>申請者　：{r.userName}</p>
                             <p>店名　　：{r.restaurantName}</p>
                             <div className={styles.imgFrame}>
-                                <img src={`http://localhost:8080${r.url}`} />
+                                <img src={`${import.meta.env.VITE_API_BASE_URL}${r.url}`} />
                             </div>
                             <div>
                                 <button onClick={() => handleApprovePhoto(r.photoId, r.userId)} className={styles.button}>承認する</button>
@@ -173,6 +213,26 @@ export const RequestRestaurants: React.FC = () => {
                                 />
                             </div>
                             <p className={styles.message}>{messagePhoto[r.photoId]}</p>
+                        </li>
+                    ))}
+                </ul>
+                <hr></hr>
+                <h2>未対応お問い合わせ</h2>
+                <ul className={styles.list}>
+                    {inquiries.map((i) => (
+                        <li key={i.inquiryId}>
+                            <p>申請日時：{new Date(i.createdAt).toLocaleString("ja-JP")}</p>
+                            <p>申請者　：{i.userName}</p>
+                            <p>件名　　：{i.subject}</p>
+                            <p>内容　　：{i.message}</p>
+                            <div>
+                                回答：<input type="text"
+                                    value={answer[i.inquiryId] || ""}
+                                    onChange={(e) => handleAnswerChange(i.inquiryId, e.target.value)}
+                                />
+                                <button onClick={() => handleAnswerInquiry(i.inquiryId, i.userId)} className={styles.button}>回答する</button>
+                            </div>
+                            <p className={styles.message}>{messageInquiry[i.inquiryId]}</p>
                         </li>
                     ))}
                 </ul>

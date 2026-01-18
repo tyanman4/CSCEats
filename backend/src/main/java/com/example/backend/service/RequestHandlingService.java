@@ -9,6 +9,7 @@ import com.example.backend.entity.Photo;
 import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.entity.Restaurants;
 import com.example.backend.helper.GeoUtils;
+import com.example.backend.mapper.InquiryMapper;
 import com.example.backend.mapper.NotificationsMapper;
 import com.example.backend.mapper.PhotoMapper;
 import com.example.backend.mapper.RequestRestaurantsMapper;
@@ -25,6 +26,7 @@ public class RequestHandlingService {
     private final RestaurantsMapper restaurantsMapper;
     private final NotificationsMapper notificationsMapper;
     private final PhotoMapper photoMapper;
+    private final InquiryMapper inquiryMapper;
     private final GeoUtils geoUtils;
 
     public List<RequestRestaurants> findPendingRequestRestaurants() {
@@ -105,5 +107,13 @@ public class RequestHandlingService {
         photo.setStatus("rejected");
         photo.setRejectReason(reason);
         photoMapper.update(photo);
+    }
+
+    @Transactional
+    public void answerInquiry(Long inquiryId, String answer, Long adminId, Long userId) {
+
+        notificationsMapper.insert(userId, "inquiry_answered", inquiryId);
+
+        inquiryMapper.updateAnswer(inquiryId, answer, adminId);
     }
 }

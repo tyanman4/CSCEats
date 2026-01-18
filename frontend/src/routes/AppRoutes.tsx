@@ -9,6 +9,7 @@ import { RequestRestaurant } from "../pages/RequestRestaurant/RequestRestaurant"
 import { RestaurantDetail } from "../pages/RestaurantDetail/RestaurantDetail";
 import { RestaurantsForUpdate } from "../pages/RestaurantsForUpdate/RestaurantsForUpdate";
 import { RestaurantsForUpdateDetail } from "../pages/RestaurantsForUpdateDetail/RestaurantsForUpdateDetail";
+import { InquiryForm } from "../pages/InquiryForm/InquiryForm";
 import { NotFound } from "../pages/NotFound";
 import { RequireAuth } from "./guards/RequireAuth";
 import { Forbidden } from "../pages/Forbidden";
@@ -33,6 +34,7 @@ export const AppRoutes = () => {
           <Route path="/restaurants/request" element={<RequireAuth><RequestRestaurant /></RequireAuth>} />
           <Route path=" " element={<RequestRestaurant />} />
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />
+          <Route path="/inquiry/form" element={<RequireAuth><InquiryForm /></RequireAuth>} />
           <Route path="/403" element={<Forbidden />} />
           <Route path="/500" element={<InternalServiceError />} />
           <Route path="/503" element={<ServiceUnavailable />} />

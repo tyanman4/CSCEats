@@ -28,13 +28,14 @@ interface RestaurantReview {
   address: string;
   distance: number;
   url: string;
-  averageBudget: string;
   description: string;
   imageUrl: string;
   createdAt: string;
   updatedAt: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
+  underBudget: number;
+  topBudget: number;
   averageRating: number;
   reviewCount: number;
   categories: Category[];
@@ -66,6 +67,19 @@ export const RestaurantList: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await appApi.get<ApiResponse<Category[]>>("/categories");
+        setCategories(res.data.data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     const fetchRestaurants = async () => {
       try {
         const res = await appApi.get<ApiResponse<RestaurantResponse>>("/restaurants", {
@@ -84,19 +98,6 @@ export const RestaurantList: React.FC = () => {
 
     fetchRestaurants();
   }, [searchWord, sortOptions, page]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await appApi.get<ApiResponse<Category[]>>("/categories");
-        setCategories(res.data.data);
-      } catch (err) {
-        console.error("Error fetching categories:", err);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   const mapRestaurants = useMemo<MapRestaurant[]>(() => {
     return restaurants

@@ -43,10 +43,11 @@ interface Restaurant {
   name: string;
   address: string;
   url: string;
-  averageBudget: string;
+  underBudget: number;
+  topBudget: number;
   description: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface RestaurantDetailResponse {
@@ -118,6 +119,13 @@ export const RestaurantDetail = () => {
     return <div>Loading...</div>;
   }
 
+  const lat = detail.restaurant.latitude;
+  const lng = detail.restaurant.longitude;
+
+  const hasLocation =
+    Number.isFinite(lat) &&
+    Number.isFinite(lng);
+
   return (
     <>
       <Header />
@@ -152,19 +160,27 @@ export const RestaurantDetail = () => {
 
           <RestaurantInfo
             address={detail.restaurant.address}
-            budget={detail.restaurant.averageBudget}
+            budget={detail.restaurant.topBudget && detail.restaurant.underBudget
+              ? `${detail.restaurant.underBudget}円〜${detail.restaurant.topBudget}円`
+              : undefined
+            }
             url={detail.restaurant.url}
             description={detail.restaurant.description}
           />
 
-          <RestaurantMap
-            restaurant={{
-              name: detail.restaurant.name,
-              address: detail.restaurant.address,
-              latitude: detail.restaurant.latitude,
-              longitude: detail.restaurant.longitude,
-            }}
-          />
+          {hasLocation && (
+            <RestaurantMap
+              restaurant={{
+                name: detail.restaurant.name,
+                address: detail.restaurant.address,
+                latitude: lat!,
+                longitude: lng!,
+              }}
+            />
+          )}
+          {!hasLocation && (
+            <p className={styles.noLocation}>地図情報は現在準備中です</p>
+          )}
         </div>
 
         {/* ===== 右カラム ===== */}

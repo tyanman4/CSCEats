@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     gap: 24px;
-    padding: 80px 24px 24px;
+    padding: 100px 24px 24px;
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -13,6 +13,8 @@
 
 .rightColumn {
     width: 40%;
+    max-height: calc(1200px - 120px); // Header分を引く
+    overflow-y: auto;
 }
 
 .sectionTitle {

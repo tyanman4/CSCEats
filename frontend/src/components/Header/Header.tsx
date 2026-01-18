@@ -20,12 +20,13 @@ export const Header: React.FC = () => {
   const [isAllRead, setIsAllRead] = useState<boolean>(true)
 
   useEffect((() => {
+    if (!user?.id) return;
     appApi.get(`notifications/user/${user?.id}/all-read`)
       .then((r) => {
         setIsAllRead(r.data)
       })
       .catch((err) => console.error(err))
-  }), [])
+  }), [user?.id])
 
 
 
@@ -39,6 +40,7 @@ export const Header: React.FC = () => {
         {isAdmin && <button className={`${styles.button} ${styles.admin}`} onClick={() => navigate("/request-restaurants")}>リクエスト承認ページ</button>}
         {isAdmin && <button className={`${styles.button} ${styles.admin}`} onClick={() => navigate("/restaurants-for-update")}>レストラン管理ページ</button>}
         {!isAuthenticated && location.pathname !== "/login" && <button className={styles.button} onClick={() => navigate("/login")}>ログイン</button>}
+        {isAuthenticated && <button onClick={() => navigate("/inquiry/form")} className={styles.button}>お問い合わせ</button>}
         {isAuthenticated && <button className={styles.button} onClick={() => navigate("/restaurants/request")}>レストランのリクエスト</button>}
         {isAuthenticated && <button onClick={handleLogout} className={styles.button}>ログアウト</button>}
       </div>
