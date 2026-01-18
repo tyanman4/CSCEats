@@ -232,7 +232,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                                 {photos.map((photo, index) => (
                                     <img
                                         key={photo.photoId}
-                                        src={`${import.meta.env.VITE_API_BASE_URL}/${photo.url}`}
+                                        src={`${import.meta.env.VITE_API_BASE_URL}${photo.url}`}
                                         className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
                                             }`}
                                         onClick={() => setCurrentPhotoIndex(index)}
