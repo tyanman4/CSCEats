@@ -20,8 +20,7 @@ interface Props {
 export const RestaurantCategories: React.FC<Props> = ({
   categories,
   restaurantId,
-  onSuccess,
-  onError,
+
   onRefresh,
 }) => {
   const [showModal, setShowModal] = useState(false);
