@@ -19,11 +19,11 @@ export const RestaurantInfo: React.FC<Props> = ({
       {/* 値が存在する場合のみ表示 */}
       {address?.trim() && <p>住所: {address}</p>}
       {budget?.trim() && <p>平均予算: {budget}</p>}
+      {description?.trim() && <p>説明: {description}</p>}
       {url?.trim() && <p>
         {/* noopener / noreferrer: 外部リンクのセキュリティ対策らしい*/}
         <a href={url} target="_blank" rel="noopener noreferrer">公式サイトへ</a>
       </p>}
-      {description?.trim() && <p>説明: {description}</p>}
     </div>
   );
 };

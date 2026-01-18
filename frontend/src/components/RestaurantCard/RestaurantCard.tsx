@@ -26,7 +26,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
       <h5>{restaurant.name}</h5>
 
       <p className={styles.address}>
-        📍 {restaurant.address}（{restaurant.distance}m）
+        📍 {restaurant.address}{restaurant.distance && `（${restaurant.distance}m）`}
       </p>
 
       {restaurant.underBudget && restaurant.topBudget && (

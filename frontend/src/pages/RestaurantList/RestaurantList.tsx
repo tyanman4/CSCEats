@@ -32,8 +32,8 @@ interface RestaurantReview {
   imageUrl: string;
   createdAt: string;
   updatedAt: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   underBudget: number;
   topBudget: number;
   averageRating: number;
