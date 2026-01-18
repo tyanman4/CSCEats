@@ -221,7 +221,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                             <div className={styles.mainPhotoWrapper}>
                                 <button type="button" className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
                                 <img
-                                    src={`${import.meta.env.VITE_API_BASE_URL}/${photos[currentPhotoIndex].url}`}
+                                    src={`${import.meta.env.VITE_API_BASE_URL}${photos[currentPhotoIndex].url}`}
                                     className={styles.mainPhoto}
                                 />
 
