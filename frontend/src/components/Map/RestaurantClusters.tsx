@@ -32,7 +32,7 @@ export const RestaurantClusters: React.FC<Props> = ({ markers }) => {
       const marker = L.marker([m.lat, m.lng]);
 
       const imageUrl = m.imageUrl
-        ? `${import.meta.env.VITE_API_BASE_URL}/uploads/${m.imageUrl}`
+        ? `${import.meta.env.VITE_API_BASE_URL}${m.imageUrl}`
         : `${import.meta.env.VITE_API_BASE_URL}/uploads/no-image.png`;
 
       marker.bindPopup(`
