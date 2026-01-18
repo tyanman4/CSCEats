@@ -96,7 +96,7 @@ public class SecurityConfig {
                                 "https://csceats.onrender.com",
                                 "http://localhost:5173")); // Viteを許可
                 // CORS では実際のリクエストの前に「プリフライト OPTIONS リクエスト」が来るので、OPTIONS も必ず含める。
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 config.setAllowedHeaders(List.of(
                                 "Authorization",
                                 "Content-Type"));

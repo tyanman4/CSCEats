@@ -80,7 +80,7 @@ export const RestaurantPhotos: React.FC<Props> = ({
         <button className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
         {photos.length > 0 ? (
           <img
-            src={`${import.meta.env.VITE_API_BASE_URL}/uploads/${photos[currentPhotoIndex].url}`}
+            src={`${import.meta.env.VITE_API_BASE_URL}${photos[currentPhotoIndex].url}`}
             className={styles.mainPhoto}
           />
         ) : (
@@ -97,7 +97,7 @@ export const RestaurantPhotos: React.FC<Props> = ({
         {photos.map((photo, index) => (
           <img
             key={photo.photoId}
-            src={`${import.meta.env.VITE_API_BASE_URL}/uploads/${photo.url}`}
+            src={`${import.meta.env.VITE_API_BASE_URL}${photo.url}`}
             className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
               }`}
             onClick={() => setCurrentPhotoIndex(index)}

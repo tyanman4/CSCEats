@@ -20,12 +20,13 @@ export const Header: React.FC = () => {
   const [isAllRead, setIsAllRead] = useState<boolean>(true)
 
   useEffect((() => {
+    if (!user?.id) return;
     appApi.get(`notifications/user/${user?.id}/all-read`)
       .then((r) => {
         setIsAllRead(r.data)
       })
       .catch((err) => console.error(err))
-  }), [])
+  }), [user?.id])
 
 
 

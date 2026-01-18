@@ -13,4 +13,7 @@ public class Inquiry {
     private Long adminUserId;
     private String createdAt;
     private String updatedAt;
+
+    // 追加項目
+    private String userName;
 }

@@ -24,8 +24,12 @@
 
     <!-- ③ ステータス別問い合わせ一覧 -->
     <select id="findByStatus" resultType="Inquiry">
-        SELECT *
-        FROM inquiries
+        SELECT 
+        i.*,
+        u.name as userName
+        FROM inquiries i
+        LEFT JOIN users u
+        ON i.user_id = u.user_id
         WHERE status = #{status}
         ORDER BY created_at DESC
     </select>
