@@ -2,6 +2,8 @@
 import { useState } from "react";
 import appApi from "../../api/appApi";
 import styles from "./RestaurantPhotos.module.scss";
+import { uploadImage } from "../../util/uploadImage";
+import { deleteImage } from "../../util/deleteImage";
 
 interface Photo {
   photoId: number;
@@ -33,6 +35,7 @@ export const RestaurantPhotos: React.FC<Props> = ({
   const [showModal, setShowModal] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSending, setIsSending] = useState(false);
 
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
@@ -48,15 +51,20 @@ export const RestaurantPhotos: React.FC<Props> = ({
   };
 
   const uploadPhotos = async () => {
+    if (files.length === 0 || isSending) return;
+    setIsSending(true);
     const formData = new FormData();
     files.forEach((f) => formData.append("files", f));
-    setShowModal(false);
+
+    let imageUrls: string[] = [];
 
     try {
+      imageUrls = await Promise.all(
+        files.map(file => uploadImage(file, "pending", Number(restaurantId)))
+      );
       const res = await appApi.post<ApiResponse<null>>(
-        `/restaurants/${restaurantId}/photos`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        `/restaurants/approved/${restaurantId}/photos`,
+        { imageUrls: imageUrls },
       );
 
       setFiles([]);
@@ -65,12 +73,19 @@ export const RestaurantPhotos: React.FC<Props> = ({
       await onRefresh();
 
     } catch (err: any) {
+      await Promise.all(
+        imageUrls.map(url => deleteImage(url))
+      );
       if (err.response?.status === 400) {
         setErrors(err.response.data.data ?? {});
         onError(err.response.data.message);
       } else {
         onError("写真のアップロードに失敗しました");
       }
+
+    } finally {
+      setIsSending(false);
+      setShowModal(false);
     }
   };
 
@@ -80,12 +95,12 @@ export const RestaurantPhotos: React.FC<Props> = ({
         <button className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
         {photos.length > 0 ? (
           <img
-            src={`${import.meta.env.VITE_API_BASE_URL}${photos[currentPhotoIndex].url}`}
+            src={`${photos[currentPhotoIndex].url}`}
             className={styles.mainPhoto}
           />
         ) : (
           <div className={styles.noPhoto}>
-            <img src={`${import.meta.env.VITE_API_BASE_URL}/uploads/no-image.png`} alt='no image' className={styles.mainPhoto} />
+            <img src={import.meta.env.VITE_NO_IMAGE_URL} alt='no image' className={styles.mainPhoto} />
           </div>
         )}
 
@@ -97,7 +112,7 @@ export const RestaurantPhotos: React.FC<Props> = ({
         {photos.map((photo, index) => (
           <img
             key={photo.photoId}
-            src={`${import.meta.env.VITE_API_BASE_URL}${photo.url}`}
+            src={`${photo.url}`}
             className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
               }`}
             onClick={() => setCurrentPhotoIndex(index)}
@@ -139,8 +154,8 @@ export const RestaurantPhotos: React.FC<Props> = ({
 
             <div className={styles.modalButtons}>
               <button onClick={() => setShowModal(false)}>キャンセル</button>
-              <button disabled={!files.length} onClick={uploadPhotos}>
-                送信
+              <button disabled={!(files.length || !isSending)} onClick={uploadPhotos}>
+                {isSending ? "送信中..." : "アップロード"}
               </button>
             </div>
           </div>

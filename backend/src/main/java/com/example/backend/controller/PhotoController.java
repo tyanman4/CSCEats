@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.dto.ApiResponseDto;
+import com.example.backend.dto.PhotoUrlsDto;
+import com.example.backend.entity.Photo;
 import com.example.backend.service.PhotoService;
 import com.example.backend.security.JwtUtil;
 
@@ -22,13 +24,15 @@ public class PhotoController {
     private final PhotoService photoService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/api/restaurants/{restaurantId}/photos")
+    @PostMapping("/api/restaurants/{status}/{restaurantId}/photos")
     public ResponseEntity<ApiResponseDto<Void>> uploadPhotos(
             @PathVariable Long restaurantId,
-            @RequestParam("files") List<MultipartFile> files, // ✅ 複数枚
+            @PathVariable String status,
+            @RequestBody PhotoUrlsDto photoUrlsDto,
             HttpServletRequest request) {
         ApiResponseDto<Void> response = new ApiResponseDto<>();
-        if (files == null || files.isEmpty()) {
+        List<String> imageUrls = photoUrlsDto.getImageUrls();
+        if (imageUrls == null || imageUrls.isEmpty()) {
             response.setStatus(400);
             response.setMessage("写真が選択されていません。");
             response.setPath(request.getRequestURI());
@@ -36,7 +40,7 @@ public class PhotoController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (files.size() > 5) {
+        if (imageUrls.size() > 5) {
 
             response.setStatus(400);
             response.setMessage("一度にアップロードできる写真は最大5枚までです");
@@ -48,7 +52,18 @@ public class PhotoController {
         String token = request.getHeader("Authorization").substring(7);
         Long userId = jwtUtil.extractUserId(token);
 
-        photoService.savePhotos(restaurantId, null, userId, files);
+        if (status.equals("approved")) {
+            photoService.savePhotoUrls(restaurantId, null, userId, imageUrls);
+        } else if (status.equals("pending")) {
+            photoService.savePhotoUrls(null, restaurantId, userId, imageUrls);
+        } else {
+            response.setStatus(400);
+            response.setMessage("不正なステータスです。");
+            response.setPath(request.getRequestURI());
+            response.setTimestamp(Instant.now().toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        photoService.savePhotoUrls(null, restaurantId, userId, imageUrls);
 
         response.setStatus(201);
         response.setMessage("写真をアップロードしました。");

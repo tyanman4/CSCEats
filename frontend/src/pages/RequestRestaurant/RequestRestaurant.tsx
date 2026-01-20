@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import { Header } from "../../components/Header/Header";
+import { uploadImage } from "../../util/uploadImage";
+import { deleteImage } from "../../util/deleteImage";
 import appApi from "../../api/appApi";
 import '../../styles/_form.scss';
 
@@ -28,81 +30,55 @@ export const RequestRestaurant: React.FC = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const fileArray = Array.from(files);
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-
-    // 合計サイズ（25MB）
-    const totalSize = fileArray.reduce((acc, f) => acc + f.size, 0);
-    if (totalSize > 25 * 1024 * 1024) {
-      setMessage("画像の合計サイズは25MB以下にしてください");
-      e.target.value = "";
-      return;
-    }
-
-    for (const file of fileArray) {
-      // ファイルごとの 5MB
-      if (file.size > 5 * 1024 * 1024) {
-        setMessage("ファイルサイズは1つにつき5MB以下にしてください");
-        e.target.value = "";
-        return;
-      }
-      // 形式チェック
-      if (!allowedTypes.includes(file.type)) {
-        setMessage("対応している画像形式は jpg, jpeg, png, webp のみです");
-        e.target.value = "";
-        return;
-      }
-    }
-
-    // 問題なければ保存
-    setFormData((prev) => ({
+    if (!e.target.files) return;
+    setFormData(prev => ({
       ...prev,
-      photos: fileArray,
+      photos: Array.from(e.target.files!),
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.name || !formData.address) {
-      setMessage("レストラン名と住所は必須です。");
+      setMessageType("error");
+      setMessage("レストラン名と住所は必須です");
       return;
     }
 
+    let imageUrls: string[] = [];
+
     try {
       setIsSending(true);
-      const formPayload = new FormData();
-      formPayload.append("name", formData.name);
-      formPayload.append("address", formData.address);
-      formPayload.append("url", formData.url);
-      formData.photos.forEach((file) => {
-        formPayload.append("photos", file);
+
+      const res = await appApi.post("/request-restaurants", {
+        name: formData.name,
+        address: formData.address,
+        url: formData.url,
       });
 
-      const res = await appApi.post<ApiResponse<null>>("/request-restaurants",
-        formPayload, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      imageUrls = await Promise.all(
+        formData.photos.map(file => uploadImage(file, "pending", res.data.data.requestRestaurantId))
+      );
 
-      if (res.status === 201) {
-        setMessage(res.data.message);
-        setMessageType("success");
-        setFormData({ name: "", address: "", url: "", photos: [] });
-      } else {
-        setMessageType("error");
-        setMessage(res.data.message || "リクエストの送信に失敗しました。");
+      // 画像URLを backend に送信
+      if (imageUrls.length > 0) {
+        await appApi.post(`/restaurants/pending/${res.data.data.requestRestaurantId}/photos`, {
+          imageUrls: imageUrls,
+        });
       }
-    } catch (err: any) {
-      if (err.response) {
-        setMessageType("error");
-        setMessage(err.response.data.message);
-      } else {
-        setMessageType("error");
-        setMessage("通信エラーが発生しました");
-      }
+
+      setMessageType("success");
+      setMessage("リクエストを送信しました");
+      setFormData({ name: "", address: "", url: "", photos: [] });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+
+    } catch {
+      await Promise.all(
+        imageUrls.map(url => deleteImage(url))
+      );
+      setMessageType("error");
+      setMessage("送信に失敗しました");
     } finally {
       setIsSending(false);
     }

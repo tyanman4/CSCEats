@@ -3,10 +3,6 @@ package com.example.backend.form;
 import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 @Data
 public class RequestRestaurantForm {
 
@@ -17,6 +13,4 @@ public class RequestRestaurantForm {
     private String address;
 
     private String url;
-
-    private List<MultipartFile> photos;
 }
