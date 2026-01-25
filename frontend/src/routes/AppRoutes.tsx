@@ -23,6 +23,7 @@ export const AppRoutes = () => {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<RequireAuth><MyPage /></RequireAuth>} />
           <Route path="/user-detail/:id" element={<UserDetail />} />

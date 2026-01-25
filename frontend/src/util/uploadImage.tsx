@@ -1,14 +1,21 @@
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
 
-export const uploadImage = async (file: File, status: string, restaurantId: number) => {
+export const uploadImage = async (
+  file: File,
+  status: "pending" | "approved" | "rejected",
+  restaurantId: number,
+  type: "request" | "approved"
+) => {
+  const idPrefix = type === "request" ? "r_" : "a_";
+
   const fileRef = ref(
     storage,
-    `restaurants/${status}/${restaurantId}/${Date.now()}_${file.name}`
+    `restaurants/${status}/${idPrefix}${restaurantId}/${Date.now()}_${file.name}`
   );
 
   await uploadBytes(fileRef, file);
   const url = await getDownloadURL(fileRef);
 
-  return url; // ← これを backend に送る
+  return url;
 };

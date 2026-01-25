@@ -58,7 +58,7 @@ export const RequestRestaurant: React.FC = () => {
       });
 
       imageUrls = await Promise.all(
-        formData.photos.map(file => uploadImage(file, "pending", res.data.data.requestRestaurantId))
+        formData.photos.map(file => uploadImage(file, "pending", res.data.data.requestRestaurantId, "request"))
       );
 
       // 画像URLを backend に送信

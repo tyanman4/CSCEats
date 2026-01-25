@@ -12,14 +12,6 @@ public interface PhotoMapper {
     // 写真追加
     void insert(Photo photo);
 
-    // 承認
-    void approvePhoto(@Param("photoId") Long photoId);
-
-    // 却下（理由つき）
-    void rejectPhoto(
-            @Param("photoId") Long photoId,
-            @Param("reason") String reason);
-
     // レストラン別一覧
     List<Photo> findByRestaurantId(@Param("restaurantId") Long restaurantId);
 
@@ -36,4 +28,6 @@ public interface PhotoMapper {
 
     int update(Photo photo);
 
+    // 写真IDからレストランIDとリクエストレストランIDを取得(firebaseのパス移動用)
+    Long findRestaurantIdByPhotoId(Long photoId);
 }

@@ -32,14 +32,6 @@ public class PhotoService {
         }
     }
 
-    public void approvePhoto(Long photoId) {
-        photoMapper.approvePhoto(photoId);
-    }
-
-    public void rejectPhoto(Long photoId, String reason) {
-        photoMapper.rejectPhoto(photoId, reason);
-    }
-
     public List<Photo> getPhotosByRestaurant(Long restaurantId) {
         return photoMapper.findByRestaurantId(restaurantId);
     }

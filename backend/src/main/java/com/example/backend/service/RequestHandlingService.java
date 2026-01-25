@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.entity.Photo;
 import com.example.backend.entity.RequestRestaurants;
 import com.example.backend.entity.Restaurants;
+import com.example.backend.helper.FirebaseStorageHelper;
 import com.example.backend.helper.GeoUtils;
 import com.example.backend.mapper.InquiryMapper;
 import com.example.backend.mapper.NotificationsMapper;
@@ -28,6 +29,7 @@ public class RequestHandlingService {
     private final PhotoMapper photoMapper;
     private final InquiryMapper inquiryMapper;
     private final GeoUtils geoUtils;
+    private final FirebaseStorageHelper firebaseStorageHelper;
 
     public List<RequestRestaurants> findPendingRequestRestaurants() {
         return requestRestaurantsMapper.selectPendingRequestRestaurants();
@@ -87,25 +89,33 @@ public class RequestHandlingService {
     }
 
     @Transactional
-    public void approvePhoto(Long photoId, Long userId) {
+    public void approvePhoto(Long photoId, Long userId, String imageUrl) {
 
         notificationsMapper.insert(userId, "photo_approved", photoId);
+
+        Long restaurantId = photoMapper.findRestaurantIdByPhotoId(photoId);
+        String newImageUrl = firebaseStorageHelper.moveImage(imageUrl, "approved", restaurantId);
 
         Photo photo = new Photo();
         photo.setPhotoId(photoId);
         photo.setStatus("approved");
+        photo.setUrl(newImageUrl);
         photoMapper.update(photo);
     }
 
     @Transactional
-    public void rejectPhoto(Long photoId, String reason, Long userId) {
+    public void rejectPhoto(Long photoId, String reason, Long userId, String imageUrl) {
 
         notificationsMapper.insert(userId, "photo_rejected", photoId);
+
+        Long restaurantId = photoMapper.findRestaurantIdByPhotoId(photoId);
+        String newImageUrl = firebaseStorageHelper.moveImage(imageUrl, "rejected", restaurantId);
 
         Photo photo = new Photo();
         photo.setPhotoId(photoId);
         photo.setStatus("rejected");
         photo.setRejectReason(reason);
+        photo.setUrl(newImageUrl);
         photoMapper.update(photo);
     }
 

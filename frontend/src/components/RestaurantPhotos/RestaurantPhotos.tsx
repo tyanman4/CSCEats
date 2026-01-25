@@ -60,7 +60,7 @@ export const RestaurantPhotos: React.FC<Props> = ({
 
     try {
       imageUrls = await Promise.all(
-        files.map(file => uploadImage(file, "pending", Number(restaurantId)))
+        files.map(file => uploadImage(file, "pending", Number(restaurantId), "approved"))
       );
       const res = await appApi.post<ApiResponse<null>>(
         `/restaurants/approved/${restaurantId}/photos`,
