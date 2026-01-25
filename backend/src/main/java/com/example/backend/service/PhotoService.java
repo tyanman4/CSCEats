@@ -14,33 +14,22 @@ import java.util.List;
 public class PhotoService {
 
     private final PhotoMapper photoMapper;
-    private final FileStorageService fileStorageService; // 同じ package なので import 不要
 
-    public void savePhotos(Long restaurantId, Long requestRestaurantId, Long userID, List<MultipartFile> files) {
-        for (MultipartFile f : files) {
-            savePhoto(restaurantId, requestRestaurantId, userID, f);
+    public void savePhotoUrls(
+            Long restaurantId,
+            Long requestRestaurantId,
+            Long userId,
+            List<String> photoUrls) {
+        for (String url : photoUrls) {
+            Photo photo = new Photo();
+            photo.setRestaurantId(restaurantId);
+            photo.setRequestRestaurantId(requestRestaurantId);
+            photo.setUserId(userId);
+            photo.setUrl(url);
+            photo.setStatus("pending");
+
+            photoMapper.insert(photo);
         }
-    }
-
-    public void savePhoto(Long restaurantId, Long requestRestaurantId, Long userId, MultipartFile file) {
-        String fileUrl = fileStorageService.store(file);
-
-        Photo photo = new Photo();
-        photo.setRestaurantId(restaurantId);
-        photo.setRequestRestaurantId(requestRestaurantId);
-        photo.setUserId(userId);
-        photo.setUrl(fileUrl);
-        photo.setStatus("pending");
-
-        photoMapper.insert(photo);
-    }
-
-    public void approvePhoto(Long photoId) {
-        photoMapper.approvePhoto(photoId);
-    }
-
-    public void rejectPhoto(Long photoId, String reason) {
-        photoMapper.rejectPhoto(photoId, reason);
     }
 
     public List<Photo> getPhotosByRestaurant(Long restaurantId) {

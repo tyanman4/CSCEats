@@ -13,24 +13,6 @@
         (#{restaurantId}, #{requestRestaurantId}, #{userId}, #{url}, #{status}, NOW(), NOW())
     </insert>
 
-    <!-- ② 承認 -->
-    <update id="approvePhoto">
-        UPDATE photos
-        SET status = 'approved',
-            reject_reason = NULL,
-            updated_at = NOW()
-        WHERE photo_id = #{photoId}
-    </update>
-
-    <!-- ③ 却下 -->
-    <update id="rejectPhoto">
-        UPDATE photos
-        SET status = 'rejected',
-            reject_reason = #{reason},
-            updated_at = NOW()
-        WHERE photo_id = #{photoId}
-    </update>
-
     <!-- ④ レストラン別写真一覧 -->
     <select id="findByRestaurantId" resultType="Photo">
         SELECT *
@@ -84,8 +66,15 @@
             <if test="rejectReason != null">
                 reject_reason = #{rejectReason},
             </if>
+            url = #{url},
             updated_at = NOW()
         </set>
         WHERE photo_id = #{photoId}
     </update>
+
+    <select id="findRestaurantIdByPhotoId" resultType="Long">
+        SELECT restaurant_id
+        FROM photos
+        WHERE photo_id = #{photoId}
+    </select>
 </mapper>

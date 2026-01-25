@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Instant;
@@ -26,8 +26,6 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-
-import org.springframework.http.MediaType;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,28 +36,31 @@ public class RequestRestaurantController {
         private final PhotoService photoService;
         private final JwtUtil jwtUtil;
 
-        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        @PostMapping
         public ResponseEntity<ApiResponseDto<Map<String, Long>>> requestRestaurant(
-                        @ModelAttribute @Valid RequestRestaurantForm form,
-                        HttpServletRequest request) { // --- JWT から userId 抽出 ---
+                        @RequestBody @Valid RequestRestaurantForm form,
+                        HttpServletRequest request) {
+
+                // --- JWT から userId 抽出 ---
                 String authHeader = request.getHeader("Authorization");
                 String token = authHeader.substring(7);
                 Long userId = jwtUtil.extractUserId(token);
 
-                // --- Service 呼び出し ---
+                // --- レストランリクエスト登録 ---
                 Long requestRestaurantId = requestRestaurantService.insert(
                                 form.getName(),
                                 form.getAddress(),
                                 form.getUrl(),
                                 userId);
 
-                if (form.getPhotos() != null && !form.getPhotos().isEmpty()) {
-                        photoService.savePhotos(
-                                        null,
-                                        requestRestaurantId,
-                                        userId,
-                                        form.getPhotos());
-                }
+                // --- 画像URL保存 ---
+                // if (form.getPhotoUrls() != null && !form.getPhotoUrls().isEmpty()) {
+                // photoService.savePhotoUrls(
+                // null,
+                // requestRestaurantId,
+                // userId,
+                // form.getPhotoUrls());
+                // }
 
                 ApiResponseDto<Map<String, Long>> response = new ApiResponseDto<>(
                                 201,
@@ -76,5 +77,4 @@ public class RequestRestaurantController {
                 List<RequestRestaurants> list = requestRestaurantService.findByUserId(userId);
                 return ResponseEntity.ok(list);
         }
-
 }

@@ -42,7 +42,6 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
     const [LON_MIN, LON_MAX] = [129, 146]
     const [LAT_MIN, LAT_MAX] = [30, 46]
 
-
     useEffect(() => {
 
         let restaurant: Restaurant | null, photos: Photo[]
@@ -221,7 +220,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                             <div className={styles.mainPhotoWrapper}>
                                 <button type="button" className={styles.arrowLeft} onClick={handlePrevPhoto}>‹</button>
                                 <img
-                                    src={`${import.meta.env.VITE_API_BASE_URL}${photos[currentPhotoIndex].url}`}
+                                    src={`${photos[currentPhotoIndex].url}`}
                                     className={styles.mainPhoto}
                                 />
 
@@ -232,7 +231,7 @@ export const RestaurantsForUpdateDetail: React.FC = () => {
                                 {photos.map((photo, index) => (
                                     <img
                                         key={photo.photoId}
-                                        src={`${import.meta.env.VITE_API_BASE_URL}${photo.url}`}
+                                        src={`${photo.url}`}
                                         className={`${styles.thumbnail} ${index === currentPhotoIndex ? styles.activeThumbnail : ''
                                             }`}
                                         onClick={() => setCurrentPhotoIndex(index)}

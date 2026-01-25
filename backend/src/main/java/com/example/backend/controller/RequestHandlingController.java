@@ -56,7 +56,8 @@ public class RequestHandlingController {
     public ResponseEntity<String> approvePhoto(@PathVariable Long id,
             @RequestBody Map<String, String> body) {
         Long userId = Long.parseLong(body.get("userId"));
-        requestHandlingService.approvePhoto(id, userId);
+        String imageUrl = body.get("imageUrl");
+        requestHandlingService.approvePhoto(id, userId, imageUrl);
         return ResponseEntity.ok("approved");
     }
 
@@ -66,7 +67,8 @@ public class RequestHandlingController {
 
         Long userId = Long.parseLong(body.get("userId"));
         String reason = body.get("reason");
-        requestHandlingService.rejectPhoto(id, reason, userId);
+        String imageUrl = body.get("imageUrl");
+        requestHandlingService.rejectPhoto(id, reason, userId, imageUrl);
         return ResponseEntity.ok("rejected");
     }
 

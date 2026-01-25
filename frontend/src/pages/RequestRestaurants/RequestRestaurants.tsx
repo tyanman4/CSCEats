@@ -108,18 +108,21 @@ export const RequestRestaurants: React.FC = () => {
         setRejectReasons(prev => ({ ...prev, [id]: value }));
     };
 
-    const handleApprovePhoto = (id: number, userId: number) => {
-
-        appApi.post(`admin/approve/photo/${id}`, {
-            userId: userId
-        })
-            .then(() => {
+    const handleApprovePhoto = async (id: number, userId: number, imageUrl: string) => {
+        try {
+            await appApi.post(`admin/approve/photo/${id}`, {
+                userId: userId,
+                imageUrl: imageUrl
+            }).then(() => {
                 setPhotos(prev => prev.filter(r => r.photoId !== id));
-            })
-            .catch((e) => console.error(e));
+            });
+        } catch (e) {
+            console.error(e);
+            return;
+        }
     }
 
-    const handleRejectPhoto = (id: number, userId: number) => {
+    const handleRejectPhoto = async (id: number, userId: number, imageUrl: string) => {
 
 
         if (!rejectReasonsPhoto[id] || rejectReasonsPhoto[id].length < 4) {
@@ -128,15 +131,18 @@ export const RequestRestaurants: React.FC = () => {
             return;
         }
         setMessagePhoto(prev => ({ ...prev, [id]: "" }));
-
-        appApi.post(`admin/reject/photo/${id}`, {
-            userId: userId,
-            reason: rejectReasonsPhoto[id]
-        })
-            .then(() => {
+        try {
+            await appApi.post(`admin/reject/photo/${id}`, {
+                userId: userId,
+                reason: rejectReasonsPhoto[id],
+                imageUrl: imageUrl
+            }).then(() => {
                 setPhotos(prev => prev.filter(r => r.photoId !== id));
-            })
-            .catch((e) => console.error(e));
+            });
+        } catch (e) {
+            console.error(e);
+            return;
+        }
     }
 
     const handleRejectReasonChangePhoto = (id: number, value: string) => {
@@ -201,11 +207,11 @@ export const RequestRestaurants: React.FC = () => {
                             <p>申請者　：{r.userName}</p>
                             <p>店名　　：{r.restaurantName}</p>
                             <div className={styles.imgFrame}>
-                                <img src={`${import.meta.env.VITE_API_BASE_URL}${r.url}`} />
+                                <img src={`${r.url}`} />
                             </div>
                             <div>
-                                <button onClick={() => handleApprovePhoto(r.photoId, r.userId)} className={styles.button}>承認する</button>
-                                <button onClick={() => handleRejectPhoto(r.photoId, r.userId)} className={styles.button}>拒否する</button>
+                                <button onClick={() => handleApprovePhoto(r.photoId, r.userId, r.url)} className={styles.button}>承認する</button>
+                                <button onClick={() => handleRejectPhoto(r.photoId, r.userId, r.url)} className={styles.button}>拒否する</button>
                                 拒否理由：<input type="text"
                                     value={rejectReasonsPhoto[r.photoId] || ""}
                                     onChange={(e) => handleRejectReasonChangePhoto(r.photoId, e.target.value)}
