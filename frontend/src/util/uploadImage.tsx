@@ -8,10 +8,11 @@ export const uploadImage = async (
   type: "request" | "approved"
 ) => {
   const idPrefix = type === "request" ? "r_" : "a_";
+  const envPrefix = import.meta.env.VITE_ENV;
 
   const fileRef = ref(
     storage,
-    `restaurants/${status}/${idPrefix}${restaurantId}/${Date.now()}_${file.name}`
+    `${envPrefix}/restaurants/${status}/${idPrefix}${restaurantId}/${Date.now()}_${file.name}`
   );
 
   await uploadBytes(fileRef, file);

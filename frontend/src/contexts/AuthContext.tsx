@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import appApi from "../api/appApi";
+import { signInAnonymously } from "firebase/auth";
+import { firebaseAuth } from "../firebase";
 
 type User = {
     id: string
@@ -65,6 +67,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (token) {
             fetchProfile(token);
+            // 匿名ログイン
+            signInAnonymously(firebaseAuth)
+                .catch(console.error);
         }
     }, [token]);
 
