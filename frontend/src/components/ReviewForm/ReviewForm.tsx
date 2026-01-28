@@ -2,6 +2,7 @@ import { useState } from "react";
 import { StarRating } from "../StarRating/StarRating";
 import styles from "./ReviewForm.module.scss";
 import appApi from "../../api/appApi";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface Props {
   restaurantId: string;
@@ -16,6 +17,7 @@ export const ReviewForm: React.FC<Props> = ({
   const [comment, setComment] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
 
   const handleSubmit = async () => {
     if (isSending) return;
@@ -78,10 +80,14 @@ export const ReviewForm: React.FC<Props> = ({
 
       <button
         className={styles.submitButton}
-        disabled={isSending}
+        disabled={isSending || !isAuthenticated}
         onClick={handleSubmit}
       >
-        {isSending ? "送信中..." : "投稿する"}
+        {!isAuthenticated
+          ? "ログインしてください"
+          : isSending
+            ? "送信中..."
+            : "投稿する"}
       </button>
     </div>
   );

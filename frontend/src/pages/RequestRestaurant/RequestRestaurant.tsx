@@ -2,6 +2,9 @@ import { useState, useRef } from "react";
 import { Header } from "../../components/Header/Header";
 import { uploadImage } from "../../util/uploadImage";
 import { deleteImage } from "../../util/deleteImage";
+import { useAuth } from "../../contexts/AuthContext";
+import { signInAnonymously } from "firebase/auth";
+import { firebaseAuth } from "../../firebase";
 import appApi from "../../api/appApi";
 import '../../styles/_form.scss';
 
@@ -23,6 +26,7 @@ export const RequestRestaurant: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isAuthenticated } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -57,6 +61,12 @@ export const RequestRestaurant: React.FC = () => {
         url: formData.url,
       });
 
+      // firebase匿名ログイン
+      if (!firebaseAuth.currentUser) {
+        await signInAnonymously(firebaseAuth);
+      }
+
+      // 画像をfirebaseにアップロード
       imageUrls = await Promise.all(
         formData.photos.map(file => uploadImage(file, "pending", res.data.data.requestRestaurantId, "request"))
       );
@@ -144,8 +154,8 @@ export const RequestRestaurant: React.FC = () => {
             />
           </div>
 
-          <button type="submit" disabled={isSending} className="form-button">
-            {isSending ? "送信中..." : "リクエストを送信"}
+          <button type="submit" disabled={isSending || !isAuthenticated} className="form-button">
+            {!isAuthenticated ? "ログインしてください" : isSending ? "送信中..." : "リクエストを送信"}
           </button>
         </form>
       </div>

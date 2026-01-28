@@ -27,21 +27,6 @@ public class AdminInquiryController {
 
     private final InquiryService inquiryService;
 
-    // @GetMapping("/{status}")
-    // public ResponseEntity<ApiResponseDto<List<Inquiry>>> getInquiriesByStatus(
-    // @PathVariable String status,
-    // HttpServletRequest request) {
-    // List<Inquiry> inquiries = inquiryService.getInquiriesByStatus(status);
-
-    // ApiResponseDto<List<Inquiry>> response = new ApiResponseDto<>(
-    // HttpStatus.OK.value(),
-    // "Inquiries fetched successfully",
-    // request.getRequestURI(),
-    // LocalDateTime.now().toString(),
-    // inquiries);
-
-    // return ResponseEntity.ok(response);
-    // }
     @GetMapping("/{status}")
     public ResponseEntity<List<Inquiry>> getInquiriesByStatus(@PathVariable String status) {
         return ResponseEntity.ok(inquiryService.getInquiriesByStatus(status));

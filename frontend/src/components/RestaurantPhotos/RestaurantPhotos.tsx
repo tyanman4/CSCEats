@@ -4,6 +4,10 @@ import appApi from "../../api/appApi";
 import styles from "./RestaurantPhotos.module.scss";
 import { uploadImage } from "../../util/uploadImage";
 import { deleteImage } from "../../util/deleteImage";
+import { useAuth } from "../../contexts/AuthContext";
+import { signInAnonymously } from "firebase/auth";
+import { firebaseAuth } from "../../firebase";
+
 
 interface Photo {
   photoId: number;
@@ -36,6 +40,7 @@ export const RestaurantPhotos: React.FC<Props> = ({
   const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSending, setIsSending] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
@@ -59,6 +64,10 @@ export const RestaurantPhotos: React.FC<Props> = ({
     let imageUrls: string[] = [];
 
     try {
+      if (!firebaseAuth.currentUser) {
+        await signInAnonymously(firebaseAuth);
+      }
+
       imageUrls = await Promise.all(
         files.map(file => uploadImage(file, "pending", Number(restaurantId), "approved"))
       );
@@ -154,8 +163,11 @@ export const RestaurantPhotos: React.FC<Props> = ({
 
             <div className={styles.modalButtons}>
               <button onClick={() => setShowModal(false)}>キャンセル</button>
-              <button disabled={!(files.length || !isSending)} onClick={uploadPhotos}>
-                {isSending ? "送信中..." : "アップロード"}
+              <button
+                disabled={!isAuthenticated || files.length === 0 || isSending}
+                onClick={uploadPhotos}
+              >
+                {!isAuthenticated ? "ログインしてください" : isSending ? "送信中..." : "アップロード"}
               </button>
             </div>
           </div>

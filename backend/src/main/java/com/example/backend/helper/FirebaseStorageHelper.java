@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FirebaseStorageHelper {
 
-    public String moveImage(String imageUrl, String status, Long restaurantId) {
+    public String moveImage(String imageUrl, String status, Long restaurantId, String environment) {
 
         String fromPath = java.net.URLDecoder.decode(
                 imageUrl.split("/o/")[1].split("\\?")[0],
@@ -26,7 +26,7 @@ public class FirebaseStorageHelper {
 
         String fileName = fromPath.substring(fromPath.lastIndexOf("/") + 1);
 
-        String toPath = "restaurants/" + status + "/a_" + restaurantId + "/" + fileName;
+        String toPath = environment + "/restaurants/" + status + "/a_" + restaurantId + "/" + fileName;
 
         // copy
         Blob newBlob = bucket.create(

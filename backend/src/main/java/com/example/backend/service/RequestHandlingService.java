@@ -89,12 +89,12 @@ public class RequestHandlingService {
     }
 
     @Transactional
-    public void approvePhoto(Long photoId, Long userId, String imageUrl) {
+    public void approvePhoto(Long photoId, Long userId, String imageUrl, String environment) {
 
         notificationsMapper.insert(userId, "photo_approved", photoId);
 
         Long restaurantId = photoMapper.findRestaurantIdByPhotoId(photoId);
-        String newImageUrl = firebaseStorageHelper.moveImage(imageUrl, "approved", restaurantId);
+        String newImageUrl = firebaseStorageHelper.moveImage(imageUrl, "approved", restaurantId, environment);
 
         Photo photo = new Photo();
         photo.setPhotoId(photoId);
@@ -104,12 +104,12 @@ public class RequestHandlingService {
     }
 
     @Transactional
-    public void rejectPhoto(Long photoId, String reason, Long userId, String imageUrl) {
+    public void rejectPhoto(Long photoId, String reason, Long userId, String imageUrl, String environment) {
 
         notificationsMapper.insert(userId, "photo_rejected", photoId);
 
         Long restaurantId = photoMapper.findRestaurantIdByPhotoId(photoId);
-        String newImageUrl = firebaseStorageHelper.moveImage(imageUrl, "rejected", restaurantId);
+        String newImageUrl = firebaseStorageHelper.moveImage(imageUrl, "rejected", restaurantId, environment);
 
         Photo photo = new Photo();
         photo.setPhotoId(photoId);

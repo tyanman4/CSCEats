@@ -4,86 +4,88 @@ import { signInAnonymously } from "firebase/auth";
 import { firebaseAuth } from "../firebase";
 
 type User = {
-    id: string
-    name: string
-    introduction: string
-    role: string
+  id: string
+  name: string
+  introduction: string
+  role: string
 } | null //ログアウト時はnull
 
 type AuthContextType = {
-    user: User;
-    token: string | null;
-    login: (token: string) => Promise<void>;
-    logout: () => void;
-    isAuthenticated: boolean;
-    isAdmin: boolean
+  user: User;
+  token: string | null;
+  login: (token: string) => Promise<void>;
+  logout: () => void;
+  isAuthenticated: boolean;
+  isAdmin: boolean
 };
 
 //コンテキスト作成
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User>(null);
-    const [token, setToken] = useState<string | null>(
-        localStorage.getItem("token")
-    );
-    //tokenが存在すればtrue
-    const isAuthenticated = !!token;
+  const [user, setUser] = useState<User>(null);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
+  //tokenが存在すればtrue
+  const isAuthenticated = !!user;
 
-    const isAdmin = user?.role === "admin"
+  const isAdmin = user?.role === "admin"
 
-    //プロフィール取得関数
-    const fetchProfile = async (jwt: string) => {
-        try {
+  //プロフィール取得関数
+  const fetchProfile = async (jwt: string) => {
+    try {
 
-            const res = await appApi.get("/users/me", {
-                headers: { Authorization: `Bearer ${jwt}` },
-            });
-            const userData: User = {
-                id: res.data.id,
-                name: res.data.name,
-                introduction: res.data.introduction,
-                role: res.data.role
-            };
-            setUser(userData);
-        } catch (err) {
-            console.error("プロフィール取得エラー:", err);
-            logout();
-        }
+      const res = await appApi.get("/users/me", {
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
+      const userData: User = {
+        id: res.data.id,
+        name: res.data.name,
+        introduction: res.data.introduction,
+        role: res.data.role
+      };
+      setUser(userData);
+    } catch (err) {
+      console.error("プロフィール取得エラー:", err);
+      logout();
+    }
+  };
+
+  const login = async (jwt: string) => {
+    localStorage.setItem("token", jwt);
+    setToken(jwt);
+    await fetchProfile(jwt);
+  };
+
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem("token");
+  };
+
+  useEffect(() => {
+    const firebaseLogin = async () => {
+      if (token) {
+        await signInAnonymously(firebaseAuth);
+      }
     };
 
-    const login = async (jwt: string) => {
-        localStorage.setItem("token", jwt);
-        setToken(jwt);
-        await fetchProfile(jwt);
-    };
+    firebaseLogin().catch(console.error);
+  }, [token]);
 
-    const logout = () => {
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem("token");
-    };
 
-    useEffect(() => {
-        if (token) {
-            fetchProfile(token);
-            // 匿名ログイン
-            signInAnonymously(firebaseAuth)
-                .catch(console.error);
-        }
-    }, [token]);
-
-    return (
-        //子孫要素はvalueを共有利用できる。
-        <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, isAdmin }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    //子孫要素はvalueを共有利用できる。
+    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, isAdmin }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = (): AuthContextType => {
-    const context = useContext(AuthContext);
-    //Provider内で使わないとエラー
-    if (!context) throw new Error("useAuth must be used within AuthProvider");
-    return context;
+  const context = useContext(AuthContext);
+  //Provider内で使わないとエラー
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  return context;
 };
